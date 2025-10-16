@@ -1,0 +1,83 @@
+	// #ifndef APP-NVUE
+	/*每个页面公共css */
+	view,
+	scroll-view,
+	swiper,
+	button,
+	input,
+	textarea,
+	label,
+	navigator,
+	div,
+	page,
+	image {
+		margin: 0px;
+		padding: 0px;
+		box-sizing: border-box;
+    font-family: PingFangSC, PingFang SC;
+    color: #222222;
+	}
+
+
+	.uni-tabbar {
+
+		// tabbar上边框
+		.uni-tabbar-border {
+			background-color: rgba(0, 0, 0, 0.13) !important; 
+		}
+	}
+
+	uni-button:after,
+	button:after {
+		border: none !important;
+	}
+	//#endif
+
+
+	/* 解决小程序和app滚动条的问题 */
+	/* #ifdef MP-WEIXIN || APP */
+	::-webkit-scrollbar {
+		display: none;
+		width: 0 !important;
+		height: 0 !important;
+		-webkit-appearance: none;
+		background: transparent;
+		color: transparent;
+	}
+	/* #endif */
+
+	/* 解决H5 的问题 */
+	/* #ifdef H5 */
+	uni-scroll-view .uni-scroll-view::-webkit-scrollbar {
+		/* 隐藏滚动条，但依旧具备可以滚动的功能 */
+		display: none;
+		width: 0 !important;
+		height: 0 !important;
+		-webkit-appearance: none;
+		background: transparent;
+		color: transparent;
+	}
+	/* #endif */
+
+
+	/* #ifndef APP-NVUE || APP-PLUS-NVUE */
+	::-webkit-scrollbar {
+		width: 8rpx;
+		height: 8rpx;
+	}
+	/*定义滚动条轨道 内阴影+圆角*/
+	::-webkit-scrollbar-track {
+		-webkit-box-shadow: inset 0 0 20rpx transparent;
+		box-shadow: inset 0 0 12rpx transparent;
+		border-radius: 20rpx;
+		background-color: transparent;
+	}
+
+	/*定义滑块 内阴影+圆角*/
+	::-webkit-scrollbar-thumb {
+		border-radius: 20rpx;
+		-webkit-box-shadow: inset 0 0 20rpx transparent;
+		box-shadow: inset 0 0 12rpx transparent;
+		background-color: transparent;
+	}
+	/* #endif */

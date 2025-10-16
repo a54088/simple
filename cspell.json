@@ -1,0 +1,28 @@
+{
+  "version": "0.2",
+  "ignorePaths": ["node_modules/**"],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "words": [
+    "Alipay",
+    "easycom",
+    "iconfont",
+    "tishi",
+    "umtrack",
+    "vercode",
+    "vueenv",
+    "autoscan"
+  ],
+  "ignoreWords": [
+    "Conditon",
+    "fullfilled",
+    "loadmore",
+    "middlewares",
+    "miniprogram",
+    "nomore",
+    "pinia",
+    "dcloudio",
+    "VITE"
+  ],
+  "import": []
+}
