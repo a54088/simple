@@ -11,7 +11,8 @@
     "umtrack",
     "vercode",
     "vueenv",
-    "autoscan"
+    "autoscan",
+    "uview"
   ],
   "ignoreWords": [
     "Conditon",
