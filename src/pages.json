@@ -8,7 +8,26 @@
         "animationType": "fade-in",
         "animationDuration": 300,
         "navigationStyle": "custom",
-        "navigationBarTitleText": "首页"
+        "navigationBarTitleText": "首页",
+        "disableScroll": true,
+        "backgroundColor": "#fff",
+        "app-plus": {
+          "bounce": "none"
+        }
+      }
+    },
+    {
+      "path": "pages/map/index",
+      "style": {
+        "animationType": "fade-in",
+        "animationDuration": 300,
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "地图",
+        "disableScroll": true,
+        "backgroundColor": "#fff",
+        "app-plus": {
+          "bounce": "none"
+        }
       }
     }
   ],
@@ -17,6 +36,22 @@
     "navigationBarTitleText": "啊圈",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/map/index",
+        "text": "地图"
+      }
+    ],
+    "fontSize": "12px",
+    "color": "#979797",
+    "selectedColor": "#FF612F",
+    "backgroundColor": "#fff"
   },
   "easycom": {
     "autoscan": true,

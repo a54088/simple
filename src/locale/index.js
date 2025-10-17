@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-10-16 16:03:23
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-16 16:34:23
+ * @LastEditTime: 2025-10-17 16:19:56
  * @Description:
  */
 import { createI18n } from "@/uni_modules/uview-next";
@@ -18,7 +18,7 @@ const locales = {
     ...loginEn,
   },
 };
-debugger;
+
 const config = {
   locale: "zh-Hans", // 默认显示语言
   fallbackLocale: "en", // 回退语言
