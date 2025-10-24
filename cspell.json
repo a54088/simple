@@ -12,7 +12,8 @@
     "vercode",
     "vueenv",
     "autoscan",
-    "uview"
+    "uview",
+    "unocss"
   ],
   "ignoreWords": [
     "Conditon",

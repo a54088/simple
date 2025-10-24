@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-10-16 14:50:15
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-16 14:52:00
+ * @LastEditTime: 2025-10-20 11:13:23
  * @Description:
 -->
 
@@ -23,14 +23,14 @@
 yarn install
 
 # 启动项目
-yarn dev:h5
+yarn dev:h5:test
 ```
 
 ### 1.2 打包项目
 
 ```bash
 # 打包项目
-yarn build:h5
+yarn build:h5:prod
 ```
 
 ## 2、接口调用介绍

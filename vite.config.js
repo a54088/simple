@@ -2,14 +2,16 @@
  * @Author: 王硕
  * @Date: 2025-10-15 14:04:13
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-16 13:54:08
+ * @LastEditTime: 2025-10-24 13:14:19
  * @Description:
  */
 import { defineConfig } from "vite";
 import uni from "@dcloudio/vite-plugin-uni";
+
 import AutoImport from "unplugin-auto-import/vite";
 import { resolve } from "path";
 import { createHtmlPlugin } from "vite-plugin-html";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
