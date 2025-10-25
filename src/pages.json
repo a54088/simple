@@ -31,28 +31,69 @@
       }
     }
   ],
+  "subPackages": [
+    {
+      "root": "devTools/page",
+      "name": "devToolsPage",
+      "pages": [
+        {
+          "path": "index",
+          "style": {
+            "navigationStyle": "custom",
+            // #ifdef APP-PLUS
+            "softinputMode": "adjustResize",
+            "backgroundColor": "transparent",
+            "animationDuration": 1,
+            "animationType": "none",
+            "popGesture": "none",
+            "bounce": "none",
+            "titleNView": false,
+            // #endif
+            "app-plus": {
+              "usingComponents": true,
+              "nvueCompiler": "uni-app",
+              "nvueStyleCompiler": "uni-app",
+              "compilerVersion": 3
+            }
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages-sub",
+      "pages": [
+        {
+          "path": "map-index/index",
+          "style": {
+            "navigationBarTitleText": "地图模式",
+            "navigationStyle": "custom"
+          }
+        }
+      ]
+    }
+  ],
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "啊圈",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  "tabBar": {
-    "list": [
-      {
-        "pagePath": "pages/home/index",
-        "text": "首页"
-      },
-      {
-        "pagePath": "pages/map/index",
-        "text": "地图"
-      }
-    ],
-    "fontSize": "12px",
-    "color": "#979797",
-    "selectedColor": "#FF612F",
-    "backgroundColor": "#fff"
-  },
+  // "tabBar": {
+  //   "list": [
+  //     {
+  //       "pagePath": "pages/home/index",
+  //       "text": "首页"
+  //     },
+  //     {
+  //       "pagePath": "pages/map/index",
+  //       "text": "地图"
+  //     }
+  //   ],
+  //   "fontSize": "12px",
+  //   "color": "#979797",
+  //   "selectedColor": "#FF612F",
+  //   "backgroundColor": "#fff"
+  // },
   "easycom": {
     "autoscan": true,
     "custom": {}

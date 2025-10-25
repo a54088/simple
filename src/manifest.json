@@ -165,6 +165,18 @@
         },
         "uniStatistics" : {
             "enable" : true
+        },
+        "sdkConfigs" : {
+            "maps" : {
+                "amap" : {
+                    "key" : "5c7a6cc7f93412e188515213c19dfd5c",
+                    "securityJsCode" : "8dadbc20bbb8963192e9d05fe0157d45",
+                    "serviceHost" : ""
+                }
+            }
+        },
+        "unipush" : {
+            "enable" : false
         }
     },
     "app-harmony" : {
