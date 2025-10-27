@@ -2,11 +2,12 @@
  * @Author: 王硕
  * @Date: 2025-10-15 14:04:13
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-24 13:14:19
+ * @LastEditTime: 2025-10-27 16:31:56
  * @Description:
  */
 import { defineConfig } from "vite";
 import uni from "@dcloudio/vite-plugin-uni";
+import UniKuRoot from "@uni-ku/root";
 
 import AutoImport from "unplugin-auto-import/vite";
 import { resolve } from "path";
@@ -26,6 +27,7 @@ export default defineConfig({
       include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
       imports: ["vue"],
     }),
+    UniKuRoot(),
     uni(),
   ],
   resolve: {

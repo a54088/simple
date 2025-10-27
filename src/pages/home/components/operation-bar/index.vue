@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-10-25 16:00:33
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-25 17:18:57
+ * @LastEditTime: 2025-10-27 16:36:50
  * @Description: 
 -->
 <script setup>
@@ -27,7 +27,7 @@ const vm = inject("homeVM");
     </view>
 
     <view>
-      <button class="operation-bar-btn">
+      <button class="operation-bar-btn" @tap="vm.showToast">
         <text class="iconfont icon-jianpan iconfont__btn"></text>
         <text class="operation-bar-btn-text">按住说话</text>
         <text class="iconfont icon-jianpan-2 iconfont__btn"></text>

@@ -2230,6 +2230,15 @@
   resolved "https://registry.npmmirror.com/@types/web-bluetooth/-/web-bluetooth-0.0.21.tgz#525433c784aed9b457aaa0ee3d92aeb71f346b63"
   integrity sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==
 
+"@uni-ku/root@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.npmmirror.com/@uni-ku/root/-/root-1.4.1.tgz#75e84fccfa3721d6e0ad9ffff1fc6db90c434ade"
+  integrity sha512-DI9LLbWmPXjqJVwZTC84GuvSz9vzOgSUjbFrOE1y3kivttEReNVqwWM3n/kzFoNuS3KKm/DissOph4rFs912Zw==
+  dependencies:
+    "@vue/compiler-sfc" "3.4.21"
+    chokidar "^3.6.0"
+    jsonc-parser "^3.3.1"
+
 "@vitejs/plugin-legacy@5.3.2":
   version "5.3.2"
   resolved "https://registry.npmmirror.com/@vitejs/plugin-legacy/-/plugin-legacy-5.3.2.tgz#f890db6014898c36af85b8ad52c680ef026b8aa8"
@@ -2775,7 +2784,7 @@ centra@^2.7.0:
   dependencies:
     follow-redirects "^1.15.6"
 
-chokidar@^3.5.3:
+chokidar@^3.5.3, chokidar@^3.6.0:
   version "3.6.0"
   resolved "https://registry.npmmirror.com/chokidar/-/chokidar-3.6.0.tgz#197c6cc669ef2a8dc5e7b4d97ee4e092c3eb0d5b"
   integrity sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==
@@ -3648,7 +3657,7 @@ json5@^2.2.3:
   resolved "https://registry.npmmirror.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
-jsonc-parser@^3.2.0:
+jsonc-parser@^3.2.0, jsonc-parser@^3.3.1:
   version "3.3.1"
   resolved "https://registry.npmmirror.com/jsonc-parser/-/jsonc-parser-3.3.1.tgz#f2a524b4f7fd11e3d791e559977ad60b98b798b4"
   integrity sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==
