@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-10-16 14:50:15
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-20 11:13:23
+ * @LastEditTime: 2025-10-27 09:38:46
  * @Description:
 -->
 
@@ -51,6 +51,10 @@ yarn build:h5:prod
 ## 7、效率工具
 
 #### Plop 是一个微生成器框架 [文档](https://plopjs.com/documentation/) [中文文档](https://lexmin0412.github.io/plop-cn-docs/)
+
+## 8、组件库
+
+#### [uView Next](https://uview.d3u.cn/)，基于 uView UI 2.0，80+精选组件库，支持 vue2 和 vue3，支持鸿蒙，支持多语言，搭配便捷工具助力，让开发更得心应手
 
 ### 权限控制
 
