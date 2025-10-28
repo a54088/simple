@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-07-28 10:05:07
  * @LastEditors: 王硕
- * @LastEditTime: 2025-09-29 10:13:57
+ * @LastEditTime: 2025-10-28 15:52:00
  * @Description: 
 -->
 <script setup lang="js">
@@ -45,7 +45,7 @@ const onToAgreement2 = (path, title, type) => {
       ></u-icon>
     </text>
     <view class="login-agreement__right">
-      <text @click="onAgreement">登录即表示接受</text>
+      <text @click="onAgreement">登录即表明同意</text>
       <!-- <text
         class="agreement"
         @click="
@@ -60,7 +60,7 @@ const onToAgreement2 = (path, title, type) => {
       <text
         class="agreement"
         @click="onToAgreement('/pages-agreement/auction-service/index')"
-        >《用户许可协议》</text
+        >《隐私政策》</text
       >
       <text>和</text>
       <text
@@ -68,7 +68,7 @@ const onToAgreement2 = (path, title, type) => {
         @click="
           onToAgreement('pages-agreement/privacy/index', '隐私政策', 'ys')
         "
-        >《隐私政策》</text
+        >《用户许可协议》</text
       >
       <!-- <text
         class="agreement"
@@ -82,26 +82,25 @@ const onToAgreement2 = (path, title, type) => {
 <style lang="scss" scoped>
 .login-agreement {
   display: flex;
+  justify-content: center;
   .login-agreement__right {
     font-size: 24rpx;
-    color: #222222;
-    line-height: 34rpx;
+    color: rgba(255, 255, 255, 0.6);
     .agreement {
-      color: #fb494a;
+      color: #ff194a;
     }
   }
   .icon-dagou {
-    color: #fb494a;
+    color: #ff194a;
     border: none !important;
   }
   .login-agreement__left {
     flex-shrink: 0;
-    width: 26rpx;
-    height: 26rpx;
-    background: #ffffff;
-    border: 2rpx solid #fb494a;
+    width: 32rpx;
+    height: 32rpx;
+    border: 2rpx solid #8b8c8e;
     margin-right: 14rpx;
-    border-radius: 50%;
+    border-radius: 5rpx;
     display: flex;
     align-items: center;
     justify-content: center;

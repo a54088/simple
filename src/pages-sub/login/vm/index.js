@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-07-26 15:40:46
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-28 14:30:19
+ * @LastEditTime: 2025-10-28 16:09:45
  * @Description:
  */
 import { ViewModel } from "@/shared/class/view-model.js";
@@ -16,12 +16,24 @@ export class LoginVM extends ViewModel {
    * password_login: 密码登录
    * sms_login: 短信登录
    * register: 新用户注册
+   * forget_password: 忘记密码
    */
   formType = "password_login";
 
   tabIndex = 1;
 
   isSmsLogin = false;
+
+  forgetPasswordForm = {
+    /** 手机号 */
+    mobile: "",
+    /** 密码 */
+    password: "",
+    /** 确认密码 */
+    confirmPassword: "",
+    /** 验证码 */
+    mobileCode: "",
+  };
 
   registerForm = {
     /** 手机号 */
@@ -32,7 +44,6 @@ export class LoginVM extends ViewModel {
     confirmPassword: "",
     /** 验证码 */
     mobileCode: "",
-    invitMobile: "",
   };
 
   loginForm = {
@@ -65,55 +76,20 @@ export class LoginVM extends ViewModel {
     super();
   }
 
-  get tabList() {
-    if (this.isSmsLogin) {
-      return [
-        {
-          label: "新用户注册",
-          backgroundImage: tab1,
-          key: "register",
-        },
-        {
-          label: "验证码登录",
-          backgroundImage: tab2,
-          key: "sms",
-        },
-      ];
-    }
-    return [
-      {
-        label: "新用户注册",
-        backgroundImage: tab1,
-        key: "register",
-      },
-      {
-        label: "密码登录",
-        backgroundImage: tab2,
-        key: "password",
-      },
-    ];
-  }
-
-  get currentTab() {
-    return this.tabList[this.tabIndex];
-  }
-
   get loginButtonText() {
-    if (this.tabIndex === 0) {
-      return "注册";
+    if (this.formType === "register") {
+      return "确认注册";
     }
-    if (this.tabIndex === 1) {
-      return "登录";
+
+    if (this.formType === "forget_password") {
+      return "确  认";
     }
-    return "登录";
+    return "登  录";
   }
   setTab(index) {
     this.tabIndex = +index;
   }
-  setInvitMobile(mobile) {
-    const lastFourDigits = mobile.match(/\d{4}$/)[0];
-    this.registerForm.invitMobile = lastFourDigits;
-  }
+
   // 获取短信验证码
   getSmsLoginCode() {
     if (this.smsLoginCodeRef.canGetCode) {

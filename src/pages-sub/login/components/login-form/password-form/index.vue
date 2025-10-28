@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-07-26 16:04:33
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-28 15:30:51
+ * @LastEditTime: 2025-10-28 15:59:49
  * @Description: 
 -->
 .
@@ -36,7 +36,15 @@ const rules = {
 const showPassword = ref(false);
 
 const onChangeCode = () => {
-  vm.isSmsLogin = !vm.isSmsLogin;
+  if (vm.formType === "sms_login") {
+    vm.formType = "password_login";
+  } else if (vm.formType === "password_login") {
+    vm.formType = "sms_login";
+  }
+};
+
+const onChangeRegister = () => {
+  vm.formType = "register";
 };
 </script>
 
@@ -82,9 +90,11 @@ const onChangeCode = () => {
         </u-input>
       </view>
     </u-form-item>
-    <view class="code-login" @tap="onChangeCode">
-      <text>新用户注册</text>
-      <text>{{ vm.isSmsLogin ? "密码登录" : "验证码登录" }}</text>
+    <view class="code-login">
+      <text @tap="onChangeRegister">新用户注册</text>
+      <text @tap="onChangeCode">{{
+        vm.isSmsLogin ? "密码登录" : "验证码登录"
+      }}</text>
     </view>
   </u-form>
 </template>
@@ -92,6 +102,7 @@ const onChangeCode = () => {
 <style lang="scss" scoped>
 .code-login {
   margin-top: 4rpx;
+  padding: 0 40rpx;
   width: 100%;
   display: flex;
   justify-content: space-between;
