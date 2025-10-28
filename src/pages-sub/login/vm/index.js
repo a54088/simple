@@ -1,31 +1,29 @@
 /*
  * @Author: 王硕
  * @Date: 2025-07-26 15:40:46
- * @LastEditors: hch
- * @LastEditTime: 2025-10-22 13:22:48
+ * @LastEditors: 王硕
+ * @LastEditTime: 2025-10-28 14:30:19
  * @Description:
  */
 import { ViewModel } from "@/shared/class/view-model.js";
 import LoginApi from "@/api/auth/index.js";
 import { useUserStore } from "@/store/index";
-import tab1 from "@/static/images/login/tab1.png";
-import tab2 from "@/static/images/login/tab2.png";
 import userApi from "@/api/user/index";
 
-import imApi from "@/api/im/index.js";
-import { TUILogin } from "@tencentcloud/tui-core";
-// #ifdef APP-PLUS || H5
-import { TUIChatKit } from "../../../TUIKit";
-// #endif
-
 export class LoginVM extends ViewModel {
+  /**
+   * 登录表单类型
+   * password_login: 密码登录
+   * sms_login: 短信登录
+   * register: 新用户注册
+   */
+  formType = "password_login";
+
   tabIndex = 1;
 
   isSmsLogin = false;
 
   registerForm = {
-    /** 推荐码 */
-    recommenderCode: "",
     /** 手机号 */
     mobile: "",
     /** 密码 */
@@ -109,10 +107,10 @@ export class LoginVM extends ViewModel {
     }
     return "登录";
   }
-  setTab (index) {
+  setTab(index) {
     this.tabIndex = +index;
   }
-  setInvitMobile (mobile) {
+  setInvitMobile(mobile) {
     const lastFourDigits = mobile.match(/\d{4}$/)[0];
     this.registerForm.invitMobile = lastFourDigits;
   }
@@ -234,30 +232,6 @@ export class LoginVM extends ViewModel {
       }
     } catch (e) {
       console.log(e);
-    }
-  }
-
-  async registerIm(userInfo) {
-    console.log(userInfo);
-
-    try {
-      // #ifdef APP-PLUS || H5
-      TUIChatKit.init();
-      // #endif
-      let vueVersion = 2;
-      // #ifdef VUE3
-      vueVersion = 3;
-      // #endif
-      let { data } = await imApi.getUserSig({ identifier: userInfo.mobile });
-      TUILogin.login({
-        SDKAppID: 1600101358,
-        userID: `${userInfo.mobile}`,
-        userSig: data,
-        useUploadPlugin: true, // If you need to send rich media messages, please set to true.
-        framework: `vue${vueVersion}`, // framework used vue2 / vue3
-      });
-    } catch (error) {
-      console.log(error);
     }
   }
 

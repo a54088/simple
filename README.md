@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-10-16 14:50:15
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-27 16:21:39
+ * @LastEditTime: 2025-10-28 10:51:24
  * @Description:
 -->
 
@@ -33,8 +33,13 @@ yarn dev:h5:test
 ### 1.2 打包项目
 
 ```bash
-# 打包项目
+# h5 打包项目
 yarn build:h5:prod
+```
+
+```bash
+# app 打包项目
+使用 HBuilder X 4.75 进行打包
 ```
 
 ## 2、接口调用介绍

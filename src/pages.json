@@ -63,6 +63,12 @@
       "root": "pages-sub",
       "pages": [
         {
+          "path": "login/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "map-index/index",
           "style": {
             "navigationBarTitleText": "地图模式",

@@ -1,14 +1,13 @@
 <!--
  * @Author: 王硕
  * @Date: 2025-07-26 13:25:29
- * @LastEditors: hch
- * @LastEditTime: 2025-10-22 13:22:58
+ * @LastEditors: 王硕
+ * @LastEditTime: 2025-10-28 14:30:16
  * @Description: 
 -->
 <script setup>
 import { provide } from "vue";
 import LoginForm from "./components/login-form/index.vue";
-import LoginTab from "./components/login-tab/index.vue";
 import LoginAgreement from "./components/login-agreement/index.vue";
 import LoginButton from "./components/login-button/index.vue";
 import LoginBottom from "./components/login-bottom/index.vue";
@@ -23,52 +22,55 @@ onUnmounted(() => {
 });
 
 onLoad((options) => {
-  options.tabType && vm.setTab(options.tabType)
-  options.mobile && vm.setInvitMobile(options.mobile)
-  options.inviteCode && vm.setInviteCode(options.inviteCode)
+  options.tabType && vm.setTab(options.tabType);
+  options.mobile && vm.setInvitMobile(options.mobile);
+  options.inviteCode && vm.setInviteCode(options.inviteCode);
 });
 </script>
 
 <template>
-  <view class="body">
-    <toptitle :nobg="1" title="安合供"></toptitle>
-    <view class="outer">
-      <view class="login__layout">
-        <view class="login_welcome">
-          <text>嗨!</text>
-          <text class="login_welcome_text">安合供欢迎您</text>
-        </view>
-        <view class="login-tab">
-          <LoginTab />
-        </view>
-        <view class="login-form">
-          <LoginForm />
-        </view>
-        <view class="login-agreement">
-          <LoginAgreement />
-        </view>
-        <view class="login-button">
-          <LoginButton />
-        </view>
-        <!-- <view class="login-bottom" v-if="vm.currentTab.key === 'password'">
-          <LoginBottom />
-        </view> -->
+  <view class="login__layout">
+    <view class="login__logo">
+      <image
+        class="login__logo_img"
+        src="@/static/images/login/login_logo.png"
+      />
+
+      <view class="login__logo_text">
+        <text>A Circle，圈住未来</text>
       </view>
+    </view>
+    <view class="login-form">
+      <LoginForm />
+    </view>
+    <view class="login-agreement">
+      <LoginAgreement />
+    </view>
+    <view class="login-button">
+      <LoginButton />
     </view>
   </view>
 </template>
 
 <style lang="scss" scoped>
-.body {
-  width: 100vw;
-  background-image: url("@/static/images/login/rgbg.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
 .login__layout {
   width: 100vw;
-  // height: 100vh;
-  padding: 96rpx 57rpx 0;
+  height: 100vh;
+  padding: 130rpx 70rpx 0;
+  background-color: #181818;
+  .login__logo {
+    text-align: center;
+    .login__logo_text {
+      margin-top: 24rpx;
+      font-size: 22rpx;
+      letter-spacing: 0.2em;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .login__logo_img {
+      width: 256rpx;
+      height: 102rpx;
+    }
+  }
   .login-bottom {
     margin-top: 30rpx;
   }

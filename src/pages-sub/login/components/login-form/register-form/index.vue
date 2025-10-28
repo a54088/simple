@@ -1,8 +1,8 @@
 <!--
  * @Author: 王硕
  * @Date: 2025-07-26 16:04:33
- * @LastEditors: hch
- * @LastEditTime: 2025-10-18 16:11:32
+ * @LastEditors: 王硕
+ * @LastEditTime: 2025-10-28 14:31:16
  * @Description: 
 -->
 .
@@ -20,12 +20,6 @@ const codeButtonText = ref("获取验证码");
 vm.registerFormRef = registerFormRef;
 
 const rules = {
-  // recommenderCode: {
-  //   required: true,
-  //   message: "推荐码不能为空",
-  //   // blur和change事件触发检验
-  //   trigger: ["blur", "change"],
-  // },
   mobile: {
     trigger: ["blur", "change"],
     validator: (rule, value, callback) => {
@@ -93,20 +87,6 @@ const codeChange = (text) => {
     :borderBottom="false"
     ref="registerFormRef"
   >
-    <u-form-item label="" prop="recommenderCode">
-      <view class="form-item--init">
-        <u--input
-          v-model="form.recommenderCode"
-          border="none"
-          placeholder="请输入推荐码"
-        >
-          <template #prefix>
-            <text class="form-label">推荐码</text>
-          </template>
-        </u--input>
-      </view>
-    </u-form-item>
-
     <u-form-item prop="mobile">
       <view class="form-item--init">
         <u--input
@@ -171,13 +151,9 @@ const codeChange = (text) => {
         </u--input>
       </view>
     </u-form-item>
-    <u-form-item v-if="form.invitMobile" >
+    <u-form-item v-if="form.invitMobile">
       <view class="form-item--init">
-        <u--input
-          v-model="form.invitMobile"
-          border="none"
-          disabled
-        >
+        <u--input v-model="form.invitMobile" border="none" disabled>
           <template #prefix>
             <text class="form-label">推荐人手机号后四位</text>
           </template>

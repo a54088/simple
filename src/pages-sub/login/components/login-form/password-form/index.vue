@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-07-26 16:04:33
  * @LastEditors: 王硕
- * @LastEditTime: 2025-08-16 16:04:28
+ * @LastEditTime: 2025-10-28 15:30:51
  * @Description: 
 -->
 .
@@ -25,16 +25,6 @@ const form = computed({
 });
 
 const rules = {
-  // mobile: {
-  //   trigger: ["blur", "change"],
-  //   validator: (rule, value, callback) => {
-  //     // 上面有说，返回true表示校验通过，返回false表示不通过
-  //     // uni.$u.test.mobile()就是返回true或者false的
-  //     return uni.$u.test.mobile(value);
-  //   },
-  //   required: true,
-  //   message: "手机号码不正确",
-  // },
   "form.password": {
     required: true,
     message: "密码不能为空",
@@ -51,7 +41,7 @@ const onChangeCode = () => {
 </script>
 
 <template>
-  <u--form
+  <u-form
     labelPosition="left"
     labelWidth="0"
     :model="form"
@@ -61,72 +51,66 @@ const onChangeCode = () => {
   >
     <u-form-item prop="mobile">
       <view class="form-item--init">
-        <u--input
+        <u-input
           v-model="form.mobile"
           border="none"
-          placeholder="请输入手机号"
+          color="#fff"
+          placeholder="请输入登录手机号"
         >
-          <template #prefix>
-            <text class="form-label">手机号</text>
-          </template>
-        </u--input>
+        </u-input>
       </view>
     </u-form-item>
 
     <u-form-item prop="password">
       <view class="form-item--init">
-        <u--input
+        <u-input
           v-model="form.password"
           :type="showPassword ? 'text' : 'password'"
           border="none"
+          color="#fff"
           placeholder="请输入登录密码"
+          :showPasswordToggle="false"
         >
-          <template #prefix>
-            <text class="form-label">登录密码</text>
-          </template>
           <template #suffix>
             <u-icon
               :name="showPassword ? 'eye-off' : 'eye'"
-              color="#999"
+              color="rgba(255, 255, 255, 0.8)"
               size="20"
               @click="showPassword = !showPassword"
             />
           </template>
-        </u--input>
+        </u-input>
       </view>
     </u-form-item>
     <view class="code-login" @tap="onChangeCode">
+      <text>新用户注册</text>
       <text>{{ vm.isSmsLogin ? "密码登录" : "验证码登录" }}</text>
     </view>
-  </u--form>
+  </u-form>
 </template>
 
 <style lang="scss" scoped>
 .code-login {
-  margin-top: 8rpx;
+  margin-top: 4rpx;
   width: 100%;
   display: flex;
-  justify-content: flex-end;
-  color: #3d3d3d;
+  justify-content: space-between;
   font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.8);
 }
 .form-item--init {
   width: 100%;
-  background: #f8f8f8;
-  border-radius: 10rpx;
+  background: #000000;
+  border-radius: 22rpx;
   padding: 25rpx 30rpx;
   display: flex;
   align-items: center;
+  color: #fff;
+  font-size: 28rpx;
+
+  // color: rgba(255, 255, 255, 0.6);
 }
 .code-button {
   color: #fb494a;
-}
-.form-label {
-  display: inline-block;
-  font-size: 28rpx;
-  letter-spacing: 0;
-  color: #3d3d3d;
-  width: 120rpx;
-  margin-right: 10rpx;
 }
 </style>
