@@ -1,237 +1,174 @@
-<!--
- * @Author: 王硕
- * @Date: 2025-10-15 14:04:12
- * @LastEditors: 王硕
- * @LastEditTime: 2025-10-25 15:06:25
- * @Description: 
--->
-<script setup>
-import { ref, onMounted } from "vue";
-
-// 当前位置坐标
-const currentLatitude = ref(39.9042);
-const currentLongitude = ref(116.4074);
-
-// 获取当前位置
-const getCurrentLocation = () => {
-  uni.getLocation({
-    type: "gcj02", // 返回可以用于uni.openLocation的经纬度
-    success: (res) => {
-      console.log("获取位置成功:", res);
-      currentLatitude.value = res.latitude;
-      currentLongitude.value = res.longitude;
-
-      // 更新当前位置标记
-      updateCurrentLocationMarker(res.latitude, res.longitude);
-
-      uni.showToast({
-        title: "位置获取成功",
-        icon: "success",
-      });
-    },
-    fail: (err) => {
-      console.error("获取位置失败:", err);
-      uni.showToast({
-        title: "位置获取失败",
-        icon: "none",
-      });
-    },
-  });
-};
-
-// 更新当前位置标记
-const updateCurrentLocationMarker = (lat, lng) => {
-  // 查找或创建当前位置标记
-  const currentLocationMarker = markers.value.find((m) => m.id === 0);
-  if (currentLocationMarker) {
-    // 更新现有标记位置
-    currentLocationMarker.latitude = lat;
-    currentLocationMarker.longitude = lng;
-  } else {
-    // 添加新标记
-    markers.value.unshift({
-      id: 0,
-      latitude: lat,
-      longitude: lng,
-      iconPath: "@/static/logo.png",
-      width: 40,
-      height: 40,
-      title: "我的位置",
-      anchor: { x: 0.5, y: 1 },
-      callout: {
-        content: `当前位置\n纬度: ${lat.toFixed(6)}\n经度: ${lng.toFixed(6)}`,
-        color: "#FFFFFF",
-        fontSize: 12,
-        borderRadius: 5,
-        bgColor: "#FF6B6B",
-        padding: 5,
-        display: "ALWAYS",
-      },
-    });
-  }
-};
-
-// 组件挂载时获取位置
-onMounted(() => {
-  getCurrentLocation();
-});
-
-// 标记点击事件
-const onMarkerTap = (e) => {
-  console.log("标记被点击:", e.detail.markerId);
-  // 可以根据markerId执行不同的操作
-  switch (e.detail.markerId) {
-    case 1:
-      console.log("点击了总部位置");
-      break;
-    case 2:
-      console.log("点击了分部位置");
-      break;
-    case 3:
-      console.log("点击了重要地点");
-      break;
-    case 4:
-      console.log("点击了普通标记");
-      break;
-  }
-};
-
-// 气泡点击事件
-const onCalloutTap = (e) => {
-  console.log("气泡被点击:", e.detail.markerId);
-  uni.showToast({
-    title: `查看标记 ${e.detail.markerId} 详情`,
-    icon: "none",
-  });
-};
-const polygons = [
-  {
-    points: [
-      { latitude: 39.91, longitude: 116.395 },
-      { latitude: 39.915, longitude: 116.4 },
-      { latitude: 39.91, longitude: 116.405 },
-      { latitude: 39.905, longitude: 116.4 },
-    ],
-    strokeColor: "#FF0000",
-    strokeWidth: 3,
-  },
-  {
-    points: [
-      { latitude: 39.9, longitude: 116.385 },
-      { latitude: 39.905, longitude: 116.39 },
-      { latitude: 39.9, longitude: 116.395 },
-      { latitude: 39.895, longitude: 116.39 },
-    ],
-    strokeColor: "#00FF00",
-    strokeWidth: 3,
-  },
-];
-
-// 标记数组 - 使用ref使其响应式
-const markers = ref([
-  {
-    id: 1,
-    latitude: 39.909,
-    longitude: 116.39742,
-    iconPath: "../../../static/logo.png",
-    width: 30,
-    height: 30,
-    title: "总部位置",
-    anchor: { x: 0.5, y: 1 },
-  },
-  {
-    id: 2,
-    latitude: 39.9,
-    longitude: 116.39,
-    iconPath: "@/static/logo.png",
-    width: 25,
-    height: 25,
-    title: "分部位置",
-    anchor: { x: 0.5, y: 1 },
-  },
-  {
-    id: 3,
-    latitude: 39.915,
-    longitude: 116.405,
-    iconPath: "@/static/logo.png",
-    width: 35,
-    height: 35,
-    title: "重要地点",
-    anchor: { x: 0.5, y: 1 },
-    callout: {
-      content: "这是重要地点\n点击查看详情",
-      color: "#FFFFFF",
-      fontSize: 14,
-      borderRadius: 5,
-      bgColor: "#007AFF",
-      padding: 5,
-      display: "ALWAYS",
-    },
-  },
-  {
-    id: 4,
-    latitude: 39.895,
-    longitude: 116.385,
-    iconPath: "@/static/logo.png",
-    width: 20,
-    height: 20,
-    title: "普通标记",
-    anchor: { x: 0.5, y: 0.5 },
-    alpha: 0.8,
-  },
-]);
-</script>
-
 <template>
-  <view class="map__layout">
-    <map
-      style="width: 100vw; height: 100vh"
-      :latitude="currentLatitude"
-      :longitude="currentLongitude"
-      :markers="markers"
-      :polygons="polygons"
-      show-location
-      @markertap="onMarkerTap"
-      @callouttap="onCalloutTap"
-    >
-    </map>
-
-    <!-- 获取位置按钮 -->
-    <view class="location-btn" @click="getCurrentLocation">
-      <text class="location-btn-text">📍 获取位置</text>
-    </view>
-
-    <view class="map__marker">
-      <view class="map__marker__content">
-        <view class="map__marker__title">当前位置</view>
-      </view>
+  <view class="map-container">
+    <!-- 地图容器 -->
+    <view id="mapContainer" class="map"></view>
+    <!-- 操作按钮 -->
+    <view class="btn-group">
+      <button @click="addMarker">添加标记</button>
+      <button @click="clearMarkers">清除标记</button>
     </view>
   </view>
 </template>
 
-<style lang="scss" scoped>
-.map__layout {
+<script setup>
+import { onMounted, ref } from 'vue';
+
+// 地图实例和标记数组
+const map = ref(null);
+const markers = ref([]); // 存储所有标记实例
+const userMarker = ref(null); // 单独存储本人位置标记
+
+// 预设4个不同位置的经纬度（保持不变）
+const presetPositions = [
+  [116.397428, 39.90923],    // 位置1（北京中心）
+  [116.410783, 39.911816],    // 位置2（稍偏东）
+  [116.385457, 39.918223],    // 位置3（稍偏西）
+  [116.397428, 39.898567]     // 位置4（稍偏南）
+];
+
+// 初始化地图
+const initMap = () => {
+  map.value = new AMap.Map('mapContainer', {
+    zoom: 13,
+    center: [116.397428, 39.90923] // 初始中心点
+  });
+
+  // 获取当前定位并添加本人位置标记
+  map.value.plugin('AMap.Geolocation', () => {
+    const geolocation = new AMap.Geolocation({
+      enableHighAccuracy: true,
+      timeout: 10000
+    });
+    map.value.addControl(geolocation);
+    geolocation.getCurrentPosition((status, result) => {
+      if (status === 'complete') {
+        map.value.setCenter(result.position);
+        // 添加本人位置标记（特殊样式）
+        addUserPositionMarker(result.position);
+      }
+      // 添加预设的4个标记（保持原有逻辑）
+      addPresetMarkers();
+    });
+  });
+};
+
+// 添加本人位置标记（特殊样式：蓝色底+头像阴影）
+const addUserPositionMarker = (position) => {
+  userMarker.value = new AMap.Marker({
+    position: position,
+    title: '我的位置',
+    content: `
+      <div style="position: relative; width: 54px; height: 65px;">
+        <!-- 蓝色圆形背景 -->
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: #409EFF; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(64, 158, 255, 0.8);">
+          <!-- 本人头像（带阴影） -->
+          <img src="/static/map/avatar1.svg" style="width: 48px; height: 48px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3);" />
+        </div>
+        <!-- 底部蓝色尖角 -->
+        <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 11px solid #409EFF;"></div>
+        <!-- 中心定位点 -->
+        <div style="position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 10px; height: 10px; border-radius: 50%; background: #409EFF; border: 2px solid white;"></div>
+      </div>
+    `,
+    anchor: 'bottom-center'
+  });
+
+  userMarker.value.addTo(map.value);
+  markers.value.push(userMarker.value); // 加入标记数组统一管理
+};
+
+// 添加预设的4个标记（保持原有样式不变）
+const addPresetMarkers = () => {
+  if (!map.value) return;
+  
+  presetPositions.forEach((position, index) => {
+    const avatarNum = index + 1; // 头像序号1-4
+    const marker = new AMap.Marker({
+      position: position,
+      title: `标记 ${avatarNum}`,
+      content: `
+        <div style="position: relative; width: 54px; height: 60px;">
+          <!-- 黑色圆形背景 -->
+          <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
+            <img src="/static/map/avatar${avatarNum}.svg" style="width: 48px; height: 48px; border-radius: 50%;" />
+          </div>
+          <!-- 底部黑色尖角 -->
+          <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;"></div>
+        </div>
+      `,
+      anchor: 'bottom-center'
+    });
+
+    marker.addTo(map.value);
+    markers.value.push(marker);
+  });
+};
+
+// 添加标记（保持原有逻辑）
+const addMarker = () => {
+  if (!map.value) return;
+
+  const center = map.value.getCenter();
+  const marker = new AMap.Marker({
+    position: center,
+    title: `标记 ${markers.value.length + 1}`,
+    content: `
+     <div style="position: relative; width: 54px; height: 60px;">
+        <!-- 黑色圆形背景 -->
+        <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
+          <img src="/static/map/avatar1.svg" style="width: 48px; height: 48px; border-radius: 50%;" />
+        </div>
+        <!-- 底部尖角 -->
+        <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;"></div>
+      </div>
+    `,
+    anchor: 'bottom-center'
+  });
+
+  marker.addTo(map.value);
+  markers.value.push(marker);
+};
+
+// 清除所有标记（保持原有逻辑）
+const clearMarkers = () => {
+  markers.value.forEach(marker => marker.remove());
+  markers.value = [];
+  userMarker.value = null; // 重置本人位置标记
+};
+
+onMounted(() => {
+  initMap();
+});
+</script>
+
+<style scoped>
+/* 保持原有样式不变 */
+.map-container {
+  width: 100%;
+  height: 100vh;
   position: relative;
 }
 
-.location-btn {
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.btn-group {
   position: absolute;
-  bottom: 50px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 25px;
-  padding: 10px 15px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  bottom: 30rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20rpx;
+  z-index: 10;
+}
 
-  &-text {
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
+button {
+  padding: 15rpx 30rpx;
+  background-color: #007aff;
+  color: white;
+  border-radius: 8rpx;
 }
 </style>
