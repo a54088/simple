@@ -2,6 +2,7 @@
    <view class="map-logo-menu">
       <!-- 固定展开的菜单容器 -->
       <view class="logo-menu-container">
+         <image src="@/static/map/global.webp" class="logo-global" mode="widthFix"></image>
          <view class="logo-item" v-for="(item, index) in logoItems" :key="index" @click="handleLogoClick(item)">
             <image :src="item.logo" class="logo-img" mode="widthFix" :alt="item.name"></image>
          </view>
@@ -74,6 +75,12 @@ const handleLogoClick = (item) => {
 /* 点击反馈 */
 .logo-item:active {
    background-color: #f0f0f0;
+}
+
+.logo-global {
+   width: 96rpx;
+   height: 96rpx;
+   margin-bottom: 30rpx;
 }
 
 /* Logo图片样式 */
