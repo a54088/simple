@@ -10,23 +10,23 @@ export function useMap(containerId) {
   const presetPositions = [
     {
       id: 1,
-      latitude: 116.397428,
-      longitude: 39.90923,
+      longitude: 116.397428,
+      latitude: 39.90923,
     },
     {
       id: 2,
-      latitude: 116.410783,
-      longitude: 39.911816,
+      longitude: 116.410783,
+      latitude: 39.911816,
     },
     {
       id: 3,
-      latitude: 116.385457,
-      longitude: 39.918223,
+      longitude: 116.385457,
+      latitude: 39.918223,
     },
     {
       id: 4,
-      latitude: 116.397428,
-      longitude: 39.898567,
+      longitude: 116.397428,
+      latitude: 39.898567,
     }
   ];
 
@@ -67,8 +67,8 @@ export function useMap(containerId) {
           <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
             <img src="/static/map/avatar1.webp" style="width: 48px; height: 48px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3);" />
           </div>
-                <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;z-index:2"></div>
-            <img style="position: absolute;width: 90px;height: 68px;top: 27px;left: 11px;" src="/static/map/avatarBack.webp"/>
+          <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;z-index:2"></div>
+          <img style="position: absolute;width: 90px;height: 68px;top: 27px;left: 11px;" src="/static/map/avatarBack.webp"/>
         </div>
       `,
       anchor: 'bottom-center'
@@ -82,7 +82,7 @@ export function useMap(containerId) {
   const addPresetMarkers = () => {
     if (!map.value) return;
     presetPositions.forEach((item) => {
-      addMarker(item);   
+      addMarker(item); // addMarker内部已完成添加和存储
     });
   };
 
@@ -90,24 +90,23 @@ export function useMap(containerId) {
   const addMarker = (item) => {
     if (!map.value) return;
     const marker = new AMap.Marker({
-      position: [item.latitude, item.longitude],
+      position: [item.longitude, item.latitude],
       title: `标记 ${markers.value.length + 1}`,
       content: `
-         <div style="position: relative; width: 54px; height: 60px;">
-            <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
-              <img src="/static/map/avatar${item.id}.webp" style="width: 48px; height: 48px; border-radius: 50%;" />
-            </div>
-            <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;"></div>
+        <div style="position: relative; width: 54px; height: 60px;">
+          <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
+            <img src="/static/map/avatar${item.id}.webp" style="width: 48px; height: 48px; border-radius: 50%;" />
           </div>
+          <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;"></div>
+        </div>
       `,
       anchor: 'bottom-center'
     });
 
-    marker.addTo(map.value);
-    markers.value.push(marker);
+    marker.addTo(map.value); // 已添加到地图
+    markers.value.push(marker); // 已存入数组
   };
 
-  // 清除所有标记
   const clearMarkers = () => {
     markers.value.forEach(marker => marker.remove());
     markers.value = [];
