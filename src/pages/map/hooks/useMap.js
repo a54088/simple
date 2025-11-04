@@ -1,127 +1,188 @@
-import { ref, onMounted } from 'vue';
+// hooks/useMap.js
+import { ref } from 'vue';
 
-export function useMap(containerId) {
-  // 地图实例和标记管理
+export function useMap() {
+  // 地图实例
   const map = ref(null);
-  const markers = ref([]);
-  const userMarker = ref(null);
-
-  // 预设位置
-  const presetPositions = [
+  // 当前位置坐标
+  const currentLatitude = ref(39.9042);
+  const currentLongitude = ref(116.4074);
+  // 标记数组
+  const markers = ref([
     {
       id: 1,
-      longitude: 116.397428,
-      latitude: 39.90923,
+      latitude: 39.909,
+      longitude: 116.39742,
+      iconPath: "/static/map/avatar1.webp",
+      width: 30,
+      height: 30,
+      title: "总部位置",
+      anchor: { x: 0.5, y: 1 },
     },
     {
       id: 2,
-      longitude: 116.410783,
-      latitude: 39.911816,
+      latitude: 39.9,
+      longitude: 116.39,
+      iconPath: "/static/map/avatar2.webp",
+      width: 25,
+      height: 25,
+      title: "分部位置",
+      anchor: { x: 0.5, y: 1 },
     },
     {
       id: 3,
-      longitude: 116.385457,
-      latitude: 39.918223,
+      latitude: 39.915,
+      longitude: 116.405,
+      iconPath: "/static/map/avatar3.webp",
+      width: 35,
+      height: 35,
+      title: "重要地点",
+      anchor: { x: 0.5, y: 1 },
+      callout: {
+        content: "这是重要地点\n点击查看详情",
+        color: "#FFFFFF",
+        fontSize: 14,
+        borderRadius: 5,
+        bgColor: "#007AFF",
+        padding: 5,
+        display: "ALWAYS",
+      },
     },
     {
       id: 4,
-      longitude: 116.397428,
-      latitude: 39.898567,
+      latitude: 39.895,
+      longitude: 116.385,
+      iconPath: "/static/map/avatar4.webp",
+      width: 20,
+      height: 20,
+      title: "普通标记",
+      anchor: { x: 0.5, y: 0.5 },
+      alpha: 0.8,
+    },
+  ]);
+  // 用户标记
+  const userMarker = ref(null);
+
+  /**
+   * 初始化地图
+   * @param {Object} mapInstance 地图组件实例
+   */
+  const initMap = (mapInstance) => {
+    map.value = mapInstance;
+    console.log('地图初始化');
+    
+    
+    // 获取定位
+    uni.getLocation({
+      type: "gcj02",
+      success: (res) => {
+        console.log("获取位置成功:", res);
+        currentLatitude.value = res.latitude;
+        currentLongitude.value = res.longitude;
+        updateCurrentLocationMarker(res.latitude, res.longitude);
+        
+        uni.showToast({
+          title: "位置获取成功",
+          icon: "success",
+        });
+      },
+      fail: (err) => {
+        console.error("获取位置失败:", err);
+        addUserMarker(39.90923, 116.397428);
+        
+        uni.showToast({
+          title: "位置获取失败，使用默认位置",
+          icon: "none",
+        });
+      }
+    });
+  };
+
+  /**
+   * 更新当前位置标记
+   */
+  const updateCurrentLocationMarker = (lat, lng) => {
+    const currentLocationMarker = markers.value.find(m => m.id === 0);
+    if (currentLocationMarker) {
+      currentLocationMarker.latitude = lat;
+      currentLocationMarker.longitude = lng;
+    } else {
+      markers.value.unshift({
+        id: 0,
+        latitude: lat,
+        longitude: lng,
+        iconPath: "@/static/logo.png",
+        width: 40,
+        height: 40,
+        title: "我的位置",
+        anchor: { x: 0.5, y: 1 },
+        callout: {
+          content: `当前位置\n纬度: ${lat.toFixed(6)}\n经度: ${lng.toFixed(6)}`,
+          color: "#FFFFFF",
+          fontSize: 12,
+          borderRadius: 5,
+          bgColor: "#FF6B6B",
+          padding: 5,
+          display: "ALWAYS",
+        },
+      });
     }
-  ];
-
-  // 初始化地图
-  const initMap = () => {
-    map.value = new AMap.Map(containerId, {
-      zoom: 13,
-      center: [116.397428, 39.90923]
-    });
-
-    // 获取定位并添加标记
-    map.value.plugin('AMap.Geolocation', () => {
-      const geolocation = new AMap.Geolocation({
-        enableHighAccuracy: true,// 是否使用高精度定位，默认：true
-        timeout: 10000,// 设置定位超时时间，默认：无穷大
-        offset: [10, 20],  // 定位按钮的停靠位置的偏移量
-        zoomToAccuracy: true,  //  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-        position: 'RB' //  定位按钮的排放位置,  RB表示右下
-      });
-      map.value.addControl(geolocation);
-      geolocation.getCurrentPosition((status, result) => {
-        if (status === 'complete') {
-          map.value.setCenter(result.position);
-          addUserPositionMarker(result.position);
-        }
-        addPresetMarkers();
-      });
-    });
   };
 
-  // 添加用户标记
-  const addUserPositionMarker = (position) => {
-    userMarker.value = new AMap.Marker({
-      position: position,
-      title: '我的位置',
-      content: `
-        <div style="position: relative; width: 54px; height: 65px;">
-          <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
-            <img src="/static/map/avatar1.webp" style="width: 48px; height: 48px; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.3);" />
-          </div>
-          <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;z-index:2"></div>
-          <img style="position: absolute;width: 90px;height: 68px;top: 27px;left: 11px;" src="/static/map/avatarBack.webp"/>
-        </div>
-      `,
-      anchor: 'bottom-center'
-    });
-
-    userMarker.value.addTo(map.value);
-    markers.value.push(userMarker.value);
+  /**
+   * 添加默认用户标记（定位失败时）
+   */
+  const addUserMarker = (lat, lng) => {
+    currentLatitude.value = lat;
+    currentLongitude.value = lng;
+    updateCurrentLocationMarker(lat, lng);
   };
 
-  // 添加预设标记
-  const addPresetMarkers = () => {
-    if (!map.value) return;
-    presetPositions.forEach((item) => {
-      addMarker(item); // addMarker内部已完成添加和存储
-    });
-  };
-
-  // 添加新标记
+  /**
+   * 添加普通标记
+   */
   const addMarker = (item) => {
-    if (!map.value) return;
-    const marker = new AMap.Marker({
-      position: [item.longitude, item.latitude],
-      title: `标记 ${markers.value.length + 1}`,
-      content: `
-        <div style="position: relative; width: 54px; height: 60px;">
-          <div style="width: 54px; height: 54px; border-radius: 50%; background: #000; display: flex; align-items: center; justify-content: center;">
-            <img src="/static/map/avatar${item.id}.webp" style="width: 48px; height: 48px; border-radius: 50%;" />
-          </div>
-          <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #000;"></div>
-        </div>
-      `,
-      anchor: 'bottom-center'
-    });
-
-    marker.addTo(map.value); // 已添加到地图
-    markers.value.push(marker); // 已存入数组
+    console.log('添加普通标记', item);
+    const markerData = {
+      id: item.id,
+      longitude: item.longitude,
+      latitude: item.latitude,
+      iconPath: `/static/map/avatar${item.id}.webp`,
+      width: 48,
+      height: 48,
+      anchor: { x: 0.5, y: 1 },
+      zIndex: 50,
+      title: `标记 ${item.id}`
+    };
+    markers.value.push(markerData);
+    return markerData.id;
   };
 
+  /**
+   * 清除所有标记
+   */
   const clearMarkers = () => {
-    markers.value.forEach(marker => marker.remove());
+    console.log('清除所有标记');
+    if (!map.value) return;
+
+    // 调用插件的删除方法
+    markers.value.forEach(marker => {
+      if (marker.id) map.value.removeMarker(marker.id);
+    });
+
+    // 清空数组
     markers.value = [];
     userMarker.value = null;
   };
-
-  onMounted(() => {
-    initMap();
-  });
 
   return {
     map,
     markers,
     userMarker,
+    currentLatitude,
+    currentLongitude,
     addMarker,
-    clearMarkers
+    clearMarkers,
+    initMap
   };
 }

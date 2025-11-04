@@ -1,24 +1,24 @@
 <template>
-   <view class="bottom_nav">
-      <view class="nav_container">
-         <view class="nav_container_logo">
-            <image src="/static/map/logo.webp" class="logo" mode="widthFix"></image>
-         </view>
+   <cover-view class="bottom_nav">
+      <cover-view class="nav_container">
+         <cover-view class="nav_container_logo">
+            <cover-image src="/static/map/logo.webp" class="logo" mode="widthFix"></cover-image>
+         </cover-view>
          <!-- 绑定点击事件和动态active类 -->
-         <view 
+         <cover-view 
             class="nav_container_item" 
             :class="{ active: currentActive === index }" 
             v-for="(item, index) in navItems" 
             :key="index"
             @click="handleItemClick(index)"
          >
-            <view class="icon_wrapper">
-               <image :src="item.icon" class="nav_icon" mode="widthFix"></image>
-            </view>
-            <view class="nav_label" v-if="item.label" style="color: #fff;font-size: 24rpx;">{{ item.label }}</view>
-         </view>
-      </view>
-   </view>
+            <cover-view class="icon_wrapper">
+               <cover-image :src="item.icon" class="nav_icon" mode="widthFix"></cover-image>
+            </cover-view>
+            <cover-view class="nav_label" v-if="item.label">{{ item.label }}</cover-view>
+         </cover-view>
+      </cover-view>
+   </cover-view>
 </template>
 
 <script setup>
@@ -61,7 +61,7 @@ const handleItemClick = (index) => {
    bottom: 0;
    left: 0;
    right: 0;
-   z-index: 10;
+   z-index: 1000;
    padding-bottom: 33rpx;
    box-sizing: border-box;
 
@@ -113,6 +113,10 @@ const handleItemClick = (index) => {
             .nav_icon {
                width: 44rpx;
                height: 38rpx;
+            }
+             .nav_label{
+               color: #fff !important;
+               font-size: 24rpx;
             }
          }
       }

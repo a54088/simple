@@ -1,13 +1,13 @@
 <template>
-   <view class="map-logo-menu">
+   <cover-view class="map-logo-menu">
       <!-- 固定展开的菜单容器 -->
-      <view class="logo-menu-container">
-         <image src="@/static/map/global.webp" class="logo-global" mode="widthFix"></image>
-         <view class="logo-item" v-for="(item, index) in logoItems" :key="index" @click="handleLogoClick(item)">
-            <image :src="item.logo" class="logo-img" mode="widthFix" :alt="item.name"></image>
-         </view>
-      </view>
-   </view>
+      <cover-view class="logo-menu-container">
+         <cover-image src="@/static/map/global.webp" class="logo-global" mode="widthFix"></cover-image>
+         <cover-view class="logo-item" v-for="(item, index) in logoItems" :key="index" @click="handleLogoClick(item)">
+            <cover-image :src="item.logo" class="logo-img" mode="widthFix" :alt="item.name"></cover-image>
+         </cover-view>
+      </cover-view>
+   </cover-view>
 </template>
 
 <script setup>
@@ -47,7 +47,7 @@ const handleLogoClick = (item) => {
    position: absolute;
    top: 40rpx;
    right: 24rpx;
-   z-index: 20;
+   z-index: 1000;
    /* 确保在其他元素之上 */
 }
 
@@ -67,6 +67,7 @@ const handleLogoClick = (item) => {
    justify-content: center;
    border-radius: 8rpx;
    padding: 5rpx;
+   box-sizing: border-box;
    border-radius: 25rpx;
    background: rgba(0, 0, 0, 0.5);
    margin-bottom: 30rpx;
