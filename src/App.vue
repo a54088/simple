@@ -30,6 +30,7 @@ onHide(() => {
 });
 </script>
 <style lang="scss">
+@import '@zebra-ui/swiper/index.scss';
 @import "@/uni.scss";
 @import "@/shared/style/reset.scss";
 @import "@/shared/style/common.scss";
