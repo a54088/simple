@@ -33,7 +33,6 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
 
     actions: {
         setCurrentTabIndex(index) {
-            debugger
             // 获取当前页面栈
             const pages = getCurrentPages();
             // 获取当前页面实例（最后一个元素就是当前页面）
