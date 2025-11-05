@@ -5,10 +5,13 @@
  * @LastEditTime: 2025-10-27 13:16:38
  * @Description: 
 -->
+  <template>
+    <CustomTabbar />
+  </template>
 <script setup>
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
 import checkUpdate from "@/uni_modules/uni-upgrade-center-app/utils/check-update";
-
+import CustomTabbar from '@/components/custom-tabbar/index.vue'
 onLaunch(() => {
   console.log("App Launch");
 });

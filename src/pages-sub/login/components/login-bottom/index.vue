@@ -2,15 +2,22 @@
  * @Author: 王硕
  * @Date: 2025-07-28 10:24:24
  * @LastEditors: 王硕
- * @LastEditTime: 2025-07-28 10:26:37
+ * @LastEditTime: 2025-10-28 16:07:29
  * @Description: 
 -->
-<script setup></script>
+<script setup>
+import { inject } from "vue";
+
+const vm = inject("loginVM");
+
+const onToForgetPassword = () => {
+  vm.formType = "forget_password";
+};
+</script>
 
 <template>
-  <view class="login-bottom__layout">
-    <text>忘记密码</text>
-    <text>验证码登录</text>
+  <view class="login-bottom__layout" @tap="onToForgetPassword">
+    <text>忘记密码?</text>
   </view>
 </template>
 
@@ -20,6 +27,6 @@
   display: flex;
   justify-content: space-between;
   font-size: 24rpx;
-  color: #999999;
+  color: rgba(255, 255, 255, 0.4);
 }
 </style>

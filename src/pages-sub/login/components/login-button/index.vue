@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-06-11 10:16:59
  * @LastEditors: 王硕
- * @LastEditTime: 2025-07-28 11:10:36
+ * @LastEditTime: 2025-10-28 15:45:51
  * @Description: 
 -->
 <script setup lang="js">
@@ -37,16 +37,20 @@ const onClick = () => {
 
 <style lang="scss" scoped>
 .login_button__layout--agreement {
-  background-color: #fb494a !important;
+  background-color: #fff !important;
+  color: #000000 !important;
 }
 .login_button__layout {
   width: 100%;
-  height: 80rpx;
+  height: 100rpx;
   background: #c9c9c9;
-  border-radius: 10rpx;
+  border-radius: 22rpx;
   font-size: 32rpx;
-  font-weight: 500;
-  color: #ffffff;
-  line-height: 80rpx;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 100rpx;
+
+  background: rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(60px);
 }
 </style>

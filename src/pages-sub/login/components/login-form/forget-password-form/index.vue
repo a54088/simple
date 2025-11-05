@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-07-26 16:04:33
  * @LastEditors: 王硕
- * @LastEditTime: 2025-10-28 16:11:56
+ * @LastEditTime: 2025-10-28 16:11:50
  * @Description: 
 -->
 .
@@ -11,13 +11,13 @@ import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
 
-const form = computed(() => vm.registerForm);
+const form = computed(() => vm.forgetPasswordForm);
 
-const registerFormRef = ref(null);
+const forgetPasswordFormRef = ref(null);
 
 const codeButtonText = ref("获取验证码");
 
-vm.registerFormRef = registerFormRef;
+vm.forgetPasswordFormRef = forgetPasswordFormRef;
 
 const rules = {
   mobile: {
@@ -85,7 +85,7 @@ const codeChange = (text) => {
     :model="form"
     :rules="rules"
     :borderBottom="false"
-    ref="registerFormRef"
+    ref="forgetPasswordFormRef"
   >
     <u-form-item prop="mobile">
       <view class="form-item--init">
