@@ -33,6 +33,44 @@
   ],
   "subPackages": [
     {
+      "root": "pages-im",
+      "name": "pagesIm",
+      "pages": [
+        {
+          "path": "index",
+          "style": {
+            "animationType": "fade-in",
+            "animationDuration": 300,
+            "navigationBarTitleText": "IM",
+            "navigationStyle": "custom"
+          }
+        },
+        // {
+        //   "path": "chat-list/index",
+        //   "style": {
+        //     "animationType": "fade-in",
+        //     "animationDuration": 300,
+        //     "navigationBarTitleText": "聊天列表",
+        //     "navigationStyle": "custom"
+        //   }
+        // },
+        // {
+        //   "path": "chat/index",
+        //   "style": {
+        //     "navigationBarTitleText": "聊天",
+        //     "navigationStyle": "custom"
+        //   }
+        // },
+        // {
+        //   "path": "contacts/index",
+        //   "style": {
+        //     "navigationBarTitleText": "联系人",
+        //     "navigationStyle": "custom"
+        //   }
+        // },
+      ]
+    },
+    {
       "root": "devTools/page",
       "name": "devToolsPage",
       "pages": [
