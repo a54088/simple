@@ -13,7 +13,7 @@
       <cover-view class="popup-header">
         <cover-view>
           <cover-view class="popup-header-icons">
-            <cover-view class="popup-header-icons-item"> <cover-image src="/static/map/icon-down.png" mode="widthFix" class="icon"></cover-image></cover-view>
+            <cover-view class="popup-header-icons-item" @click="handleClose"> <cover-image src="/static/map/icon-down.png" mode="widthFix" class="icon"></cover-image></cover-view>
             <cover-view class="popup-header-icons-item"> <cover-image src="/static/map/icon-search.png" mode="widthFix" class="icon"></cover-image></cover-view>
           </cover-view>
           <cover-view>
@@ -29,23 +29,18 @@
         <cover-image src="/static/map/userCommunication.png" mode="widthFix" class="avatar-imgs"></cover-image>
         <!-- 操作按钮 -->
         <cover-view class="action-btn" @click="handleAction">
-           添加好友
+         <cover-view style="font-size: 40rpx;margin-right: 10rpx;">+</cover-view> <cover-view class="white">添加好友</cover-view> 
         </cover-view>
       </cover-view>
-
-
-
-      <!-- 关闭按钮 -->
-      <!-- <cover-view class="close-btn" @click="handleClose">
-        <text class="close-icon">×</text>
-      </cover-view> -->
+      <MapFooter></MapFooter>
     </cover-view>
 
   </cover-view>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+import MapFooter from '../MapFooter/index.vue'
 
 // 定义组件属性
 const props = defineProps({
@@ -70,6 +65,18 @@ const props = defineProps({
     default: () => []
   },
 });
+
+const emit = defineEmits(['close', 'action']);
+
+// 关闭弹框
+const handleClose = () => {
+  emit('close');
+};
+
+// 操作按钮点击事件
+const handleAction = () => {
+  emit('action');
+};
 
 // import { computed } from 'vue';
 // // 定义每个头像的位置、尺寸配置（可根据设计调整）
@@ -147,9 +154,11 @@ const props = defineProps({
         justify-content: center;
         font-size: 24rpx;
         margin-right: 30rpx;
-        .icon{
+
+        .icon {
           width: 32rpx;
           height: 32rpx;
+          -webkit-text-fill-color: #ffffff;
         }
       }
     }
@@ -160,7 +169,8 @@ const props = defineProps({
       font-weight: 600;
       color: #ffffff;
       display: block;
-      -webkit-text-fill-color: #ffffff; /* 针对 WebKit 内核的颜色强制（title 用） */
+      -webkit-text-fill-color: #ffffff;
+      /* 针对 WebKit 内核的颜色强制（title 用） */
     }
 
     .desc {
@@ -168,7 +178,8 @@ const props = defineProps({
       color: #DCDCDC;
       display: block;
       margin-top: 10rpx;
-      -webkit-text-fill-color: #DCDCDC; /* desc 用 */
+      -webkit-text-fill-color: #DCDCDC;
+      /* desc 用 */
 
     }
 
@@ -185,7 +196,7 @@ const props = defineProps({
     flex-direction: column;
     align-items: center;
     gap: 20rpx;
-    margin-bottom: 40rpx;
+    margin-bottom: 240rpx;
     border-radius: 20rpx;
     overflow: hidden;
     border: 2rpx solid #3D3D3D;
@@ -206,14 +217,17 @@ const props = defineProps({
       border-radius: 168rpx;
       background: #39393B;
       color: #fff;
-      -webkit-text-fill-color: #fff; 
+      -webkit-text-fill-color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32rpx;
     }
   }
-
+  .white{
+       color: #fff;
+      -webkit-text-fill-color: #fff;
+  }
 
 
 

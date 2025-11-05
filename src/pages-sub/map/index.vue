@@ -74,6 +74,12 @@ const handleMarkerTap = (e) => {
   
 }
 
+
+// 添加好友
+const handleAddFriend = (e) => {
+  
+}
+
 onMounted(() => {
   // 等待组件渲染完成后再获取地图实例
   nextTick(() => {

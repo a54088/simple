@@ -25,8 +25,8 @@ const props = defineProps({
       type: Array,
       default: () => [
          { icon: '/static/map/toolbar-chat.webp', label: '聊天' },
-         { icon: '/static/map/toolbar-figure.webp', label: '形象' },
-         { icon: '/static/map/toolbar-find.webp', label: '发现' }
+         { icon: '/static/map/toolbar-eye.webp', label: '圈子' },
+         { icon: '/static/map/toolbar-contacts.webp', label: '通讯录' }
       ]
    },
    // 默认选中项索引，支持通过prop传入

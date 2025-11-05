@@ -30,7 +30,7 @@
             "navigationBarTitleText": "IM",
             "navigationStyle": "custom"
           }
-        },
+        }
         // {
         //   "path": "chat-list/index",
         //   "style": {
