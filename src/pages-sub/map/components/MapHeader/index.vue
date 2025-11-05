@@ -90,6 +90,7 @@ defineProps({
     &_item {
       font-size: 32rpx;
       color: #fff;
+      margin-right: 30rpx;
     }
   }
 }
