@@ -70,6 +70,7 @@ defineProps({
   background: linear-gradient(180deg, #181818 0%, rgba(24, 24, 24, 0) 100%);
   width: 100%;
   height: 100%;
+  box-sizing: border-box;
 
   .title {
     font-size: 50rpx;

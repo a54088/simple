@@ -14,8 +14,8 @@ export function useMap() {
       latitude: 39.909,
       longitude: 116.39742,
       iconPath: "/static/map/avatar1.webp",
-      width: 30,
-      height: 30,
+      width: 48,
+      height: 48,
       title: "总部位置",
       anchor: { x: 0.5, y: 1 },
     },
@@ -24,8 +24,8 @@ export function useMap() {
       latitude: 39.9,
       longitude: 116.39,
       iconPath: "/static/map/avatar2.webp",
-      width: 25,
-      height: 25,
+      width: 48,
+      height: 48,
       title: "分部位置",
       anchor: { x: 0.5, y: 1 },
     },
@@ -34,8 +34,8 @@ export function useMap() {
       latitude: 39.915,
       longitude: 116.405,
       iconPath: "/static/map/avatar3.webp",
-      width: 35,
-      height: 35,
+      width: 48,
+      height: 48,
       title: "重要地点",
       anchor: { x: 0.5, y: 1 },
       callout: {
@@ -53,15 +53,13 @@ export function useMap() {
       latitude: 39.895,
       longitude: 116.385,
       iconPath: "/static/map/avatar4.webp",
-      width: 20,
-      height: 20,
+      width: 48,
+      height: 48,
       title: "普通标记",
       anchor: { x: 0.5, y: 0.5 },
       alpha: 0.8,
     },
   ]);
-  // 用户标记
-  const userMarker = ref(null);
 
   /**
    * 初始化地图
@@ -80,16 +78,19 @@ export function useMap() {
         currentLatitude.value = res.latitude;
         currentLongitude.value = res.longitude;
         updateCurrentLocationMarker(res.latitude, res.longitude);
+         
+        // 移动地图中心到当前位置
+        map.value.moveToLocation({
+          latitude: res.latitude,
+          longitude: res.longitude
+        });
         
         uni.showToast({
           title: "位置获取成功",
           icon: "success",
         });
       },
-      fail: (err) => {
-        console.error("获取位置失败:", err);
-        addUserMarker(39.90923, 116.397428);
-        
+      fail: (err) => {    
         uni.showToast({
           title: "位置获取失败，使用默认位置",
           icon: "none",
@@ -111,7 +112,7 @@ export function useMap() {
         id: 0,
         latitude: lat,
         longitude: lng,
-        iconPath: "@/static/logo.png",
+        iconPath: "/static/map/avatar1.webp",
         width: 40,
         height: 40,
         title: "我的位置",
@@ -172,13 +173,11 @@ export function useMap() {
 
     // 清空数组
     markers.value = [];
-    userMarker.value = null;
   };
 
   return {
     map,
     markers,
-    userMarker,
     currentLatitude,
     currentLongitude,
     addMarker,

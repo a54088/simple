@@ -5,13 +5,8 @@
             <cover-image src="/static/map/logo.webp" class="logo" mode="widthFix"></cover-image>
          </cover-view>
          <!-- 绑定点击事件和动态active类 -->
-         <cover-view 
-            class="nav_container_item" 
-            :class="{ active: currentActive === index }" 
-            v-for="(item, index) in navItems" 
-            :key="index"
-            @click="handleItemClick(index)"
-         >
+         <cover-view class="nav_container_item" :class="{ active: currentActive === index }"
+            v-for="(item, index) in navItems" :key="index" @click="handleItemClick(index)">
             <cover-view class="icon_wrapper">
                <cover-image :src="item.icon" class="nav_icon" mode="widthFix"></cover-image>
             </cover-view>
@@ -114,11 +109,12 @@ const handleItemClick = (index) => {
                width: 44rpx;
                height: 38rpx;
             }
-             .nav_label{
-               color: #fff !important;
-               font-size: 24rpx;
-            }
          }
+      }
+
+      .nav_label {
+         color: #fff !important;
+         font-size: 24rpx;
       }
 
       // 选中样式
