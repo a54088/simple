@@ -2536,6 +2536,11 @@
   resolved "https://registry.npmmirror.com/@vueuse/shared/-/shared-13.9.0.tgz#7168b4ed647e625b05eb4e7e80fe8aabd00e3923"
   integrity sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==
 
+"@zebra-ui/swiper@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.npmmirror.com/@zebra-ui/swiper/-/swiper-3.0.2.tgz#585ff1f9ecdd48c96aa40502cc5e57f36ccfe84a"
+  integrity sha512-t4n/9GF8gcUkKA+3hZgizc/iqEpEKi/c0cHX2xCEanAaU1h1cK8LqF+gzMYaYXY/ZKiRhGfOhuSyEyLlz3CZcQ==
+
 accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.npmmirror.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
