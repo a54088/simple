@@ -18,7 +18,6 @@ const blockLeft = computed(() => {
 });
 
 const setCurrentTabIndex = (index) => {
-    debugger
     vm.setCurrentTabIndex(index);
 }
 </script>

@@ -8,14 +8,17 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
         {
             label: '聊天',
             icon: 'icon-a-24gf-bubble4',
+            path: '/pages-im/chat-list/index',
         },
         {
             label: '圈子',
             icon: 'icon-a-24gf-bubble4',
+            path: '/pages-im/circle-list/index',
         },
         {
             label: '通讯录',
             icon: 'icon-tongxunlu02-F',   
+            path: '/pages-im/contacts/index',
         },
       ],
       currentTabIndex: 0,
@@ -31,6 +34,9 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
   actions: {
     setCurrentTabIndex(index) {
       this.currentTabIndex = index
+    //   uni.reLaunch({
+    //     url: this.currentTab.path,
+    //   })
     }
   },
 });

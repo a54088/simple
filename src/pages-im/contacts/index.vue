@@ -1,5 +1,7 @@
-<script setup></script>
+<script setup>
+import CustomTabbar from '@/components/custom-tabbar/index.vue'
+</script>
 <template>
-contacts
+<CustomTabbar />
 </template>
 <style lang="sass" scoped></style>
