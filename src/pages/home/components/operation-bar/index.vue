@@ -48,6 +48,11 @@ const vm = inject("homeVM");
   top: 50%;
   transform: translateY(-50%);
 }
+
+.operation-bar {
+  padding: 0 32rpx;
+}
+
 .operation-bar-btn {
   margin-top: 32rpx;
   height: 96rpx;

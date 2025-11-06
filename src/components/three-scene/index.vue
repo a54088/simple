@@ -75,7 +75,6 @@ function initThree() {
   
   // 创建场景并设置背景色
   scene = new THREE.Scene()
-  scene.background = new THREE.Color('#eee')
 
   // 创建透视相机 - 从正前方看向原点
   camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 1000)
@@ -83,21 +82,32 @@ function initThree() {
   camera.lookAt(0, 0, 0)  // 看向原点
 
   // 创建 WebGL 渲染器（启用抗锯齿）
-  renderer = new THREE.WebGLRenderer({ antialias: true })
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
   renderer.setSize(w, h)
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setClearColor(0x000000, 0)
   // 将渲染器的 canvas 元素添加到容器中
   containerEl.appendChild(renderer.domElement)
 
-  scene.add(new THREE.AmbientLight(0xffffff, 1))          // 柔光打底
-  const dir = new THREE.DirectionalLight(0xffffff, 2)     // 主光×2
+  /* ======================== 光源 start ======================== */
+  // 环境光更亮一些
+  scene.add(new THREE.AmbientLight(0xffffff, 1.5))
+  // 主方向光更强一点
+  const dir = new THREE.DirectionalLight(0xffffff, 3)
   dir.position.set(5, 10, 7)
   scene.add(dir)
 
+  // 添加补光（从相反方向）
+  const fill = new THREE.DirectionalLight(0xffffff, 1.5)
+  fill.position.set(-5, -2, -5)
+  scene.add(fill)
+  /* ======================== 光源 end ======================== */
+
+  /* ======================== 辅助内容 start ======================== */
   // 辅助线
   // const axesHelper = new THREE.AxesHelper(100);
   // scene.add(axesHelper);
+  /* ======================== 辅助内容 end ======================== */
 
   // 创建轨道控制器（支持鼠标/触摸操作）
   controls = new OrbitControls(camera, renderer.domElement)

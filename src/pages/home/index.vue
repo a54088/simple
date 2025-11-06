@@ -34,11 +34,11 @@ onLoad(() => {});
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #121212;
+  background-color: #D8D8D8;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: #fff;
-  padding: 32rpx;
+  padding: 32rpx 0;
 }
 </style>
