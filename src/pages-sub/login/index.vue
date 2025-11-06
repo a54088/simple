@@ -8,23 +8,25 @@
 <script setup>
 import { provide } from "vue";
 import LoginForm from "./components/login-form/index.vue";
+import LoginType from "./components/login-type/index.vue";
 import LoginAgreement from "./components/login-agreement/index.vue";
 import LoginButton from "./components/login-button/index.vue";
 import LoginBottom from "./components/login-bottom/index.vue";
+import AppleLoginButton from "./components/apple-login-button/index.vue";
 import { LoginVM } from "./vm/index";
-import { onLoad, onShow } from "@dcloudio/uni-app";
+// import { onLoad, onUnmounted } from "@dcloudio/uni-app";
 let vm = new LoginVM();
 
 provide("loginVM", vm);
 
-onUnmounted(() => {
-  vm = null;
-});
+// onUnmounted(() => {
+//   vm = null;
+// });
 
-onLoad((options) => {
-  options.tabType && vm.setTab(options.tabType);
-  options.inviteCode && vm.setInviteCode(options.inviteCode);
-});
+// onLoad((options) => {
+//   options.tabType && vm.setTab(options.tabType);
+//   options.inviteCode && vm.setInviteCode(options.inviteCode);
+// });
 </script>
 
 <template>
@@ -39,19 +41,7 @@ onLoad((options) => {
         <text>A Circle，圈住未来</text>
       </view>
     </view>
-    <view class="login-form">
-      <LoginForm />
-    </view>
-    <view class="login-button">
-      <LoginButton />
-    </view>
-    <view>
-      <LoginAgreement />
-    </view>
-
-    <view class="login-bottom" v-if="vm.formType === 'password_login'">
-      <LoginBottom />
-    </view>
+    <LoginType></LoginType>
   </view>
 </template>
 
@@ -60,7 +50,7 @@ onLoad((options) => {
   width: 100vw;
   height: 100vh;
   padding: 130rpx 70rpx 0;
-  background-color: #181818;
+  background-color: #fff;
   color: rgba(255, 255, 255, 0.8);
   .login__logo {
     text-align: center;
