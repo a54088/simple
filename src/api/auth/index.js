@@ -2,7 +2,7 @@
  * @Author: 王硕
  * @Date: 2025-07-26 13:42:56
  * @LastEditors: 王硕
- * @LastEditTime: 2025-08-16 15:48:10
+ * @LastEditTime: 2025-10-28 16:09:45
  * @Description:
  */
 import { client } from "@/shared/network/index";
@@ -21,6 +21,13 @@ const AuthApi = {
    * @returns
    */
   smsLogin: (data) => client.createPostJSON("/member/auth/sms-login", data),
+
+  /**
+   * 苹果登录
+   * @param {*} data
+   * @returns
+   */
+  appleLogin: (data) => client.createPostJSON("/member/auth/apple-login", data),
 
   /**
    * 发送短信验证码
