@@ -8,6 +8,7 @@
 <script setup>
 import { provide } from "vue";
 import LoginForm from "./components/login-form/index.vue";
+import LoginType from "./components/login-type/index.vue";
 import LoginAgreement from "./components/login-agreement/index.vue";
 import LoginButton from "./components/login-button/index.vue";
 import LoginBottom from "./components/login-bottom/index.vue";
@@ -40,6 +41,7 @@ provide("loginVM", vm);
         <text>A Circle，圈住未来</text>
       </view>
     </view>
+    <LoginType></LoginType>
   </view>
 </template>
 
