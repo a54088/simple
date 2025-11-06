@@ -7,6 +7,7 @@
 -->
 .
 <script setup>
+import CustomNavbar from "@/components/custom-navbar/index.vue";
 import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
@@ -72,19 +73,30 @@ const getCode = () => {
 const onChangeRegister = () => {
   vm.formType = "register";
 };
+
+const onLeftClick = () => {
+  vm.formType = "mobile_auto_login";
+};
 </script>
 
 <template>
-  <u-form
+
+  <view class="sms-form">
+    <CustomNavbar leftIconColor="#000" title="" bgColor="transparent" :autoBack="false" :leftClick="onLeftClick"/>
+    <view class="sms-form__logo">
+      <image class="img_left" src="@/static/images/login/zhuceye-aquan.png" />
+      <image class="img_right" src="@/static/images/login/zhuceye-icon.png" />
+    </view>
+    <u-form
     labelPosition="left"
-    labelWidth="0"
+    labelWidth="60"
     :model="form"
     :rules="rules"
     :borderBottom="false"
     ref="smsFormRef"
+    class="sms-form__layout"
   >
     <u-form-item prop="mobile">
-      <view class="form-item--init">
         <u-input
           v-model="form.mobile"
           border="none"
@@ -92,11 +104,9 @@ const onChangeRegister = () => {
           placeholder="请输入手机号"
         >
         </u-input>
-      </view>
     </u-form-item>
 
     <u-form-item prop="code">
-      <view class="form-item--init">
         <u-input
           v-model="form.code"
           border="none"
@@ -113,39 +123,25 @@ const onChangeRegister = () => {
             <text class="code-button" @tap="getCode">{{ codeButtonText }}</text>
           </template>
         </u-input>
-      </view>
     </u-form-item>
-    <view class="code-login">
+    <!-- <view class="code-login">
       <text @tap="onChangeRegister">新用户注册</text>
       <text @tap="onChangeCode">{{
         vm.isSmsLogin ? "密码登录" : "验证码登录"
       }}</text>
-    </view>
+    </view> -->
   </u-form>
+  </view>
+  
 </template>
 
 <style lang="scss" scoped>
-.code-login {
-  margin-top: 8rpx;
-  padding: 0 40rpx;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 28rpx;
-}
-.form-item--init {
-  width: 100%;
-  background: #000000;
-  border-radius: 22rpx;
-  padding: 25rpx 30rpx;
-  display: flex;
-  align-items: center;
-  color: #fff;
-  font-size: 28rpx;
+
+.sms-form {
+  padding: 130rpx 0 0;
 }
 .code-button {
-  color: #fff;
+  color: #3D3D3D;
 }
 .form-label {
   display: inline-block;
@@ -154,5 +150,43 @@ const onChangeRegister = () => {
   color: #3d3d3d;
   width: 120rpx;
   margin-right: 10rpx;
+}
+
+.sms-form__logo {
+  padding: 120rpx 32rpx 84rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .img_left {
+    width: 222rpx;
+    height: 144rpx;
+  }
+  .img_right {
+    width: 192rpx;
+    height: 174rpx;
+  }
+}
+.sms-form__layout {
+  padding: 0;
+  ::v-deep.u-form-item:last-child {
+    margin-bottom: 60rpx;
+  }
+  ::v-deep.u-form-item {
+    width: 100%;
+    border-radius: 56rpx;
+    padding: 36.5rpx 40rpx;
+    display: flex;
+    color: #3d3d3d;
+    background: rgba(0, 0, 0, 0.04);
+    margin-bottom: 32rpx;
+  }
+  ::v-deep.u-form-item__body {
+    padding: 0;
+  }
+  ::v-deep.u-form-item__body__left__content__label {
+    font-size: 28rpx;
+    font-weight: 500;
+    color: #3d3d3d;
+  }
 }
 </style>

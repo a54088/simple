@@ -14,11 +14,11 @@ export class LoginVM extends ViewModel {
   /**
    * 登录表单类型
    * password_login: 密码登录
-   * sms_login: 短信登录
-   * register: 新用户注册
+   * sms_login: 短信登录(包括新用户注册)
    * forget_password: 忘记密码
+   * mobile_auto_login: 手机号一键登录
    */
-  formType = "password_login";
+  formType = "sms_login";
 
   tabIndex = 1;
 
