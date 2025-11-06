@@ -84,8 +84,6 @@ const {
    swiperList
 } = useSwiper()
 
-// 其他变量
-const currentTab = ref(0)
 
 // 初始化日期
 onMounted(() => {
