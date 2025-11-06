@@ -10,6 +10,7 @@
 import { inject } from 'vue';
 
 const vm = inject("loginVM");
+
 </script>
 
 <template>
@@ -17,14 +18,11 @@ const vm = inject("loginVM");
     <!-- 登录类型选择内容 -->
     <view class="login-type-content">
       <!-- 这里可以添加登录类型选择的具体内容 -->
-      <view class="login-type-text">
-        <text>-其他登录方式-</text>
+      <view class="login-type-text" v-if="vm.formType === 'sms_login'">
+        <text @tap="vm.formType = 'password_login'">-密码登录-</text>
       </view>
-      <view class="login-type-icon">
-        <text class="iconfont icon-denglu_weixin iconfont__btn"></text>
-        <text class="iconfont icon-denglu_pingguo iconfont__btn"></text>
-        <text class="iconfont icon-denglu_guge iconfont__btn"></text>
-        <!-- <text class="iconfont icon-denglu_shouji"></text> -->
+      <view class="login-type-text" v-if="vm.formType === 'password_login'">
+        <text @tap="vm.formType = 'sms_login'">-验证码登录-</text>
       </view>
     </view>
   </view>
@@ -39,7 +37,8 @@ const vm = inject("loginVM");
   height: 150rpx;
   background-color: #fff;
   // border-top: 1rpx solid #e8e8e8;
-  // display: flex;
+  display: flex;
+  flex-direction: column;
   // align-items: center;
   // justify-content: center;
   // z-index: 999;
