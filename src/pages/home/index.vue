@@ -10,7 +10,7 @@ import { provide, ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import MsgStatusBar from "@/pages/home/components/msg-status-bar/index.vue";
 import OperationBar from "@/pages/home/components/operation-bar/index.vue";
-import ThreeScene from '@/components/three-scene/index.vue';
+import SceneModel from "./components/scene-model/index.vue";
 
 import { HomeVM } from "@/pages/home/vm/index.js";
 
@@ -19,28 +19,12 @@ provide("homeVM", vm);
 
 onLoad(() => {});
 
-const threeLoad = (model) => {
-  console.log('模型加载完成', model.animations, model)
-}
-
-const progress = (num) => {
-  console.log('模型进度', num)
-}
-
-const error = (err) => {
-  console.log('模型加载失败', err)
-}
 </script>
 
 <template>
   <view class="home__layout">
     <MsgStatusBar></MsgStatusBar>
-    <ThreeScene 
-      model="/static/models/meinv.glb"
-      @load="threeLoad"
-      @progress="progress"
-      @error="error"
-    />
+    <SceneModel />
     <OperationBar></OperationBar>
   </view>
 </template>
