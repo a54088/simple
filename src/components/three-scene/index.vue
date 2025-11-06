@@ -28,7 +28,7 @@ let mixer: THREE.AnimationMixer | undefined
 const clock = new THREE.Clock()
 
 onMounted(async () => {
-  await nextTick()
+  // await nextTick()
   initThree()
   loadModel()
   animate()

@@ -100,7 +100,7 @@ const setCurrentTabIndex = (index) => {
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.69);
         box-sizing: border-box;
-        border: 1rpx solid;
+       
         border-image: linear-gradient(134deg, #FFFFFF 3%, rgba(255, 255, 255, 0) 52%, #FFFFFF 92%) 1;
     }
 
