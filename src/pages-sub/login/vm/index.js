@@ -14,11 +14,11 @@ export class LoginVM extends ViewModel {
   /**
    * 登录表单类型
    * password_login: 密码登录
-   * sms_login: 短信登录
-   * register: 新用户注册
+   * sms_login: 短信登录(包括新用户注册)
    * forget_password: 忘记密码
+   * mobile_auto_login: 手机号一键登录
    */
-  formType = "password_login";
+  formType = "sms_login";
 
   tabIndex = 1;
 
@@ -288,6 +288,73 @@ export class LoginVM extends ViewModel {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      uni.hideLoading();
+    }
+  }
+
+  async appleLogin() {
+    try {
+      // 检查平台是否支持苹果登录
+      // #ifdef APP-PLUS
+      const platform = uni.getSystemInfoSync().platform;
+      if (platform !== 'ios') {
+        uni.showToast({
+          title: '仅iOS平台支持Apple登录',
+          icon: 'none'
+        });
+        return;
+      }
+      
+      uni.showLoading({
+        title: "登录中...",
+      });
+      
+      // 调用uni-app的苹果登录API
+      const { code, userInfo } = await uni.login({
+        provider: 'apple',
+        success: (res) => res,
+        fail: (err) => {
+          throw new Error(JSON.stringify(err));
+        }
+      });
+      
+      // 调用后端API进行苹果登录
+      const parameter = {
+        code,
+        userInfo
+      };
+      const { data, code: apiCode } = await LoginApi.appleLogin(parameter);
+      const { accessToken, refreshToken, userId } = data;
+      useUserStore().setToken(accessToken);
+      useUserStore().setUserId(userId);
+      useUserStore().setRefreshToken(refreshToken);
+      const { data: userData, code: userCode } = await userApi.getUserInfo();
+      if (userCode == 0) {
+        useUserStore().setUserInfo(userData);
+      }
+      
+      // 登录成功后的页面跳转逻辑
+      if (getCurrentPages().length === 1) {
+        uni.switchTab({
+          url: "/pages/home/index",
+        });
+      } else {
+        const pages = getCurrentPages();
+        const beforePage = pages[pages.length - 2];
+        uni.navigateBack({
+          delta: 1,
+          success: () => {
+            beforePage.onLoad();
+          },
+        });
+      }
+    } catch (e) {
+      console.error('Apple登录失败:', e);
+      uni.showToast({
+        title: '登录失败，请重试',
+        icon: 'none'
+      });
     } finally {
       uni.hideLoading();
     }

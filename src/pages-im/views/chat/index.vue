@@ -40,7 +40,16 @@ onUnmounted(() => {
         </CustomNavbar>
 
         <view class="chat__content">
-
+            <scroll-view :scroll-top="scrollTop" scroll-y="true" class="chat-list__scroll" @scrolltoupper="upper"
+                @scrolltolower="lower" @scroll="scroll">
+                <view class="chat-ai__layout">
+                    <ChatItem />
+                </view>
+                <view class="chat-item__block__layout" v-for="(item, index) in chatList" :key="index">
+                    <ChatItem />
+                </view>
+                <view class="chat-list__safe__layout"></view>
+            </scroll-view>
         </view>
         <view>
             <ChatFooter />

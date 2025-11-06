@@ -5,7 +5,6 @@
     "versionName" : "0.0.1",
     "versionCode" : "1",
     "transformPx" : false,
-    /* 5+App特有相关 */
     "app-plus" : {
         "usingComponents" : true,
         "nvueStyleCompiler" : "uni-app",
@@ -16,7 +15,6 @@
             "autoclose" : true,
             "delay" : 0
         },
-        /* 模块配置 */
         "modules" : {
             "Barcode" : {},
             "Camera" : {},
@@ -27,11 +25,10 @@
             "Maps" : {},
             "Record" : {},
             "VideoPlayer" : {},
-            "UIWebview" : {}
+            "UIWebview" : {},
+            "OAuth" : {}
         },
-        /* 应用发布信息 */
         "distribute" : {
-            /* android打包配置 */
             "android" : {
                 "permissions" : [
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
@@ -48,10 +45,12 @@
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
                     "<uses-feature android:name=\"android.hardware.camera\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>"
                 ]
             },
-            /* ios打包配置 */
             "ios" : {
                 "dSYMs" : false,
                 "idfa" : false,
@@ -61,10 +60,10 @@
                     "NSLocationWhenInUseUsageDescription" : "获取您当前的位置，为您提供更好的服务",
                     "NSPhotoLibraryUsageDescription" : "获取相册权限，以上传头像和部分必要内容",
                     "NSPhotoLibraryAddUsageDescription" : "获取相册权限，以保存重要图片信息",
-                    "NSCameraUsageDescription" : "获取相机权限，以上传头像和部分必要内容"
+                    "NSCameraUsageDescription" : "获取相机权限，以上传头像和部分必要内容",
+                    "NSUserAuthenticationUsageDescription" : "使用Apple账号登录，为您提供个性化服务"
                 }
             },
-            /* SDK配置 */
             "sdkConfigs" : {
                 "geolocation" : {
                     "amap" : {
@@ -81,7 +80,16 @@
                         "appkey_android" : "5022db18bcb16e637bb7e80541078d68"
                     }
                 },
-                "oauth" : {},
+                "oauth" : {
+                    "apple" : {},
+                    "weixin" : {
+                        "appid" : "",
+                        "UniversalLinks" : ""
+                    },
+                    "google" : {
+                        "clientid" : ""
+                    }
+                },
                 "speech" : {},
                 "statics" : {}
             },
@@ -122,9 +130,7 @@
             "enable" : true
         }
     },
-    /* 快应用特有相关 */
     "quickapp" : {},
-    /* 小程序特有相关 */
     "mp-weixin" : {
         "appid" : "",
         "setting" : {

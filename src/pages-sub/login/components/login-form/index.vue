@@ -16,9 +16,9 @@ const vm = inject("loginVM");
 
 <template>
   <PasswordForm v-show="vm.formType === 'password_login'" />
-  <RegisterForm v-show="vm.formType === 'register'" />
+  <!-- <RegisterForm v-show="vm.formType === 'register'" /> -->
   <SmsForm v-show="vm.formType === 'sms_login'" />
-  <ForgetPasswordForm v-show="vm.formType === 'forget_password'" />
+  <!-- <ForgetPasswordForm v-show="vm.formType === 'forget_password'" /> -->
 </template>
 
 <style lang="scss" scoped></style>

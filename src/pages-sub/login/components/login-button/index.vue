@@ -37,19 +37,18 @@ const onClick = () => {
 
 <style lang="scss" scoped>
 .login_button__layout--agreement {
-  background-color: #fff !important;
-  color: #000000 !important;
+  background-color: #000 !important;
+  color: #fff !important;
 }
 .login_button__layout {
   width: 100%;
   height: 100rpx;
-  background: #c9c9c9;
-  border-radius: 22rpx;
+  border-radius: 50rpx;
   font-size: 32rpx;
-  color: rgba(255, 255, 255, 0.5);
+  color: #666;
   line-height: 100rpx;
 
-  background: rgba(255, 255, 255, 0.2);
+  background: #E5E5E5;
 
   backdrop-filter: blur(60px);
 }

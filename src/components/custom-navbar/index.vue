@@ -36,8 +36,14 @@ const fixed = computed(() => {
 });
 
 const autoBack = computed(() => {
-  return attrs.autoBack || true;
+  return attrs.autoBack === false ? false : true;
 });
+
+const leftClick = () => {
+  if (attrs.leftClick) {
+    attrs.leftClick();
+  }
+};
 </script>
 
 <template>
@@ -49,6 +55,7 @@ const autoBack = computed(() => {
     :titleStyle="titleStyle"
     :fixed="fixed"
     :autoBack="autoBack"
+    @leftClick="leftClick"
   >
     <template v-slot:right><slot name="right"> </slot></template>
     <template v-slot:center><slot name="center"> </slot></template>
