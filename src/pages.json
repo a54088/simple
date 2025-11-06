@@ -30,6 +30,15 @@
             "navigationBarTitleText": "IM",
             "navigationStyle": "custom"
           }
+        }, 
+        {
+          "path": "views/chat/index",
+          "style": {
+            "animationType": "fade-in",
+            "animationDuration": 300,
+            "navigationBarTitleText": "聊天",
+            "navigationStyle": "custom"
+          }
         }
       ]
     },

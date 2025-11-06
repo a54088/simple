@@ -35,6 +35,7 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
     },
 
     actions: {
+        
         setCurrentTabIndex(index) {
             // 获取当前页面栈
             const pages = getCurrentPages();

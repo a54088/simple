@@ -58,6 +58,7 @@ const leftClick = () => {
     @leftClick="leftClick"
   >
     <template v-slot:right><slot name="right"> </slot></template>
+    <template v-slot:center><slot name="center"> </slot></template>
     <template v-slot:left><slot name="left"> </slot></template>
   </u-navbar>
 </template>
