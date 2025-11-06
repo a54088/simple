@@ -9,7 +9,9 @@
       <view class="date-search-bar">
          <view class="date-box">
             <u-icon name="calendar-fill" color="#fff" size="30"></u-icon>
-            <text>2025-11-01</text>
+            <picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+               <view class="uni-input">{{ date }}</view>
+            </picker>
          </view>
          <view class="search-btn">查找</view>
       </view>
@@ -43,37 +45,52 @@
       <view class="section">
          <view class="section-title">发现</view>
          <view class="discovery-swiper">
-            <swiper indicator-dots autoplay interval="3000" duration="500" circular>
-               <swiper-item>
+            <ZSwiper>
+               <ZSwiperItem v-for="(item, index) in swiperList" :key="index">
                   <view class="discovery-card">
-                     <image src="/static/map/restaurantSwiper1.png" mode="aspectFill"  class="discovery-card-img"></image>
-                     <!-- <view class="star-btn">☆</view> -->
-                     <text class="discovery-text">家附近新开了一家餐厅</text>
+                     <image :src="item.path" mode="aspectFill" class="discovery-card-img">
+                     </image>
+                     <view class="iconfont icon-chuangzuolinggan-shoucang1 collect"></view>
+                     <text class="discovery-text">{{ item.label }}</text>
                   </view>
-               </swiper-item>
-               <swiper-item>
-                  <view class="discovery-card">
-                     <image src="/static/map/restaurantSwiper2.png" mode="aspectFill"  class="discovery-card-img"></image>
-                     <view class="star-btn">☆</view>
-                     <text class="discovery-text">街角的咖啡馆重新装修了</text>
-                  </view>
-               </swiper-item>
-               <swiper-item>
-                  <view class="discovery-card">
-                     <image src="/static/map/restaurantSwiper1.png" mode="aspectFill"  class="discovery-card-img"></image>
-                     <view class="star-btn">★</view>
-                     <text class="discovery-text">城市公园新增了健身区域</text>
-                  </view>
-               </swiper-item>
-            </swiper>
+
+               </ZSwiperItem>
+            </ZSwiper>
          </view>
       </view>
    </view>
 </template>
 
 <script setup>
+import { onMounted } from "vue";
 import CustomNavBar from '@/components/custom-navbar/index.vue'
+import ZSwiper from '@zebra-ui/swiper/components/z-swiper/z-swiper.vue'
+import ZSwiperItem from '@zebra-ui/swiper/components/z-swiper-item/z-swiper-item.vue'
+// 导入hooks
+import useDatePicker from './hooks/useDatePicker'
+import useSwiper from './hooks/useSwiper'
 
+// 使用日期选择hook
+const {
+   date,
+   startDate,
+   endDate,
+   bindDateChange,
+   initDate
+} = useDatePicker()
+
+// 使用轮播hook
+const {
+   swiperList
+} = useSwiper()
+
+// 其他变量
+const currentTab = ref(0)
+
+// 初始化日期
+onMounted(() => {
+   initDate()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -259,16 +276,10 @@ $color-online: #73FF86;
 .discovery-swiper {
    width: 100%;
 
-   swiper {
-      width: 100%;
-      height: 500rpx; // 轮播整体高度
-   }
-
    .discovery-card {
       position: relative;
       width: 100%;
       height: 100%;
-      background-color: #fff;
       border-radius: $border-radius;
       overflow: hidden;
 
@@ -279,14 +290,13 @@ $color-online: #73FF86;
          display: block;
       }
 
-      .star-btn {
+      .collect {
          position: absolute;
-         top: 20rpx;
          right: 20rpx;
-         background-color: rgba(0, 0, 0, 0.5);
-         color: #fff;
-         width: 56rpx;
-         height: 56rpx;
+         top: 20rpx;
+         background: rgba(255, 255, 255, 0.7);
+         width: 48rpx;
+         height: 48rpx;
          border-radius: 50%;
          display: flex;
          justify-content: center;
@@ -295,12 +305,14 @@ $color-online: #73FF86;
       }
 
       .discovery-text {
-         display: block;
-         padding: $padding-medium;
          font-size: 30rpx;
          height: 100rpx; // 文字区域高度
          box-sizing: border-box;
          line-height: 52rpx;
+         position: absolute;
+         bottom: -40rpx;
+         left: 20rpx;
+         color: #fff;
       }
    }
 }
