@@ -31,6 +31,7 @@ const error = (err) => {
 
 <style lang="scss" scoped>
 .scene-box {
-    height: 100%;
+  height: 100%;
+  width: 100%;
 }
 </style>
