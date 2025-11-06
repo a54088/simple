@@ -1,14 +1,14 @@
 <template>
-  <view ref="container" class="three-container" />
+  <view 
+    id="three-container" 
+    class="three-container"
+    :prop="propData"
+    :change:prop="renderjs.handlePropChange"
+  />
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-
+<script setup>
+import { computed } from 'vue'
 
 const props = defineProps({
   model: { type: String, default: '/static/models/fox.glb' },
@@ -17,61 +17,60 @@ const props = defineProps({
 
 const emit = defineEmits(['load', 'error', 'progress'])
 
-const container = ref<any>()
-let scene!: THREE.Scene
-let camera!: THREE.PerspectiveCamera
-let renderer!: THREE.WebGLRenderer
-let controls!: OrbitControls
-let model!: THREE.Group
-let raf = 0
-let mixer: THREE.AnimationMixer | undefined
-const clock = new THREE.Clock()
+// 将 props 转换为响应式数据，传递给 renderjs
+const propData = computed(() => ({
+  model: props.model,
+  autoRotate: props.autoRotate
+}))
 
-onMounted(async () => {
-  await nextTick()
-  initThree()
-  loadModel()
-  animate()
-  window.addEventListener('resize', onResize)
-})
-
-onUnmounted(() => {
-  cancelAnimationFrame(raf)
-  window.removeEventListener('resize', onResize)
-  controls?.dispose()
-  renderer?.dispose()
-  mixer?.stopAllAction()
-  scene?.clear()
-})
-
-// 获取实际的 DOM 元素
-function getContainerElement(): HTMLElement {
-  // #ifdef H5
-  if (container.value && container.value.$el) {
-    return container.value.$el
-  }
-  if (container.value && container.value.appendChild) {
-    return container.value
-  }
-  if (typeof document !== 'undefined') {
-    const el = document.querySelector('.three-container') as HTMLElement
-    if (el) return el
-  }
-  // #endif
-  
-  // #ifndef H5
-  // 非 H5 平台，直接使用 ref（如果已经是 DOM 元素）
-  if (container.value && container.value.appendChild) {
-    return container.value
-  }
-  // #endif
-  
-  throw new Error('无法获取容器 DOM 元素')
+// 提供给 renderjs 调用的方法
+function handleLoad(modelData) {
+  emit('load', modelData)
 }
+
+function handleError(error) {
+  emit('error', error)
+}
+
+function handleProgress(progress) {
+  emit('progress', progress)
+}
+
+// 暴露方法供 renderjs 调用
+defineExpose({
+  handleLoad,
+  handleError,
+  handleProgress
+})
+</script>
+
+<script module="renderjs" lang="renderjs">
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+let scene
+let camera
+let renderer
+let controls
+let model
+let raf = 0
+let mixer
+const clock = new THREE.Clock()
+let containerEl
+let initialized = false
+let ownerInstanceRef = null
 
 // 初始化 Three.js 场景
 function initThree() {
-  const containerEl = getContainerElement()
+  if (initialized) return
+  
+  containerEl = document.getElementById('three-container')
+  if (!containerEl) {
+    console.error('无法找到容器元素')
+    return
+  }
+  
   const { clientWidth: w, clientHeight: h } = containerEl
   
   // 创建场景并设置背景色
@@ -87,7 +86,7 @@ function initThree() {
   renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setSize(w, h)
   renderer.setPixelRatio(window.devicePixelRatio)
-  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(0x000000, 0)
   // 将渲染器的 canvas 元素添加到容器中
   containerEl.appendChild(renderer.domElement)
 
@@ -107,18 +106,27 @@ function initThree() {
   controls.update()  // 更新控制器
   // 启用阻尼效果，使控制更平滑
   controls.enableDamping = true
-  // 设置是否自动旋转
-  controls.autoRotate = props.autoRotate
+  
+  initialized = true
+  animate()
+  window.addEventListener('resize', onResize)
 }
 
 // 加载模型
-function loadModel() {
+function loadModel(modelUrl) {
+  if (!initialized) {
+    initThree()
+    // 等待初始化完成
+    setTimeout(() => loadModel(modelUrl), 100)
+    return
+  }
+  
   const loader = new GLTFLoader()
 
   loader.load(
-    props.model,
+    modelUrl,
     gltf => {
-      // if (model) scene.remove(model)
+      if (model) scene.remove(model)
       model = gltf.scene
       scene.add(model)
       
@@ -155,51 +163,121 @@ function loadModel() {
 
       // 模型动画
       if (gltf.animations && gltf.animations.length > 0) {
-        mixer?.stopAllAction()
+        if (mixer) mixer.stopAllAction()
         mixer = new THREE.AnimationMixer(model)
         const a1 = gltf.animations[1]
-        mixer!.clipAction(a1).play()
+        if (a1) {
+          mixer.clipAction(a1).play()
+        }
 
         // gltf.animations.forEach((clip) => {
-        //   mixer!.clipAction(clip).play()
+        //   mixer.clipAction(clip).play()
         // })
       } else {
         console.log("没有动画数据")
       }
 
-      emit('load', model)
+      // 通过 callMethod 触发 Vue 组件的 load 事件
+      // 注意：在 renderjs 中无法直接传递复杂对象，所以只传递模型的基本信息
+      if (ownerInstanceRef) {
+        ownerInstanceRef.callMethod('handleLoad', {
+          animations: gltf.animations ? gltf.animations.length : 0
+        })
+      }
     },
     // 加载进度回调
-    xhr => emit('progress', xhr.loaded / xhr.total),
+    xhr => {
+      const progress = xhr.loaded / xhr.total
+      if (ownerInstanceRef) {
+        ownerInstanceRef.callMethod('handleProgress', progress)
+      }
+    },
     // 加载错误回调
-    err => emit('error', err)
+    err => {
+      console.error('模型加载失败:', err)
+      if (ownerInstanceRef) {
+        ownerInstanceRef.callMethod('handleError', err.message || '模型加载失败')
+      }
+    }
   )
 }
 
-// 动画
+// 动画循环
 function animate() {
+  if (!initialized) return
   raf = requestAnimationFrame(animate)
-  controls.update()
-  const delta = clock.getDelta()
-  mixer?.update(delta)
-  renderer.render(scene, camera)
+  if (controls) controls.update()
+  if (mixer) {
+    const delta = clock.getDelta()
+    mixer.update(delta)
+  }
+  if (renderer && scene && camera) {
+    renderer.render(scene, camera)
+  }
 }
 
+// 窗口大小改变处理
 function onResize() {
-  const containerEl = getContainerElement()
+  if (!containerEl || !camera || !renderer) return
   const { clientWidth: w, clientHeight: h } = containerEl
   camera.aspect = w / h
   camera.updateProjectionMatrix()
   renderer.setSize(w, h)
 }
 
-// 动态切换模型
-watch(() => props.model, (url) => {
-  if (model) scene.remove(model)
-  mixer?.stopAllAction()
-  mixer = undefined
-  loadModel()
-})
+// 清理资源
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeunload', () => {
+    if (raf) cancelAnimationFrame(raf)
+    if (controls) controls.dispose()
+    if (renderer) renderer.dispose()
+    if (mixer) mixer.stopAllAction()
+    if (scene) scene.clear()
+    window.removeEventListener('resize', onResize)
+  })
+}
+
+// 导出函数供模板使用
+export default {
+  methods: {
+    handlePropChange(newValue, oldValue, ownerInstance) {
+      // 保存 ownerInstance 引用，供其他函数使用
+      if (ownerInstance) {
+        ownerInstanceRef = ownerInstance
+      }
+      
+      // 首次初始化
+      if (!initialized) {
+        initThree()
+        // 延迟加载模型，确保初始化完成
+        setTimeout(() => {
+          if (newValue && newValue.model) {
+            loadModel(newValue.model)
+          }
+          if (controls && newValue) {
+            controls.autoRotate = newValue.autoRotate || false
+          }
+        }, 100)
+        return
+      }
+      
+      // 处理 model 变化
+      if (newValue && oldValue && newValue.model !== oldValue.model) {
+        if (model) scene.remove(model)
+        if (mixer) {
+          mixer.stopAllAction()
+          mixer = undefined
+        }
+        loadModel(newValue.model)
+      }
+      
+      // 处理 autoRotate 变化
+      if (newValue && controls && newValue.autoRotate !== undefined) {
+        controls.autoRotate = newValue.autoRotate
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>

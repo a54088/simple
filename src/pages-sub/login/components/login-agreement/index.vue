@@ -40,23 +40,11 @@ const onToAgreement2 = (path, title, type) => {
       <u-icon
         v-if="vm.isAgreement"
         name="checkbox-mark"
-        color="#FB494A"
-        size="26rpx"
+        color="#666"
       ></u-icon>
     </text>
     <view class="login-agreement__right">
-      <text @click="onAgreement">登录即表明同意</text>
-      <!-- <text
-        class="agreement"
-        @click="
-          onToAgreement(
-            'pages-agreement/auction-service/index',
-            '用户许可协议',
-            'service'
-          )
-        "
-        >《用户许可协议》</text
-      > -->
+      <text @click="onAgreement">我已阅读并同意</text>
       <text
         class="agreement"
         @click="onToAgreement('/pages-agreement/auction-service/index')"
@@ -68,13 +56,8 @@ const onToAgreement2 = (path, title, type) => {
         @click="
           onToAgreement('pages-agreement/privacy/index', '隐私政策', 'ys')
         "
-        >《用户许可协议》</text
+        >《用户服务协议》</text
       >
-      <!-- <text
-        class="agreement"
-        @tap="onToAgreement('/pages-agreement/privacy/index')"
-        >《隐私政策》</text
-      > -->
     </view>
   </view>
 </template>
@@ -83,9 +66,13 @@ const onToAgreement2 = (path, title, type) => {
 .login-agreement {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  padding-top: 20rpx;
+  flex: 1;
   .login-agreement__right {
+    font-family: PingFang SC;
     font-size: 24rpx;
-    color: rgba(255, 255, 255, 0.6);
+    color: #3d3d3d;
     .agreement {
       color: #ff194a;
     }
@@ -96,11 +83,11 @@ const onToAgreement2 = (path, title, type) => {
   }
   .login-agreement__left {
     flex-shrink: 0;
-    width: 32rpx;
-    height: 32rpx;
+    width: 24rpx;
+    height: 24rpx;
     border: 2rpx solid #8b8c8e;
-    margin-right: 14rpx;
-    border-radius: 5rpx;
+    margin-right: 8rpx;
+    border-radius: 6rpx;
     display: flex;
     align-items: center;
     justify-content: center;
