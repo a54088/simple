@@ -6,15 +6,15 @@
    </CustomNavBar>
    <view class="container">
       <!-- 日期搜索栏 -->
-      <view class="date-search-bar">
-         <view class="date-box">
-            <u-icon name="calendar-fill" color="#fff" size="30"></u-icon>
-            <picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+      <picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+         <view class="date-search-bar">
+            <view class="date-box">
+               <u-icon name="calendar-fill" color="#fff" size="30"></u-icon>
                <view class="uni-input">{{ date }}</view>
-            </picker>
+            </view>
+            <view class="search-btn">查找</view>
          </view>
-         <view class="search-btn">查找</view>
-      </view>
+      </picker>
 
       <!-- 会话处理区 -->
       <view class="section">
