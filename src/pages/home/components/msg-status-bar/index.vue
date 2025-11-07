@@ -23,20 +23,12 @@
           <u-avatar :size="31" :src="avatar"></u-avatar>
         </view>
         <!-- 多个-折叠 -->
-        <view 
-          v-if="!isOpen" 
-          class="msg-avatar-group-close avatar-close-show"
-          :style="{'width': closeAvatarList.length * 20 + 'rpx'}"
-          @tap="toggleOpen"
-        >
-          <u-avatar 
-            v-for="(item, i) in closeAvatarList" 
-            :key="i" 
-            :src="item"
-            :size="31"
-            :style="{'z-index': 99 - i, left: i * 12 + 'rpx'}"
-          ></u-avatar>
-        </view>
+        <AvatarStacking 
+          v-if="!isOpen"  
+          :avatarList="closeAvatarList" 
+          :maxCount="4" 
+          @tap="toggleOpen" 
+        />
         <!-- 多个展开 -->
         <scroll-view 
           v-if="isOpen"
@@ -56,7 +48,7 @@
           </view>
         </scroll-view>
 
-        <view @tap="toggleOpen">
+        <view @tap="toggleOpen" :class="[isOpen && 'icon-rotated']">
           <i class="iconfont icon-a-mengbanzu135"></i>
         </view>
       </view>
@@ -69,7 +61,11 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { inject } from "vue";
+// components
+import AvatarStacking from '@/components/avatar-stacking/index.vue';
 
+const vm = inject("homeVM");
 const emit = defineEmits(['menuClick', 'logoClick', 'avatarClick']);
 
 const avatarList = ref([
@@ -95,7 +91,7 @@ const toggleOpen = () => {
 };
 
 const handleMenuClick = () => {
-  console.log('menu');
+  vm.toggleMenuPopup()
 }
 
 const avatarScroll = (e) => {
@@ -175,13 +171,12 @@ const handleLogoClick = () => {
       transition: width 0.2s ease-in-out;
 
       .iconfont {
-        margin-left: 20rpx;
+        margin-left: 10rpx;
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
-        
-        &.icon-rotated {
-          transform: rotate(180deg);
-        }
+      }
+      .icon-rotated {
+        transform: rotate(180deg) translateX(-10rpx);
       }
 
       .msg-avatar-group-close {

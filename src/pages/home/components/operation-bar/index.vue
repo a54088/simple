@@ -7,19 +7,35 @@
 -->
 <template>
   <view class="operation-bar">
-    <view class="top-btn-box">
+    <view class="operation-bar-content animate__animated" :class="[!isShowMenu && 'animate__slideInDown']">
+      <view class="top-btn-box">
+        <view class="top-btn-box-title">分身空间</view>
+        <view class="top-btn-box-icon">
+          <i class="iconfont icon-shengyin"></i>
+        </view>
+      </view>
 
+      <view class="input-box">
+        <view class="icon-phone-box">
+          <i class="iconfont icon-dianhua"></i>
+        </view>
+        <view class="operation-bar-btn">
+          <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
+          <text class="operation-bar-btn-text">按住说话</text>
+          <text 
+            @tap="toggleOpen" 
+            class="iconfont icon-quxiao"
+            :class="[isShowMenu && 'icon-rotated']"
+          ></text>
+        </view>
+      </view>
     </view>
 
-    <view class="input-box">
-      <button class="operation-bar-btn" @tap="vm.showToast">
-        <text class="iconfont icon-jianpan iconfont__btn"></text>
-        <text class="operation-bar-btn-text">按住说话</text>
-        <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
-      </button>
-    </view>
-
-    <view class="menu-box">
+    <view 
+      v-if="isShowMenu" 
+      class="menu-box animate__animated" 
+      :class="[isShowMenu && 'animate__fadeInUp']"
+    >
       <view
         v-for="item in menuList"
         :key="item.key"
@@ -58,76 +74,113 @@ const menuList = ref([
       key: "dataExport",
     },
 ])
+const isShowMenu = ref(false)
+
+const toggleOpen = () => {
+  isShowMenu.value = !isShowMenu.value;
+}
 </script>
 
 <style lang="scss" scoped>
-.icon-jianpan {
-  left: 30rpx;
-}
-.icon-jianpan-2 {
-  right: 30rpx;
-}
-.iconfont__btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
 .operation-bar {
   padding: 0 32rpx;
+  position: fixed;
+  bottom: 32rpx;
+  width: 100%;
 }
 
-.operation-bar-btn {
-  margin-top: 32rpx;
-  height: 96rpx;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 1px solid !important;
-  border-image: radial-gradient(
-      108% 108% at 50% 50%,
-      #3d3d3d 0%,
-      rgba(255, 255, 255, 0) 100%
-    )
-    1;
+.operation-bar-content {
+  --animate-duration: .2s;
+}
 
-  backdrop-filter: blur(10px);
-  border-radius: 174rpx;
-  color: unset;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    border-radius: 174rpx;
-    background: #181818;
-  }
-  .operation-bar-btn-text {
-    font-size: 32rpx;
-    font-weight: 500;
-    letter-spacing: 0em;
-    color: #ffffff;
-    position: relative;
-  }
+.icon-quxiao {
+  transform: rotate(45deg);
+  font-size: 60rpx;
+  width: 60rpx;
+  height: 60rpx;
+  overflow: hidden;
+  margin-right: -10rpx;
+}
+.icon-rotated {
+  transform: rotate(0);
 }
 
 .top-btn-box {
-
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  >view {
+    padding: 20rpx 26rpx;
+    border-radius: 100rpx;
+    background: rgba(0, 0, 0, 0.8);
+    height: 78rpx;
+  }
+  .top-btn-box-title {
+    font-size: 28rpx;
+    font-weight: 500;
+  }
+  .top-btn-box-icon {
+    width: 160rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .icon-shengyin {
+      font-size: 48rpx;
+    }
+  }
 }
 
 .input-box {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-top: 20rpx;
 
+  .icon-phone-box {
+    width: 96rpx;
+    height: 96rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 50%;
+  }
+
+  .icon-jianpan {
+    font-size: 36rpx;
+  }
+  .icon-jianpan-2 {
+    font-size: 48rpx;
+  }
+  .operation-bar-btn {
+    flex: 1;
+    height: 96rpx;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 100rpx;
+    color: #fff;
+    padding: 24rpx 30rpx;
+
+    .operation-bar-btn-text {
+      font-size: 32rpx;
+      font-weight: 500;
+      letter-spacing: 0em;
+      color: #ffffff;
+      position: relative;
+    }
+  }
 } 
 
 .menu-box {
   display: flex;
   justify-content: space-between;
   gap: 18rpx;
+  margin-top: 20rpx;
+  opacity: 0;
+  --animate-duration: .2s;
 
   .menu-item {
     flex: 1;

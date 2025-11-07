@@ -11,6 +11,7 @@ import { onLoad } from "@dcloudio/uni-app";
 import MsgStatusBar from "@/pages/home/components/msg-status-bar/index.vue";
 import OperationBar from "@/pages/home/components/operation-bar/index.vue";
 import SceneModel from "./components/scene-model/index.vue";
+import MenuPopup from "./menu-popup/index.vue";
 
 import { HomeVM } from "@/pages/home/vm/index.js";
 
@@ -27,7 +28,8 @@ onLoad(() => {});
     <MsgStatusBar></MsgStatusBar>
     <SceneModel />
     <OperationBar></OperationBar>
-    <u-safe-bottom></u-safe-bottom>
+    <MenuPopup></MenuPopup>
+    <!-- <u-safe-bottom></u-safe-bottom> -->
   </view>
 </template>
 

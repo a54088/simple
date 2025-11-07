@@ -8,6 +8,11 @@
 import { ViewModel } from "@/shared/class/view-model.js";
 
 export class HomeVM extends ViewModel {
+  showMenuPopup = false
+
+  toggleMenuPopup() {
+    this.showMenuPopup = !this.showMenuPopup
+  }
 
   showToast() {
     try {
