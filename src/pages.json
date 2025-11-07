@@ -94,6 +94,12 @@
             "navigationBarTitleText": "ai总结",
             "navigationStyle": "custom"
           }
+        }, {
+          "path": "create/photo-create",
+          "style": {
+            "navigationBarTitleText": "上传图片形象",
+            "navigationStyle": "custom"
+          }
         }
       ]
     }

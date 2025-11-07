@@ -25,7 +25,7 @@ export class LoginVM extends ViewModel {
    * invite_code: 邀请码
    * email_login: 邮箱登录
    */
-  formType = "email_login";
+  formType = "sms_login";
 
   // tabIndex = 1;
 
@@ -85,6 +85,8 @@ export class LoginVM extends ViewModel {
 
   smsLoginCodeRef = null;
 
+  emailLoginCodeRef = null;
+
   emailFormRef = null;
 
   constructor() {
@@ -104,14 +106,14 @@ export class LoginVM extends ViewModel {
   // setTab(index) {
   //   this.tabIndex = +index;
   // }
-
+  
   // 获取短信验证码
   getSmsLoginCode() {
     if (this.smsLoginCodeRef.canGetCode) {
       // 模拟向后端请求验证码
-      uni.showLoading({
-        title: t("login.getSmsLoginCode"),
-      });
+      // uni.showLoading({
+      //   title: t("login.getSmsLoginCode"),
+      // });
       this.sendSmsLoginCode();
     } else {
       // uni.$u.toast("倒计时结束后再发送");
@@ -163,7 +165,22 @@ export class LoginVM extends ViewModel {
       console.log("校验不通过");
     }
   }
-
+  async getEmailLoginCode() {
+    try {
+      const parameter = {
+        scene: 1,
+        email: this.emailForm.email,
+      };
+      const { code, data } = await memberApi.sendEmailLoginCode(parameter);
+      if (data) {
+        uni.$u.toast(t("login.emailLoginCodeSent"));
+        // 通知验证码组件内部开始倒计时
+        this.emailFormRef.start();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   async register() {
     try {
       const parameter = {
@@ -197,7 +214,9 @@ export class LoginVM extends ViewModel {
       });
 
       const parameter = {
-        ...this.emailForm,
+        // ...this.emailForm,
+        mobile: this.emailForm.email,
+        code: this.emailForm.code,
         // scene: 1,
       };
       const { data, code } = await memberApi.registerLogin(parameter);
@@ -242,7 +261,7 @@ export class LoginVM extends ViewModel {
       if (data) {
         uni.$u.toast(t("login.smsLoginCodeSent"));
         // 通知验证码组件内部开始倒计时
-        this.smsLoginCodeRef.start();
+        this.emailLoginCodeRef.start();
       }
     } catch (e) {
       console.log(e);
@@ -274,7 +293,7 @@ export class LoginVM extends ViewModel {
       });
 
       const parameter = {
-        ...this.emailForm,
+        ...this.smsForm,
         // scene: 1,
       };
       const { data, code } = await memberApi.registerLogin(parameter);

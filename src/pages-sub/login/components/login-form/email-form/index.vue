@@ -37,7 +37,7 @@ const rules = {
   /** 邮箱 */
   email: {
     required: true,
-    message: "please input email",
+    message: "please input correct email",
     // blur和change事件触发检验
     trigger: ["blur", "change"],
     validator: (rule, value, callback) => {
@@ -56,14 +56,14 @@ const rules = {
 };
 
 const codeChange = (text) => {
-  console.log(text, 11);
+  console.log(2);
   
   codeButtonText.value = text;
 };
 
 const getCode = () => {
-  if (form.value.mobile) {
-    vm.getSmsLoginCode();
+  if (form.value.email) {
+    vm.getEmailLoginCode();
   } else {
     uni.showToast({
       title: "please input email",
@@ -98,7 +98,7 @@ const onLeftClick = () => {
         <u-input
           v-model="form.email"
           border="none"
-          type="number"
+          type="text"
           placeholder="please input email"
         >
         </u-input>

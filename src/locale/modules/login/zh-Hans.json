@@ -9,5 +9,6 @@
   "registerSuccess": "注册成功",
   "login.loggingIn": "登录中",
   "login.loginSuccess": "登录成功",
-  "login.getCode": "获取验证码"
+  "login.getCode": "获取验证码",
+  "login.emailLoginCodeSent": "邮箱验证码已发送"
 }

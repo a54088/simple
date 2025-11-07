@@ -12,14 +12,14 @@ import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
 
-const smsLoginCodeRef = ref();
+const emailLoginCodeRef = ref();
 
 const smsFormRef = ref();
 
 const codeButtonText = ref("获取验证码");
 
 vm.smsFormRef = smsFormRef;
-vm.smsLoginCodeRef = smsLoginCodeRef;
+vm.emailLoginCodeRef = emailLoginCodeRef;
 
 const form = computed({
   set(val) {
@@ -56,6 +56,8 @@ const onChangeCode = () => {
 };
 
 const codeChange = (text) => {
+  console.log(1);
+  
   codeButtonText.value = text;
 };
 
@@ -115,7 +117,7 @@ const onLeftClick = () => {
         >
           <template #suffix>
             <u-code
-              ref="smsLoginCodeRef"
+              ref="emailLoginCodeRef"
               @change="codeChange"
               seconds="60"
               changeText="X秒重新获取"

@@ -19,6 +19,10 @@ const UserApi = {
     client.createPostJSON("/member/auth/login", parameter),
   /** 获取用户信息 */
   getUserInfo: (parameter) => client.createGet("/member/user/get", parameter),
+
+  /** 发送邮箱验证码 */
+  sendEmailLoginCode: (parameter) =>
+    client.createPostJSON("/member/auth/send-email-code", parameter),
 };
 
 export default UserApi;
