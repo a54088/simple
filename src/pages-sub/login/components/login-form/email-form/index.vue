@@ -56,8 +56,6 @@ const rules = {
 };
 
 const codeChange = (text) => {
-  console.log(2);
-  
   codeButtonText.value = text;
 };
 

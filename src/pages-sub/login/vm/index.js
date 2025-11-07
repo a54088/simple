@@ -314,13 +314,13 @@ export class LoginVM extends ViewModel {
       if (code == 0) {
         useUserStore().setUserInfo(data);
       // 存在邀请码
-      if (userData.registerCode) {
+      if (data.inviteFlag && !data.recommendUserId) {
+        this.formType = "invite_code";
+      } else {
         uni.showToast({
           title: t("login.loginSuccess"),
           icon: "none",
         });
-      } else {
-        this.formType = "invite_code";
       }
       }
     } catch (e) {

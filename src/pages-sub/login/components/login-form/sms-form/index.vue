@@ -56,8 +56,6 @@ const onChangeCode = () => {
 };
 
 const codeChange = (text) => {
-  console.log(1);
-  
   codeButtonText.value = text;
 };
 
