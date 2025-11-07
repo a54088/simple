@@ -1,6 +1,7 @@
 <script setup>
 import { useCustomTabbarStore } from "@/store/index.js";
 import { CustomTabbarVM } from "./vm/index";
+import SafeBottom from "@/components/safe-bottom/index.vue";
 
 let vm = new CustomTabbarVM();
 provide("loginVM", vm);
@@ -40,7 +41,7 @@ const setCurrentTabIndex = (index) => {
                 <view class="custom-tabber__block" :style="{ left: blockLeft }"></view>
             </view>
         </view>
-        <u-safe-bottom></u-safe-bottom>
+        <SafeBottom />
     </view>
 </template>
 <style lang="scss" scoped>

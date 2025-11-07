@@ -21,7 +21,7 @@ let vm = new LoginVM();
 provide("loginVM", vm);
 
 const handleMobileLogin = () => {
-  vm.formType = "password_login";
+  vm.formType = "sms_login";
   // uni.navigateTo({
   //   url: "/pages-sub/login/mobile-login",
   // });
@@ -51,6 +51,12 @@ const handleMobileLogin = () => {
       </view>
       <LoginType></LoginType>
     </template>
+    <!-- 邀请码登录 -->
+     <view v-if="vm.formType === 'invite_code'" class="login-form__wrapper">
+      <LoginForm></LoginForm> 
+      <!-- <LoginButton></LoginButton> -->
+    </view>
+    <!-- 手机号登录 -->
     <view v-else class="login-form__wrapper">
       <LoginForm></LoginForm> 
       <LoginButton></LoginButton>

@@ -25,8 +25,7 @@
             "Maps" : {},
             "Record" : {},
             "VideoPlayer" : {},
-            "UIWebview" : {},
-            "OAuth" : {}
+            "UIWebview" : {}
         },
         "distribute" : {
             "android" : {
@@ -80,16 +79,7 @@
                         "appkey_android" : "5022db18bcb16e637bb7e80541078d68"
                     }
                 },
-                "oauth" : {
-                    "apple" : {},
-                    "weixin" : {
-                        "appid" : "",
-                        "UniversalLinks" : ""
-                    },
-                    "google" : {
-                        "clientid" : ""
-                    }
-                },
+                "oauth" : {},
                 "speech" : {},
                 "statics" : {}
             },

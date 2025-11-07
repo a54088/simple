@@ -22,7 +22,7 @@ onMounted(() => {
 </script>
 <template>
     <view class="im__layout">
-        <u-status-bar></u-status-bar>
+        <!-- <u-status-bar></u-status-bar> -->
         <ZSwiper>
             <ZSwiperItem v-for="(item, index) in tabList" :key="index">
                 <view class="im__content">

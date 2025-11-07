@@ -171,7 +171,7 @@ const onLeftClick = () => {
   ::v-deep.u-form-item:last-child {
     margin-bottom: 60rpx;
   }
-  ::v-deep.u-form-item {
+  ::v-deep.u-form-item__body {
     width: 100%;
     border-radius: 56rpx;
     padding: 36.5rpx 40rpx;
@@ -180,9 +180,9 @@ const onLeftClick = () => {
     background: rgba(0, 0, 0, 0.04);
     margin-bottom: 32rpx;
   }
-  ::v-deep.u-form-item__body {
-    padding: 0;
-  }
+  // ::v-deep.u-form-item__body {
+  //   padding: 0;
+  // }
   ::v-deep.u-form-item__body__left__content__label {
     font-size: 28rpx;
     font-weight: 500;

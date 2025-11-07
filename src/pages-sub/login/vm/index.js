@@ -7,6 +7,7 @@
  */
 import { ViewModel } from "@/shared/class/view-model.js";
 import LoginApi from "@/api/auth/index.js";
+import memberApi from "@/api/member/index.js";
 import { useUserStore } from "@/store/index";
 import userApi from "@/api/user/index";
 
@@ -17,10 +18,11 @@ export class LoginVM extends ViewModel {
    * sms_login: 短信登录(包括新用户注册)
    * forget_password: 忘记密码
    * mobile_auto_login: 手机号一键登录
+   * invite_code: 邀请码
    */
   formType = "sms_login";
 
-  tabIndex = 1;
+  // tabIndex = 1;
 
   isSmsLogin = false;
 
@@ -86,9 +88,9 @@ export class LoginVM extends ViewModel {
     }
     return "登  录";
   }
-  setTab(index) {
-    this.tabIndex = +index;
-  }
+  // setTab(index) {
+  //   this.tabIndex = +index;
+  // }
 
   // 获取短信验证码
   getSmsLoginCode() {
@@ -116,15 +118,31 @@ export class LoginVM extends ViewModel {
   }
 
   submit() {
-    if (this.tabIndex === 0) {
-      this.registerPre();
-    } else {
-      if (this.isSmsLogin) {
-        this.smsLoginPre();
-      } else {
-        this.loginPre();
-      }
+    if (this.formType === "invite_code") {
+      // this.useInviteCodePre();
+      return;
     }
+    if (this.formType === "mobile_auto_login") {
+      // this.mobileAutoLoginPre();
+      return;
+    }
+    if (this.formType === "password_login") {
+      this.loginPre();
+      return;
+    }
+    if (this.formType === "sms_login") {
+      this.smsLoginPre();
+      return;
+    }
+    // if (this.tabIndex === 0) {
+    //   this.registerPre();
+    // } else {
+    //   if (this.isSmsLogin) {
+    //     this.smsLoginPre();
+    //   } else {
+    //     this.loginPre();
+    //   }
+    // }
   }
   setInviteCode(inviteCode) {
     this.registerForm.recommenderCode = inviteCode;
@@ -220,35 +238,35 @@ export class LoginVM extends ViewModel {
       const parameter = {
         ...this.smsForm,
       };
-      const { data, code } = await LoginApi.smsLogin(parameter);
+      const { data, code } = await memberApi.registerLogin(parameter);
       const { accessToken, refreshToken, userId } = data;
       useUserStore().setToken(accessToken);
       useUserStore().setUserId(userId);
       useUserStore().setRefreshToken(refreshToken);
-      const { data: userData, code: userCode } = await userApi.getUserInfo();
-      if (userCode == 0) {
-        useUserStore().setUserInfo(userData);
-      }
-      // 登录im服务
-      // this.registerIm(userData)
-      if (getCurrentPages().length === 1) {
-        uni.switchTab({
-          url: "/pages/home/index",
-        });
-      } else {
-        const pages = getCurrentPages(); // 当前页面
-        const beforePage = pages[pages.length - 2]; // 上一页
-        uni.navigateBack({
-          delta: 1,
-          success: () => {
-            beforePage.onLoad(); // 执行上一页的onLoad方法
-          },
-        });
-      }
+      this.getUserInfo();
     } catch (e) {
       console.log(e);
     } finally {
       uni.hideLoading();
+    }
+  }
+  async getUserInfo() {
+    try {
+      const { data, code } = await memberApi.getUserInfo();
+      if (code == 0) {
+        useUserStore().setUserInfo(data);
+      // 存在邀请码
+      if (userData.registerCode) {
+        uni.showToast({
+          title: "登录成功",
+          icon: "none",
+        });
+      } else {
+        this.formType = "invite_code";
+      }
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -257,35 +275,29 @@ export class LoginVM extends ViewModel {
       uni.showLoading({
         title: "登录中...",
       });
-
       const parameter = {
         ...this.loginForm,
       };
-      const { data, code } = await LoginApi.login(parameter);
+      const { data, code } = await memberApi.authLogin(parameter);
       const { accessToken, refreshToken, userId } = data;
       useUserStore().setToken(accessToken);
       useUserStore().setUserId(userId);
       useUserStore().setRefreshToken(refreshToken);
-      const { data: userData, code: userCode } = await userApi.getUserInfo();
-      if (userCode == 0) {
-        useUserStore().setUserInfo(userData);
-      }
-      // 登录im服务
-      // this.registerIm(userData)
-      if (getCurrentPages().length === 1) {
-        uni.switchTab({
-          url: "/pages/home/index",
-        });
-      } else {
-        const pages = getCurrentPages(); // 当前页面
-        const beforePage = pages[pages.length - 2]; // 上一页
-        uni.navigateBack({
-          delta: 1,
-          success: () => {
-            beforePage.onLoad(); // 执行上一页的onLoad方法
-          },
-        });
-      }
+      this.getUserInfo();
+      // if (getCurrentPages().length === 1) {
+      //   uni.switchTab({
+      //     url: "/pages/home/index",
+      //   });
+      // } else {
+      //   const pages = getCurrentPages(); // 当前页面
+      //   const beforePage = pages[pages.length - 2]; // 上一页
+      //   uni.navigateBack({
+      //     delta: 1,
+      //     success: () => {
+      //       beforePage.onLoad(); // 执行上一页的onLoad方法
+      //     },
+      //   });
+      // }
     } catch (e) {
       console.log(e);
     } finally {

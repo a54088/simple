@@ -72,7 +72,6 @@ const open = () => {
 
 .chat-list__layout {
     background-color: #fff;
-    padding: 40rpx 0;
     height: 100vh;
     display: flex;
     flex-direction: column;
