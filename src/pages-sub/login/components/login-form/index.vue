@@ -10,6 +10,7 @@ import PasswordForm from "./password-form/index.vue";
 import RegisterForm from "./register-form/index.vue";
 import SmsForm from "./sms-form/index.vue";
 import ForgetPasswordForm from "./forget-password-form/index.vue";
+import InviteForm from "./invite-form/index.vue";
 
 const vm = inject("loginVM");
 </script>
@@ -19,6 +20,7 @@ const vm = inject("loginVM");
   <!-- <RegisterForm v-show="vm.formType === 'register'" /> -->
   <SmsForm v-show="vm.formType === 'sms_login'" />
   <!-- <ForgetPasswordForm v-show="vm.formType === 'forget_password'" /> -->
+  <InviteForm v-show="vm.formType === 'invite_code'" />
 </template>
 
 <style lang="scss" scoped></style>
