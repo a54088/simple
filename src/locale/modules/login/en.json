@@ -1,3 +1,13 @@
 {
-  "login.button": "Login"
+  "login.button": "Login",
+  "login.email": "Email Login",
+  "login.mobileLogin": "Mobile Login",
+  "confirm": "Confirm",
+  "login.confirm": "Confirm Register",
+  "login.getSmsLoginCode": "Get Sms Code",
+  "login.smsLoginCodeSent": "Sms Code Sent",
+  "registerSuccess": "Register Success",
+  "login.loggingIn": "Logging In",
+  "login.loginSuccess": "Login Success",
+  "login.getCode": "Get Code"
 }
