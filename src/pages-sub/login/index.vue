@@ -56,6 +56,7 @@ const handleMobileLogin = () => {
       <LoginButton></LoginButton>
       <LoginAgreement></LoginAgreement>
       <LoginMobileType></LoginMobileType>
+      
     </view>
   </view>
 </template>
