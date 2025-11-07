@@ -3,6 +3,7 @@
   <view class="map_container">
     <map style="width: 100%; height: 100%" :markers="markers" :latitude="currentLatitude" :longitude="currentLongitude"
       ref="mapRef" @markertap="handleMarkerTap" :show-location="true">
+      <cover-image src="/static/map/mapBackground.png" style="height: 329px;"></cover-image>
       <!-- 自定义定位按钮 -->
       <cover-view class="location-btn" @click="moveToCurrentLocation">
         <cover-image src="/static/map/position.png" mode="aspectFit" @click="moveToCurrentLocation"></cover-image>
@@ -144,7 +145,6 @@ map {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   z-index: 999;
 }
 

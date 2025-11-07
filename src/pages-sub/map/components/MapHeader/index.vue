@@ -35,7 +35,7 @@ defineProps({
 // 外层容器：相对定位，控制整体位置
 .header-container {
   position: absolute;
-  top: 0;
+  top: 40rpx;
   left: 0;
   right: 0;
   height: 329rpx; // 与内容层高度一致
@@ -49,15 +49,6 @@ defineProps({
   left: 0;
   right: 0;
   bottom: 0;
-  // 横向渐变模拟阴影扩散（左右淡入淡出）
-  background: linear-gradient(90deg, 
-    rgba(0, 0, 0, 0.2) 0%, 
-    rgba(0, 0, 0, 0.3) 50%, 
-    rgba(0, 0, 0, 0.2) 100%
-  );
-  // 叠加纵向渐变增强底部阴影感
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  opacity: 0.6; // 控制阴影浓度
 }
 
 // 原始内容层：保持原有样式，覆盖在阴影上
@@ -67,7 +58,6 @@ defineProps({
   left: 0;
   right: 0;
   padding: 40rpx 24rpx 24rpx;
-  background: linear-gradient(180deg, #181818 0%, rgba(24, 24, 24, 0) 100%);
   width: 100%;
   height: 100%;
   box-sizing: border-box;

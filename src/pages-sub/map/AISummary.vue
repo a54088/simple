@@ -45,7 +45,14 @@
       <view class="section">
          <view class="section-title">发现</view>
          <view class="discovery-swiper">
-            <ZSwiper>
+            <ZSwiper :autoplay="{ delay:500 }" grabCursor effect="cards" :cardsEffect="{ perSlideOffset: 20 }" :modules="modules"
+               :effect-cards="{
+                  perView: 3,
+                  offset: 20,
+                  scale: 0.9, // 非活跃卡片缩放比例（避免过度灰化）
+                  opacity: 1  // 非活跃卡片不透明
+               }"
+               >
                <ZSwiperItem v-for="(item, index) in swiperList" :key="index">
                   <view class="discovery-card">
                      <image :src="item.path" mode="aspectFill" class="discovery-card-img">
@@ -69,6 +76,11 @@ import ZSwiperItem from '@zebra-ui/swiper/components/z-swiper-item/z-swiper-item
 // 导入hooks
 import useDatePicker from './hooks/useDatePicker'
 import useSwiper from './hooks/useSwiper'
+
+// 导入“卡片叠放”特效模块
+import { EffectCards } from '@zebra-ui/swiper/modules'
+import { Autoplay } from '@zebra-ui/swiper/modules'
+const modules = ref([EffectCards,Autoplay]) // 注册特效模块
 
 // 使用日期选择hook
 const {
@@ -273,13 +285,21 @@ $color-online: #73FF86;
 // 发现区轮播
 .discovery-swiper {
    width: 100%;
+   // 增加容器高度，确保底部内容不被截断
+   height: 480rpx;
 
    .discovery-card {
-      position: relative;
+
       width: 100%;
-      height: 100%;
+      height: 480rpx;
       border-radius: $border-radius;
-      overflow: hidden;
+      position: relative;
+
+      // overflow: hidden;
+      .discovery-card-img {
+         // 图片高度可以略小于卡片，预留底部空间
+         height: 400rpx;
+      }
 
       image {
          width: 100%;
