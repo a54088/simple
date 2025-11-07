@@ -8,24 +8,6 @@
 import { ViewModel } from "@/shared/class/view-model.js";
 
 export class HomeVM extends ViewModel {
-  menuList = [
-    {
-      icon: "iconfont icon-shengyin",
-      key: "yuyin",
-    },
-    {
-      icon: "iconfont icon-jurassic_wait",
-      key: "shijian",
-    },
-    {
-      icon: "iconfont icon-faqiliaotian",
-      key: "shijian",
-    },
-    {
-      icon: "iconfont icon-xinjian",
-      key: "shijian",
-    },
-  ];
 
   showToast() {
     try {

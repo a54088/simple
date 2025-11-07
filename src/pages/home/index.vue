@@ -23,9 +23,11 @@ onLoad(() => {});
 
 <template>
   <view class="home__layout">
+    <u-status-bar></u-status-bar>
     <MsgStatusBar></MsgStatusBar>
     <SceneModel />
     <OperationBar></OperationBar>
+    <u-safe-bottom></u-safe-bottom>
   </view>
 </template>
 
