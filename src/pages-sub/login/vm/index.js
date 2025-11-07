@@ -10,6 +10,10 @@ import LoginApi from "@/api/auth/index.js";
 import memberApi from "@/api/member/index.js";
 import { useUserStore } from "@/store/index";
 import userApi from "@/api/user/index";
+import { i18n } from '@/locale/index.js'
+const { t } = i18n.global
+
+
 
 export class LoginVM extends ViewModel {
   /**
@@ -19,8 +23,9 @@ export class LoginVM extends ViewModel {
    * forget_password: 忘记密码
    * mobile_auto_login: 手机号一键登录
    * invite_code: 邀请码
+   * email_login: 邮箱登录
    */
-  formType = "sms_login";
+  formType = "email_login";
 
   // tabIndex = 1;
 
@@ -61,6 +66,12 @@ export class LoginVM extends ViewModel {
     /** 验证码 */
     code: "",
   };
+  emailForm = {
+    /** 邮箱 */
+    email: "",
+    /** 验证码 */
+    code: "",
+  };
 
   isAgreement = false;
 
@@ -74,19 +85,21 @@ export class LoginVM extends ViewModel {
 
   smsLoginCodeRef = null;
 
+  emailFormRef = null;
+
   constructor() {
     super();
   }
 
   get loginButtonText() {
     if (this.formType === "register") {
-      return "确认注册";
+      return t("login.confirm");
     }
 
     if (this.formType === "forget_password") {
-      return "确  认";
+      return t("confirm");
     }
-    return "登  录";
+    return t("login.button");
   }
   // setTab(index) {
   //   this.tabIndex = +index;
@@ -97,7 +110,7 @@ export class LoginVM extends ViewModel {
     if (this.smsLoginCodeRef.canGetCode) {
       // 模拟向后端请求验证码
       uni.showLoading({
-        title: "正在获取验证码",
+        title: t("login.getSmsLoginCode"),
       });
       this.sendSmsLoginCode();
     } else {
@@ -109,7 +122,7 @@ export class LoginVM extends ViewModel {
     if (this.smsCodeRef.canGetCode) {
       // 模拟向后端请求验证码
       uni.showLoading({
-        title: "正在获取验证码",
+        title: t("login.getSmsLoginCode"),
       });
       this.sendSmsCode();
     } else {
@@ -134,15 +147,10 @@ export class LoginVM extends ViewModel {
       this.smsLoginPre();
       return;
     }
-    // if (this.tabIndex === 0) {
-    //   this.registerPre();
-    // } else {
-    //   if (this.isSmsLogin) {
-    //     this.smsLoginPre();
-    //   } else {
-    //     this.loginPre();
-    //   }
-    // }
+    if (this.formType === "email_login") {
+      this.emailLoginPre();
+      return;
+    }
   }
   setInviteCode(inviteCode) {
     this.registerForm.recommenderCode = inviteCode;
@@ -167,11 +175,41 @@ export class LoginVM extends ViewModel {
       };
       const { data } = await LoginApi.register(parameter);
       if (data) {
-        uni.$u.toast("注册成功");
+        uni.$u.toast(t("registerSuccess"));
         this.tabIndex = 1;
       }
     } catch (e) {
       console.log(e);
+    }
+  }
+  async emailLoginPre() {
+    try {
+      await this.emailFormRef.validate();
+      this.emailLogin();
+    } catch (e) {
+      console.log("校验不通过");
+    }
+  }
+  async emailLogin() {
+    try {
+      uni.showLoading({
+        title: t("login.loggingIn"),
+      });
+
+      const parameter = {
+        ...this.emailForm,
+        // scene: 1,
+      };
+      const { data, code } = await memberApi.registerLogin(parameter);
+      const { accessToken, refreshToken, userId } = data;
+      useUserStore().setToken(accessToken);
+      useUserStore().setUserId(userId);
+      useUserStore().setRefreshToken(refreshToken);
+      this.getUserInfo();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      uni.hideLoading();
     }
   }
 
@@ -202,7 +240,7 @@ export class LoginVM extends ViewModel {
       const { code, data } = await LoginApi.sendSmsCode(parameter);
 
       if (data) {
-        uni.$u.toast("验证码已发送");
+        uni.$u.toast(t("login.smsLoginCodeSent"));
         // 通知验证码组件内部开始倒计时
         this.smsLoginCodeRef.start();
       }
@@ -214,13 +252,13 @@ export class LoginVM extends ViewModel {
   async sendSmsCode() {
     try {
       const parameter = {
-        scene: 5,
+        scene: 1,
         mobile: this.registerForm.mobile,
       };
       const { code, data } = await LoginApi.sendSmsCode(parameter);
 
       if (data) {
-        uni.$u.toast("验证码已发送");
+        uni.$u.toast(t("login.smsLoginCodeSent"));
         // 通知验证码组件内部开始倒计时
         this.smsCodeRef.start();
       }
@@ -232,11 +270,12 @@ export class LoginVM extends ViewModel {
   async smsLogin() {
     try {
       uni.showLoading({
-        title: "登录中...",
+        title: t("login.loggingIn"),
       });
 
       const parameter = {
-        ...this.smsForm,
+        ...this.emailForm,
+        // scene: 1,
       };
       const { data, code } = await memberApi.registerLogin(parameter);
       const { accessToken, refreshToken, userId } = data;
@@ -258,7 +297,7 @@ export class LoginVM extends ViewModel {
       // 存在邀请码
       if (userData.registerCode) {
         uni.showToast({
-          title: "登录成功",
+          title: t("login.loginSuccess"),
           icon: "none",
         });
       } else {
@@ -273,7 +312,7 @@ export class LoginVM extends ViewModel {
   async login() {
     try {
       uni.showLoading({
-        title: "登录中...",
+        title: t("login.loggingIn"),
       });
       const parameter = {
         ...this.loginForm,
@@ -300,73 +339,6 @@ export class LoginVM extends ViewModel {
       // }
     } catch (e) {
       console.log(e);
-    } finally {
-      uni.hideLoading();
-    }
-  }
-
-  async appleLogin() {
-    try {
-      // 检查平台是否支持苹果登录
-      // #ifdef APP-PLUS
-      const platform = uni.getSystemInfoSync().platform;
-      if (platform !== 'ios') {
-        uni.showToast({
-          title: '仅iOS平台支持Apple登录',
-          icon: 'none'
-        });
-        return;
-      }
-      
-      uni.showLoading({
-        title: "登录中...",
-      });
-      
-      // 调用uni-app的苹果登录API
-      const { code, userInfo } = await uni.login({
-        provider: 'apple',
-        success: (res) => res,
-        fail: (err) => {
-          throw new Error(JSON.stringify(err));
-        }
-      });
-      
-      // 调用后端API进行苹果登录
-      const parameter = {
-        code,
-        userInfo
-      };
-      const { data, code: apiCode } = await LoginApi.appleLogin(parameter);
-      const { accessToken, refreshToken, userId } = data;
-      useUserStore().setToken(accessToken);
-      useUserStore().setUserId(userId);
-      useUserStore().setRefreshToken(refreshToken);
-      const { data: userData, code: userCode } = await userApi.getUserInfo();
-      if (userCode == 0) {
-        useUserStore().setUserInfo(userData);
-      }
-      
-      // 登录成功后的页面跳转逻辑
-      if (getCurrentPages().length === 1) {
-        uni.switchTab({
-          url: "/pages/home/index",
-        });
-      } else {
-        const pages = getCurrentPages();
-        const beforePage = pages[pages.length - 2];
-        uni.navigateBack({
-          delta: 1,
-          success: () => {
-            beforePage.onLoad();
-          },
-        });
-      }
-    } catch (e) {
-      console.error('Apple登录失败:', e);
-      uni.showToast({
-        title: '登录失败，请重试',
-        icon: 'none'
-      });
     } finally {
       uni.hideLoading();
     }

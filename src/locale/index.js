@@ -23,5 +23,6 @@ const config = {
   locale: "zh-Hans", // 默认显示语言
   fallbackLocale: "en", // 回退语言
   messages: locales,
+  legacy: false,
 };
 export const i18n = createI18n(config);

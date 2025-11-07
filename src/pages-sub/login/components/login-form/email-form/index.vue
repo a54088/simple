@@ -14,48 +14,50 @@ const vm = inject("loginVM");
 
 const smsLoginCodeRef = ref();
 
-const smsFormRef = ref();
+const emailFormRef = ref();
 
-const codeButtonText = ref("获取验证码");
+const codeButtonText = ref("get code");
+import { useI18n } from "vue-i18n";
 
-vm.smsFormRef = smsFormRef;
+const { t } = useI18n();
+
+vm.emailFormRef = emailFormRef;
 vm.smsLoginCodeRef = smsLoginCodeRef;
 
 const form = computed({
   set(val) {
-    vm.smsForm = val;
+    vm.emailForm = val;
   },
   get() {
-    return vm.smsForm;
+    return vm.emailForm;
   },
 });
 
 const rules = {
-  mobile: {
+  /** 邮箱 */
+  email: {
+    required: true,
+    message: "please input email",
+    // blur和change事件触发检验
     trigger: ["blur", "change"],
     validator: (rule, value, callback) => {
       // 上面有说，返回true表示校验通过，返回false表示不通过
       // uni.$u.test.mobile()就是返回true或者false的
-      return uni.$u.test.mobile(value);
+      return uni.$u.test.email(value);
     },
-    required: true,
-    message: "手机号码不正确",
   },
+  /** 验证码 */
   code: {
     required: true,
-    message: "验证码不能为空",
+    message: "please input code",
     // blur和change事件触发检验
     trigger: ["blur", "change"],
   },
 };
 
-const showPassword = ref(false);
-
-const onChangeCode = () => {
-  vm.isSmsLogin = !vm.isSmsLogin;
-};
-
 const codeChange = (text) => {
+  console.log(text, 11);
+  
   codeButtonText.value = text;
 };
 
@@ -64,14 +66,10 @@ const getCode = () => {
     vm.getSmsLoginCode();
   } else {
     uni.showToast({
-      title: "请输入手机号",
+      title: "please input email",
       icon: "none",
     });
   }
-};
-
-const onChangeRegister = () => {
-  vm.formType = "register";
 };
 
 const onLeftClick = () => {
@@ -93,15 +91,15 @@ const onLeftClick = () => {
     :model="form"
     :rules="rules"
     :borderBottom="false"
-    ref="smsFormRef"
+    ref="emailFormRef"
     class="sms-form__layout"
   >
-    <u-form-item prop="mobile">
+    <u-form-item prop="email" label="Email">
         <u-input
-          v-model="form.mobile"
+          v-model="form.email"
           border="none"
           type="number"
-          placeholder="请输入手机号"
+          placeholder="please input email"
         >
         </u-input>
     </u-form-item>
@@ -110,7 +108,7 @@ const onLeftClick = () => {
         <u-input
           v-model="form.code"
           border="none"
-          placeholder="请输入验证码"
+          placeholder="please input code"
           type="number"
         >
           <template #suffix>
@@ -118,18 +116,13 @@ const onLeftClick = () => {
               ref="smsLoginCodeRef"
               @change="codeChange"
               seconds="60"
-              changeText="X秒重新获取"
+              changeText="X second get"
+              startText="Get Code"
             />
             <text class="code-button" @tap="getCode">{{ codeButtonText }}</text>
           </template>
         </u-input>
     </u-form-item>
-    <!-- <view class="code-login">
-      <text @tap="onChangeRegister">新用户注册</text>
-      <text @tap="onChangeCode">{{
-        vm.isSmsLogin ? "密码登录" : "验证码登录"
-      }}</text>
-    </view> -->
   </u-form>
   </view>
   
@@ -167,9 +160,11 @@ const onLeftClick = () => {
   }
 }
 .sms-form__layout {
+  
   ::v-deep.u-form-item {
     margin-bottom: 32rpx;
   }
+
   ::v-deep.u-form-item:last-child {
     margin-bottom: 60rpx;
   }
@@ -180,7 +175,6 @@ const onLeftClick = () => {
     display: flex;
     color: #3d3d3d;
     background: rgba(0, 0, 0, 0.04);
-    // margin-bottom: 32rpx;
   }
   // ::v-deep.u-form-item__body {
   //   padding: 0;

@@ -11,6 +11,9 @@ import RegisterForm from "./register-form/index.vue";
 import SmsForm from "./sms-form/index.vue";
 import ForgetPasswordForm from "./forget-password-form/index.vue";
 import InviteForm from "./invite-form/index.vue";
+import EmailForm from "./email-form/index.vue";
+
+
 
 const vm = inject("loginVM");
 </script>
@@ -21,6 +24,7 @@ const vm = inject("loginVM");
   <SmsForm v-show="vm.formType === 'sms_login'" />
   <!-- <ForgetPasswordForm v-show="vm.formType === 'forget_password'" /> -->
   <InviteForm v-show="vm.formType === 'invite_code'" />
+  <EmailForm v-show="vm.formType === 'email_login'" />
 </template>
 
 <style lang="scss" scoped></style>
