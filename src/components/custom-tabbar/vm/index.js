@@ -20,6 +20,6 @@ export class CustomTabbarVM extends ViewModel {
     }
 
     setCurrentTabIndex(index) {
-        useCustomTabbarStore().setCurrentTabIndex(index);
+        useCustomTabbarStore().switchTab(index);
     }
 }

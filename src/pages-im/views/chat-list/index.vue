@@ -89,7 +89,6 @@ const open = () => {
 
 .chat-list__safe__layout {
     height: calc(32rpx + 108rpx);
-    ;
 }
 
 .chat-list__scroll {

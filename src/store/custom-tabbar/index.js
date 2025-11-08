@@ -8,23 +8,22 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
                 {
                     label: '聊天',
                     icon: 'icon-a-24gf-bubble4',
-                    path: '/pages-im/chat-list/index',
                     key: 'chat-list',
-                },
-                {
-                    label: '圈子',
-                    icon: 'icon-a-24gf-bubble4',
-                    path: '/pages-im/circle-list/index',
-                    key: 'circle-list',
                 },
                 {
                     label: '通讯录',
                     icon: 'icon-tongxunlu02-F',
-                    path: '/pages-im/contacts/index',
                     key: 'contacts',
                 },
+                {
+                    label: '圈子',
+                    icon: 'icon-a-24gf-bubble4',
+                    key: 'circle',
+                },
+                
             ],
             currentTabIndex: 0,
+            swiperRef: null,
         };
     },
 
@@ -35,7 +34,13 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
     },
 
     actions: {
-        
+        switchTab(index) {
+            this.currentTabIndex = index
+            if (this.swiperRef) {
+                debugger
+                this.swiperRef.swiper.slideTo(index)
+            }
+        },
         setCurrentTabIndex(index) {
             // 获取当前页面栈
             const pages = getCurrentPages();
