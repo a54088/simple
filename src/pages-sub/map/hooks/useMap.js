@@ -16,8 +16,20 @@ export function useMap() {
       iconPath: "/static/map/avatar1.webp",
       width: 48,
       height: 48,
-      title: "总部位置",
+      // title: "总部位置",
       anchor: { x: 0.5, y: 1 },
+      label: {
+        content: ' ',
+        fontSize: 14,
+        bgColor: '#73FF86',
+        borderRadius: 200,
+        borderColor: '#FFFFFF',
+        borderWidth: 2,
+        anchorX: -10,
+        anchorY: -48,
+        // border:
+        padding: 5
+      }
     },
     {
       id: 2,
@@ -26,7 +38,7 @@ export function useMap() {
       iconPath: "/static/map/avatar2.webp",
       width: 48,
       height: 48,
-      title: "分部位置",
+      // title: "分部位置",
       anchor: { x: 0.5, y: 1 },
     },
     {
@@ -36,17 +48,17 @@ export function useMap() {
       iconPath: "/static/map/avatar3.webp",
       width: 48,
       height: 48,
-      title: "重要地点",
+      // title: "重要地点",
       anchor: { x: 0.5, y: 1 },
-      callout: {
-        content: "这是重要地点\n点击查看详情",
-        color: "#FFFFFF",
-        fontSize: 14,
-        borderRadius: 5,
-        bgColor: "#007AFF",
-        padding: 5,
-        display: "ALWAYS",
-      },
+      // callout: {
+      //   content: "这是重要地点\n点击查看详情",
+      //   color: "#FFFFFF",
+      //   fontSize: 14,
+      //   borderRadius: 5,
+      //   bgColor: "#007AFF",
+      //   padding: 5,
+      //   display: "ALWAYS",
+      // },
     },
     {
       id: 4,
@@ -55,7 +67,7 @@ export function useMap() {
       iconPath: "/static/map/avatar4.webp",
       width: 48,
       height: 48,
-      title: "普通标记",
+      // title: "普通标记",
       anchor: { x: 0.5, y: 0.5 },
       alpha: 0.8,
     },
@@ -68,8 +80,8 @@ export function useMap() {
   const initMap = (mapInstance) => {
     map.value = mapInstance;
     console.log('地图初始化');
-    
-    
+
+
     // 获取定位
     uni.getLocation({
       type: "gcj02",
@@ -78,19 +90,19 @@ export function useMap() {
         currentLatitude.value = res.latitude;
         currentLongitude.value = res.longitude;
         updateCurrentLocationMarker(res.latitude, res.longitude);
-         
+
         // 移动地图中心到当前位置
         map.value.moveToLocation({
           latitude: res.latitude,
           longitude: res.longitude
         });
-        
+
         uni.showToast({
           title: "位置获取成功",
           icon: "success",
         });
       },
-      fail: (err) => {    
+      fail: (err) => {
         uni.showToast({
           title: "位置获取失败，使用默认位置",
           icon: "none",
@@ -119,7 +131,7 @@ export function useMap() {
         anchor: { x: 0.5, y: 1 },
         callout: {
           content: `当前位置\n纬度: ${lat.toFixed(6)}\n经度: ${lng.toFixed(6)}`,
-          color: "#FFFFFF",
+          color: "#FF6B6B",
           fontSize: 12,
           borderRadius: 5,
           bgColor: "#FF6B6B",
