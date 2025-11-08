@@ -18,7 +18,7 @@ const onToChatDetail = () => {
 
 <template>
     <view class="chat-item__layout" @tap="onToChatDetail">
-        <u-avatar :src="src" size="96rpx"></u-avatar>
+        <u-avatar :src="''" size="96rpx"></u-avatar>
         <view class="chat-item__content">
             <view class="chat-item__content__title__layout">
                 <text

@@ -12,14 +12,14 @@ import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
 
-const smsLoginCodeRef = ref();
+const emailLoginCodeRef = ref();
 
 const smsFormRef = ref();
 
 const codeButtonText = ref("获取验证码");
 
 vm.smsFormRef = smsFormRef;
-vm.smsLoginCodeRef = smsLoginCodeRef;
+vm.emailLoginCodeRef = emailLoginCodeRef;
 
 const form = computed({
   set(val) {
@@ -31,19 +31,19 @@ const form = computed({
 });
 
 const rules = {
-  // mobile: {
-  //   trigger: ["blur", "change"],
-  //   validator: (rule, value, callback) => {
-  //     // 上面有说，返回true表示校验通过，返回false表示不通过
-  //     // uni.$u.test.mobile()就是返回true或者false的
-  //     return uni.$u.test.mobile(value);
-  //   },
-  //   required: true,
-  //   message: "手机号码不正确",
-  // },
-  "form.password": {
+  mobile: {
+    trigger: ["blur", "change"],
+    validator: (rule, value, callback) => {
+      // 上面有说，返回true表示校验通过，返回false表示不通过
+      // uni.$u.test.mobile()就是返回true或者false的
+      return uni.$u.test.mobile(value);
+    },
     required: true,
-    message: "密码不能为空",
+    message: "手机号码不正确",
+  },
+  code: {
+    required: true,
+    message: "验证码不能为空",
     // blur和change事件触发检验
     trigger: ["blur", "change"],
   },
@@ -115,7 +115,7 @@ const onLeftClick = () => {
         >
           <template #suffix>
             <u-code
-              ref="smsLoginCodeRef"
+              ref="emailLoginCodeRef"
               @change="codeChange"
               seconds="60"
               changeText="X秒重新获取"
@@ -167,22 +167,24 @@ const onLeftClick = () => {
   }
 }
 .sms-form__layout {
-  padding: 0;
+  ::v-deep.u-form-item {
+    margin-bottom: 32rpx;
+  }
   ::v-deep.u-form-item:last-child {
     margin-bottom: 60rpx;
   }
-  ::v-deep.u-form-item {
+  ::v-deep.u-form-item__body {
     width: 100%;
     border-radius: 56rpx;
     padding: 36.5rpx 40rpx;
     display: flex;
     color: #3d3d3d;
     background: rgba(0, 0, 0, 0.04);
-    margin-bottom: 32rpx;
+    // margin-bottom: 32rpx;
   }
-  ::v-deep.u-form-item__body {
-    padding: 0;
-  }
+  // ::v-deep.u-form-item__body {
+  //   padding: 0;
+  // }
   ::v-deep.u-form-item__body__left__content__label {
     font-size: 28rpx;
     font-weight: 500;

@@ -10,7 +10,10 @@
 import { inject } from 'vue';
 
 const vm = inject("loginVM");
-
+const handleTap = (type) => {
+  vm.isSmsLogin = type === 'sms_login';
+  vm.formType = type;
+}
 </script>
 
 <template>
@@ -19,10 +22,10 @@ const vm = inject("loginVM");
     <view class="login-type-content">
       <!-- 这里可以添加登录类型选择的具体内容 -->
       <view class="login-type-text" v-if="vm.formType === 'sms_login'">
-        <text @tap="vm.formType = 'password_login'">-密码登录-</text>
+        <text @tap="handleTap('password_login')">-密码登录-</text>
       </view>
       <view class="login-type-text" v-if="vm.formType === 'password_login'">
-        <text @tap="vm.formType = 'sms_login'">-验证码登录-</text>
+        <text @tap="handleTap('sms_login')">-验证码登录-</text>
       </view>
     </view>
   </view>

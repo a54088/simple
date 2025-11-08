@@ -8,8 +8,6 @@
 import { client } from "@/shared/network/index";
 
 const UserApi = {
-  /** 获取用户信息 */
-  getUserInfo: (parameter) => client.createGet("/member/user/get", parameter),
 
   /** 获取会员认证信息 */
   getMemberAuthInfo: () => client.createGet("/member/real-name-info/get"),

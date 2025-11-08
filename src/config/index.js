@@ -30,7 +30,7 @@ if (typeof baseUrl === "undefined") {
 export const apiPath = import.meta.env.VITE_APP_API_PATH;
 export const staticUrl = import.meta.env.SHOPRO_STATIC_URL;
 export const tenantId = import.meta.env.VITE_APP_TENANT_ID;
-export const websocketPath = import.meta.env.SHOPRO_WEBSOCKET_PATH;
+export const websocketPath = import.meta.env.VITE_APP_WS_API_PATH;
 export const h5Url = import.meta.env.SHOPRO_H5_URL;
 export const H5Url = import.meta.env.VITE_H5_URL;
 

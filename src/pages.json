@@ -28,7 +28,10 @@
             "animationType": "fade-in",
             "animationDuration": 300,
             "navigationBarTitleText": "IM",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
           }
         }, 
         {
@@ -37,7 +40,10 @@
             "animationType": "fade-in",
             "animationDuration": 300,
             "navigationBarTitleText": "聊天",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
           }
         }
       ]
@@ -91,6 +97,12 @@
             "navigationBarTitleText": "ai总结",
             "navigationStyle": "custom"
           }
+        }, {
+          "path": "create/photo-create",
+          "style": {
+            "navigationBarTitleText": "上传图片形象",
+            "navigationStyle": "custom"
+          }
         }
       ]
     }
@@ -126,7 +138,7 @@
 		"list": [
 			{
 				"name": "地图", //模式名称
-				"path": "pages-sub/map/index", //启动页面，必选
+				"path": "pages-im/index", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]

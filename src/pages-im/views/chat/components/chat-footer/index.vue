@@ -1,8 +1,21 @@
-<script setup></script>
+<script setup>
+import { inject } from 'vue'
+
+const vm = inject('imVM')
+
+const value1 = ref('')
+
+const onConfirm = () => {
+    if (value1.value) {
+        vm.sendMessage(value1.value)
+        value1.value = ''
+    }
+}
+</script>
 
 <template>
     <view class="chat__footer">
-        <u-textarea class="chat__footer__textarea" round="40rpx" height="96rpx" v-model="value1" placeholder="请输入消息" border="none" autoHeight></u-textarea>
+        <u-textarea class="chat__footer__textarea" round="40rpx" height="96rpx" v-model="value1" placeholder="请输入消息" border="none" autoHeight @confirm="onConfirm"></u-textarea>
     </view>
       <u-safe-bottom></u-safe-bottom>
 </template>

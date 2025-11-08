@@ -7,9 +7,117 @@
 -->
 <script setup>
 
-import { inject } from 'vue';
+import { inject, ref, onMounted } from 'vue';
+import { isChineseLocale } from '@/utils/index';
 
+import { i18n } from '@/locale/index.js'
+const { t } = i18n.global
 const vm = inject("loginVM");
+
+// 判断是否为国内用户的状态
+const isChineseUser = ref(true); // 默认假设为国内用户
+// 判断是否为iOS平台
+const isIOS = ref(false);
+
+// 初始化时获取用户地区信息和平台信息
+onMounted(() => {
+  try {
+    // 使用工具函数判断当前是否为国内语言环境
+    isChineseUser.value = isChineseLocale();
+    
+    // 获取当前平台信息
+    const systemInfo = uni.getSystemInfoSync();
+    isIOS.value = systemInfo.platform === 'ios';
+  } catch (e) {
+    console.log('获取环境信息失败', e);
+    // 默认保持为国内用户，非iOS平台
+  }
+});
+
+// 处理苹果登录
+const handleAppleLogin = async () => {
+  try {
+    // 登录获取code
+    const loginRes = await new Promise((resolve, reject) => {
+      uni.login({
+        provider: 'apple',
+        success: resolve,
+        fail: reject
+      });
+    });
+    console.log('苹果登录成功', loginRes);
+    
+    // 获取用户信息
+    const userInfoRes = await new Promise((resolve, reject) => {
+      uni.getUserInfo({
+        provider: 'apple',
+        success: resolve,
+        fail: reject
+      });
+    });
+    console.log('获取苹果用户信息成功', userInfoRes);
+    
+    // 调用后端登录接口，传递code和userInfoRes
+    // if (vm && typeof vm.handleAppleLogin === 'function') {
+    //   await vm.handleAppleLogin(loginRes.code, userInfoRes);
+    // }
+  } catch (err) {
+    console.log('苹果登录或获取信息失败', err);
+  }
+};
+
+// 处理微信登录
+const handleWechatLogin = async () => {
+  try {
+    const loginRes = await new Promise((resolve, reject) => {
+      uni.login({
+        provider: 'weixin',
+        success: resolve,
+        fail: reject
+      });
+    });
+    console.log('微信登录成功', loginRes);
+    
+    // 调用后端登录接口，传递code
+    if (vm && typeof vm.handleWechatLogin === 'function') {
+      await vm.handleWechatLogin(loginRes.code);
+    }
+  } catch (err) {
+    console.log('微信登录失败', err);
+  }
+};
+
+// 处理谷歌登录
+const handleGoogleLogin = async () => {
+  try {
+    // 登录获取code
+    const loginRes = await new Promise((resolve, reject) => {
+      uni.login({
+        provider: 'google',
+        success: resolve,
+        fail: reject
+      });
+    });
+    console.log('谷歌登录成功', loginRes);
+    
+    // 获取用户信息
+    const userInfoRes = await new Promise((resolve, reject) => {
+      uni.getUserInfo({
+        provider: 'google',
+        success: resolve,
+        fail: reject
+      });
+    });
+    console.log('获取谷歌用户信息成功', userInfoRes);
+    
+    // 调用后端登录接口，传递code和userInfoRes
+    // if (vm && typeof vm.handleGoogleLogin === 'function') {
+    //   await vm.handleGoogleLogin(loginRes.code, userInfoRes);
+    // }
+  } catch (err) {
+    console.log('谷歌登录或获取信息失败', err);
+  }
+};
 </script>
 
 <template>
@@ -18,13 +126,14 @@ const vm = inject("loginVM");
     <view class="login-type-content">
       <!-- 这里可以添加登录类型选择的具体内容 -->
       <view class="login-type-text">
-        <text>-其他登录方式-</text>
+        <text>-{{ t('login.otherLogin') }}-</text>
       </view>
       <view class="login-type-icon">
-        <text class="iconfont icon-denglu_weixin iconfont__btn"></text>
-        <text class="iconfont icon-denglu_pingguo iconfont__btn"></text>
-        <text class="iconfont icon-denglu_guge iconfont__btn"></text>
-        <!-- <text class="iconfont icon-denglu_shouji"></text> -->
+        <!-- 国内显示微信登录，国外显示谷歌登录 -->
+        <text v-if="isChineseUser" class="iconfont icon-denglu_weixin iconfont__btn" @tap="handleWechatLogin"></text>
+        <text v-if="!isChineseUser" class="iconfont icon-denglu_guge iconfont__btn" @tap="handleGoogleLogin"></text>
+        <!-- 仅在iOS平台显示苹果登录 -->
+        <text v-if="isIOS" class="iconfont icon-denglu_pingguo iconfont__btn" @tap="handleAppleLogin"></text>
       </view>
     </view>
   </view>

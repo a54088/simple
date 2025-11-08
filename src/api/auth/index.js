@@ -9,13 +9,6 @@ import { client } from "@/shared/network/index";
 
 const AuthApi = {
   /**
-   * 登录
-   * @param {*} data
-   * @returns
-   */
-  login: (data) => client.createPostJSON("/member/auth/login", data),
-
-  /**
    * 使用手机 + 验证码登录
    * @param {*} data
    * @returns

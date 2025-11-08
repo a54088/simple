@@ -26,7 +26,7 @@ const form = computed({
 });
 
 const rules = {
-  "form.password": {
+  "password": {
     required: true,
     message: "密码不能为空",
     // blur和change事件触发检验
@@ -123,21 +123,19 @@ const onChangeRegister = () => {
   color: #fb494a;
 }
 .password-form__layout {
-  padding: 0;
+  ::v-deep.u-form-item {
+    margin-bottom: 32rpx;
+  }
   ::v-deep.u-form-item:last-child {
     margin-bottom: 60rpx;
   }
-  ::v-deep.u-form-item {
+  ::v-deep.u-form-item__body {
     width: 100%;
     border-radius: 56rpx;
     padding: 36.5rpx 40rpx;
     display: flex;
     color: #3d3d3d;
     background: rgba(0, 0, 0, 0.04);
-    margin-bottom: 32rpx;
-  }
-  ::v-deep.u-form-item__body {
-    padding: 0;
   }
   ::v-deep.u-form-item__body__left__content__label {
     font-size: 28rpx;
