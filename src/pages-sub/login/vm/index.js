@@ -25,7 +25,7 @@ export class LoginVM extends ViewModel {
    * invite_code: 邀请码
    * email_login: 邮箱登录
    */
-  formType = "sms_login";
+  formType = "mobile_auto_login";
 
   // tabIndex = 1;
 

@@ -10,5 +10,7 @@
   "login.loggingIn": "Logging In",
   "login.loginSuccess": "Login Success",
   "login.getCode": "Get Code",
-  "login.emailLoginCodeSent": "Email Code Sent"
+  "login.emailLoginCodeSent": "Email Code Sent",
+  "login.enterAquan": "Enter Aquan",
+  "login.otherLogin": "Other Login"
 }
