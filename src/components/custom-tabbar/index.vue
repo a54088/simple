@@ -21,12 +21,17 @@ const blockLeft = computed(() => {
 const setCurrentTabIndex = (index) => {
     vm.setCurrentTabIndex(index);
 }
+const onToMapIndex = () => {
+    uni.navigateTo({
+        url: '/pages-sub/map/index',
+    })
+}
 </script>
 
 <template>
     <view class="custom-tabbar__layout">
         <view class="custom-tabbar__content">
-            <view class="custom-tabbar__logo">
+            <view class="custom-tabbar__logo" @tap="onToMapIndex">
                 <image src="@/static/images/common/logo.png" class="custom-tabbar__logo-image" />
             </view>
             <view class="custom-tabbar__list">
@@ -55,7 +60,9 @@ const setCurrentTabIndex = (index) => {
         padding: 32rpx;
         display: flex;
     }
-
+    .iconfont {
+        color: #fff;
+    }
     .custom-tabbar__list {
         padding: 0 28rpx;
         display: flex;
