@@ -1,0 +1,161 @@
+<!-- components/AddFriend/index.vue -->
+<template>
+  <view class="popup-container" :class="{ 'show': visible }">
+    <!-- 遮罩层 -->
+    <view class="mask" @click="emit('close')" :class="{ 'mask-show': visible }"></view>
+    
+    <!-- 弹框内容 -->
+    <view class="popup-content" :class="{ 'content-show': visible }">
+      <view class="popup-header">
+        <text class="title">{{ title }}</text>
+        <text class="close-btn" @click="emit('close')">×</text>
+      </view>
+      
+      <view class="popup-body">
+        <text class="desc">{{ desc }}</text>
+        
+        <view class="avatars">
+          <view class="avatar-item" v-for="(item, index) in avatars" :key="index">
+            <image :src="item" mode="aspectFill"></image>
+          </view>
+        </view>
+      </view>
+      
+      <view class="popup-footer">
+        <button class="action-btn" @click="emit('action')">{{ buttonText }}</button>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup>
+import { defineProps, defineEmits } from 'vue'
+
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false
+  },
+  title: {
+    type: String,
+    default: ''
+  },
+  desc: {
+    type: String,
+    default: ''
+  },
+  avatars: {
+    type: Array,
+    default: () => []
+  },
+  buttonText: {
+    type: String,
+    default: ''
+  }
+})
+
+const emit = defineEmits(['close', 'action'])
+</script>
+
+<style lang="scss" scoped>
+.popup-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+// 遮罩层样式
+.mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; // 隐藏时不响应点击
+}
+
+.mask-show {
+  opacity: 1;
+  pointer-events: auto; // 显示时响应点击
+}
+
+// 弹框内容样式
+.popup-content {
+  width: 100%;
+  background-color: #fff;
+  border-top-left-radius: 30rpx;
+  border-top-right-radius: 30rpx;
+  padding: 30rpx;
+  transform: translateY(100%); // 默认在屏幕底部之外
+  transition: transform 0.3s ease;
+}
+
+// 显示弹框时的样式
+.content-show {
+  transform: translateY(0); // 移动到屏幕内
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  
+  .title {
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+  
+  .close-btn {
+    font-size: 40rpx;
+    color: #999;
+  }
+}
+
+.popup-body {
+  .desc {
+    font-size: 28rpx;
+    color: #666;
+    margin-bottom: 30rpx;
+    display: block;
+  }
+  
+  .avatars {
+    display: flex;
+    gap: 16rpx;
+    margin-bottom: 40rpx;
+    
+    .avatar-item {
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+      overflow: hidden;
+      
+      image {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+.popup-footer {
+  .action-btn {
+    width: 100%;
+    height: 90rpx;
+    background-color: #007aff;
+    color: #fff;
+    border-radius: 45rpx;
+    font-size: 32rpx;
+    line-height: 90rpx;
+  }
+}
+</style>

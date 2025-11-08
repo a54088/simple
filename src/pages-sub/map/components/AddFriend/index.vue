@@ -1,6 +1,6 @@
 <template>
   <!-- 弹框容器：通过 visible 控制显示 -->
-  <cover-view v-if="visible" class="map-popup">
+  <cover-view v-show="visible" class="map-popup">
     <!-- 遮罩层（可选，点击关闭弹框） -->
     <cover-view class="popup-mask" @click="handleClose"></cover-view>
     <!-- 弹框顶部操作内容 -->
@@ -22,11 +22,11 @@
           </cover-view>
 
         </cover-view>
-        <cover-image src="/static/map/addFriendsImg.png" mode="widthFix" class="add-friends-img"></cover-image>
+        <cover-image src="/static/map/addFriendsImg.webp" mode="widthFix" class="add-friends-img"></cover-image>
       </cover-view>
       <!-- 添加好友 -->
       <cover-view class="add">
-        <cover-image src="/static/map/userCommunication.png" mode="widthFix" class="avatar-imgs"></cover-image>
+        <cover-image src="/static/map/userCommunication.webp" mode="widthFix" class="avatar-imgs"></cover-image>
         <!-- 操作按钮 -->
         <cover-view class="action-btn" @click="handleAction">
          <cover-view style="font-size: 40rpx;margin-right: 10rpx;">+</cover-view> <cover-view class="white">添加好友</cover-view> 

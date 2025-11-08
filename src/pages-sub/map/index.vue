@@ -2,11 +2,18 @@
 <template>
   <view class="map_container">
     <map style="width: 100%; height: 100%" :markers="markers" :latitude="currentLatitude" :longitude="currentLongitude"
-      ref="mapRef" :show3D="true" :skew="30" :rotate="0" @markertap="handleMarkerTap">
+      ref="mapRef" @markertap="handleMarkerTap" :show-location="true">
+      <cover-image src="/static/map/mapBackground.png" style="height: 329px;"></cover-image>
       <!-- 自定义定位按钮 -->
       <cover-view class="location-btn" @click="moveToCurrentLocation">
         <cover-image src="/static/map/position.png" mode="aspectFit" @click="moveToCurrentLocation"></cover-image>
       </cover-view>
+      <!-- 自定义标记点 -->
+      <!-- <cover-image class="amap-icon" src="/static/map/position.png"
+        :style="{width: '40rpx', height: '40rpx' }"
+        :latitude="39.908823"
+        :longitude="116.39742"
+        ></cover-image> -->
     </map>
     <MapHeader class="header_wrap" />
     <MapSide class="side_wrap" />
@@ -71,13 +78,13 @@ const handleMarkerTap = (e) => {
   const clickedMarker = markers.value.find(marker => marker.id === markerId);
   // console.log('点击的标记详情：', clickedMarker);
   popupShow.value = true;
-  
+
 }
 
 
 // 添加好友
 const handleAddFriend = (e) => {
-  
+
 }
 
 onMounted(() => {
@@ -89,6 +96,18 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+// 地图头像
+::v-deep .amap-icon {
+  border-radius: 50%;
+  border: 2px solid #333;
+  box-sizing: content-box;
+  position: relative;
+}
+
+::v-deep .amap-marker-label>div {
+  border: 2px solid #fff;
+}
+
 .map_container {
   width: 100%;
   height: 100vh;
@@ -126,7 +145,6 @@ map {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
   z-index: 999;
 }
 
