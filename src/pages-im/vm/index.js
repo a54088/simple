@@ -5,28 +5,72 @@ export class IMVM extends ViewModel {
 
   chatOperateList = [
     {
-        icon: 'icon-qunliao',
-        text: '创建群聊',
-        key: 'cjql'
+      icon: 'icon-qunliao',
+      text: '创建群聊',
+      key: 'cjql'
     },
     {
-        icon: 'icon-quanzi',
-        text: '创建圈子',
-        key: 'cjqz'
+      icon: 'icon-quanzi',
+      text: '创建圈子',
+      key: 'cjqz'
     },
     {
-        icon: 'icon-tianjiahaoyou-',
-        text: '添加好友',
-        key: 'tjhy'
+      icon: 'icon-tianjiahaoyou-',
+      text: '添加好友',
+      key: 'tjhy'
     },
     {
-        icon: 'icon-saoyisao-2',
-        text: '扫一扫',
-        key: 'sys'   
+      icon: 'icon-saoyisao-2',
+      text: '扫一扫',
+      key: 'sys'
     },
   ]
 
+  socketTask = null
+
   constructor() {
     super()
+  }
+
+  init() {
+    this.socketTask = uni.connectSocket({
+      url: `${import.meta.env.VITE_APP_WS_API_PATH}/im/ws?token=b83056564d1a41099a1e74599ca73f4d&tenant_id=0`, //仅为示例，并非真实接口地址。
+      success: (e) => {
+        console.log('ws 链接成功等待消息发送。。。', e)
+      },
+      fail: (e) => {
+        console.log('ws 链接失败', e)
+      },
+    });
+  }
+
+  sendMessage(message) {
+    if (this.socketTask) {
+      this.socketTask.send({
+        data: {
+          "type": "send_message",
+          "content": "{\"conversationId\":1,\"clientMsgId\":\"cli_20241026153500_u1002\",\"messageType\":2,\"content\":\"这是今天活动的现场照片\",\"contentType\":\"image/jpeg\",\"fileUrl\":\"https://storage.example.com/images/act_20241026.jpg\",\"fileName\":\"活动现场.jpg\",\"fileSize\":204800,\"fileDuration\":null,\"thumbnailUrl\":\"https://storage.example.com/thumbnails/act_20241026_100x100.jpg\",\"replyMessageId\":null}"
+        },
+        success: (e) => {
+          console.log('ws 消息发送成功', e)
+        },
+        fail: (e) => {
+          console.log('ws 消息发送失败', e)
+        },
+      })
+    }
+  }
+
+  closeSocket() {
+    if (this.socketTask) {
+      this.socketTask.close({
+        success: (e) => {
+          console.log('ws 关闭成功', e)
+        },
+        fail: (e) => {
+          console.log('ws 关闭失败', e)
+        },
+      })
+    }
   }
 }

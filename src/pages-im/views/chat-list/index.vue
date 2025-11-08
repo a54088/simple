@@ -50,7 +50,7 @@ const open = () => {
         </CustomNavbar>
 
         <view class="chat-list__scroll__layout">
-            <scroll-view :scroll-top="scrollTop" scroll-y="true" class="chat-list__scroll" @scrolltoupper="upper"
+            <scroll-view  scroll-y="true" class="chat-list__scroll" @scrolltoupper="upper"
                 @scrolltolower="lower" @scroll="scroll">
                 <view class="chat-ai__layout">
                     <ChatItem />

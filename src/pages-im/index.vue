@@ -6,19 +6,20 @@ import Contacts from './views/contacts/index.vue'
 import ZSwiper from '@zebra-ui/swiper/components/z-swiper/z-swiper.vue'
 import ZSwiperItem from '@zebra-ui/swiper/components/z-swiper-item/z-swiper-item.vue'
 import { useCustomTabbarStore } from "@/store/index.js";
-import { IMVM } from "@/pages-im/vm/index.js";
-import { provide, onMounted, computed } from 'vue'
+import { provide, onMounted, computed, inject } from 'vue'
 
-let vm = new IMVM()
-provide('imVM', vm)
+// let vm = new IMVM()
+// provide('imVM', vm)
 const customTabbarStore = useCustomTabbarStore();
-
+const imVM = inject('imVM')
 const currentTab = computed(() => customTabbarStore.currentTab);
 const tabList = computed(() => customTabbarStore.tabList);
-
-onMounted(() => {
-    vm = ''
-})
+// onMounted(() => {
+//     imVM.init()
+// })
+// onUnmounted(() => {
+//     imVM = ''
+// })
 </script>
 <template>
     <view class="im__layout">
