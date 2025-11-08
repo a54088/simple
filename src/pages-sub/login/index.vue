@@ -12,16 +12,19 @@ import LoginType from "./components/login-type/index.vue";
 import LoginAgreement from "./components/login-agreement/index.vue";
 import LoginButton from "./components/login-button/index.vue";
 import LoginBottom from "./components/login-bottom/index.vue";
-import AppleLoginButton from "./components/apple-login-button/index.vue";
 import LoginMobileType from "./components/login-mobile-type/index.vue";
 import { LoginVM } from "./vm/index";
 // import { onLoad, onUnmounted } from "@dcloudio/uni-app";
+import { useI18n } from 'vue-i18n'
+import { isChineseLocale } from '@/utils/index';
+
+const { t } = useI18n()
 let vm = new LoginVM();
 
 provide("loginVM", vm);
 
-const handleMobileLogin = () => {
-  vm.formType = "sms_login";
+const handleMobileLogin = (formType) => {
+  vm.formType = formType;
   // uni.navigateTo({
   //   url: "/pages-sub/login/mobile-login",
   // });
@@ -47,12 +50,13 @@ const handleMobileLogin = () => {
         />
       </view>
       <view class="login-mobile__wrapper">
-        <view class="login-mobile" @tap="handleMobileLogin"> 手机号登录 </view>
+        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale">{{ t('login.mobileLogin') }}</view>
+        <view class="login-mobile" @tap="handleMobileLogin('email_login')" v-else>{{ t('login.email') }}</view>
       </view>
       <LoginType></LoginType>
     </template>
     <!-- 邀请码登录 -->
-     <view v-if="vm.formType === 'invite_code'" class="login-form__wrapper">
+     <view v-else-if="vm.formType === 'invite_code'" class="login-form__wrapper">
       <LoginForm></LoginForm> 
       <!-- <LoginButton></LoginButton> -->
     </view>

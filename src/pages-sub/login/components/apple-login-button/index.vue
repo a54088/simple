@@ -21,9 +21,9 @@ onMounted(() => {
 });
 
 // 处理苹果登录点击事件
-const handleAppleLogin = () => {
-  vm.appleLogin();
-};
+// const handleAppleLogin = () => {
+//   vm.appleLogin();
+// };
 </script>
 
 <template>
@@ -32,10 +32,10 @@ const handleAppleLogin = () => {
     <view class="apple-login-separator">
       <text>或</text>
     </view>
-    <button class="apple-login-button" open-type="getUserInfo" @tap="handleAppleLogin">
+    <!-- <button class="apple-login-button" open-type="getUserInfo" @tap="handleAppleLogin">
       <text class="apple-login-icon"></text>
       <text class="apple-login-text">使用 Apple 登录</text>
-    </button>
+    </button> -->
   </view>
   <!-- #endif -->
 </template>

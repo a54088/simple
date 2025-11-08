@@ -1,0 +1,106 @@
+// ==================== 布局相关 ====================
+// Flex 布局
+.flex {
+	display: flex;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.flex-between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.flex-around {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.flex-start {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.flex-end {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.flex-wrap {
+	flex-wrap: wrap;
+}
+
+.flex-nowrap {
+	flex-wrap: nowrap;
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+// ==================== 文字相关 ====================
+// 文字对齐
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+// 文字溢出
+.text-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.text-ellipsis-2 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.text-ellipsis-3 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	line-clamp: 3;
+	-webkit-box-orient: vertical;
+}
+
+// ==================== 其他常用 ====================
+// 清除浮动
+.clearfix::after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+// 禁用选择
+.select-none {
+	user-select: none;
+}
+
+// 过渡动画
+.transition {
+	transition: all 0.3s ease;
+}

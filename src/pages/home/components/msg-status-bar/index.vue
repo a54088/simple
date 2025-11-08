@@ -8,9 +8,9 @@
 <template>
   <view class="msg-status-bar">
     <!-- 菜单 -->
-    <!-- <view class="menu-switch">
-      <i class="iconfont icon-paizhao-jinru"></i>
-    </view> -->
+    <view @tap="handleMenuClick" class="menu-switch">
+      <i class="iconfont icon-gengduo1"></i>
+    </view>
 
     <view class="msg-avatar-box">
       <view class="msg-left-avatar">
@@ -23,42 +23,88 @@
           <u-avatar :size="31" :src="avatar"></u-avatar>
         </view>
         <!-- 多个-折叠 -->
-        <transition name="avatar-fade" mode="out-in">
-          <view v-if="isOpen" key="close" class="msg-avatar-group-close">
-            <u-avatar :size="31" :src="avatar"></u-avatar>
-          </view>
-          <!-- 多个展开 -->
-          <view v-else key="open" class="msg-avatar-group-open">
+        <AvatarStacking 
+          v-if="!isOpen"  
+          :avatarList="closeAvatarList" 
+          :maxCount="4" 
+          @tap="toggleOpen" 
+        />
+        <!-- 多个展开 -->
+        <scroll-view 
+          v-if="isOpen"
+          class="scroll-view_H msg-avatar-group-open-wrapper avatar-open-show"
+          scroll-x="true" 
+          @scroll="avatarScroll" 
+        >
+          <view class="msg-avatar-group-open">
             <u-avatar 
-              v-for="i in 4" 
+              v-for="(item, i) in avatarList" 
+              @tap="handleAvatarClick(item)"
               :key="i" 
               :class="{ 'avatar-state-success': i === 1 }"
-              :src="avatar"
+              :src="item"
               :size="31"
             ></u-avatar>
           </view>
-        </transition>
+        </scroll-view>
 
-        <view @click="toggleOpen">
+        <view @tap="toggleOpen" :class="[isOpen && 'icon-rotated']">
           <i class="iconfont icon-a-mengbanzu135"></i>
         </view>
       </view>
     </view>
-    <view class="msg-status-right img-box">
+    <view @tap="handleLogoClick" class="msg-status-right img-box">
       <image src="/src/static/images/common/logo.png" mode="widthFix"></image>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { inject } from "vue";
+// components
+import AvatarStacking from '@/components/avatar-stacking/index.vue';
 
+const vm = inject("homeVM");
+const emit = defineEmits(['menuClick', 'logoClick', 'avatarClick']);
+
+const avatarList = ref([
+  "https://p26-passport.byteacctimg.com/img/user-avatar/60225805f9c3509ee8cb69a96d65e2a9~40x40.awebp",
+  "https://p6-passport.byteacctimg.com/img/user-avatar/83bb13b5b69787c29207cb34aa8515f8~100x100.awebp",
+  "https://p3-passport.byteacctimg.com/img/user-avatar/61c428663c65d1d95ff0203016721223~100x100.awebp",
+  "https://p26-passport.byteacctimg.com/img/user-avatar/457c4c8401d2aa48711f76f88364faa2~100x100.awebp",
+  "https://p26-passport.byteacctimg.com/img/user-avatar/60225805f9c3509ee8cb69a96d65e2a9~40x40.awebp",
+  "https://p6-passport.byteacctimg.com/img/user-avatar/83bb13b5b69787c29207cb34aa8515f8~100x100.awebp",
+  "https://p3-passport.byteacctimg.com/img/user-avatar/61c428663c65d1d95ff0203016721223~100x100.awebp",
+  "https://p26-passport.byteacctimg.com/img/user-avatar/457c4c8401d2aa48711f76f88364faa2~100x100.awebp",
+])
 const avatar = ref("https://p26-passport.byteacctimg.com/img/user-avatar/60225805f9c3509ee8cb69a96d65e2a9~40x40.awebp");
-// 开关
+// 头像组开关
 const isOpen = ref(false);
+
+const closeAvatarList = computed(() => {
+  return avatarList.value.slice(0, 4);
+})
 const toggleOpen = () => {
+  console.log('toggleOpen',isOpen.value);
   isOpen.value = !isOpen.value;
 };
+
+const handleMenuClick = () => {
+  vm.toggleMenuPopup()
+}
+
+const avatarScroll = (e) => {
+  console.log(e);
+}
+
+const handleAvatarClick = (item) => {
+  console.log(item);
+}
+
+const handleLogoClick = () => {
+  console.log('logo');
+}
 </script>
 
 <style lang="scss" scoped>
@@ -67,7 +113,6 @@ const toggleOpen = () => {
   align-content: center;
   justify-content: space-between;
   padding: 0 32rpx;
-  gap: 68rpx;
 
   .img-box {
     display: flex;
@@ -90,8 +135,15 @@ const toggleOpen = () => {
     margin: 0 20rpx;
   }
 
-  .msg-status-left {
+  .menu-switch {
+    width: 96rpx;
+    height: 96rpx;
+    border-radius: 96rpx;
+    background: rgba(0, 0, 0, 0.7);
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .msg-avatar-box {
@@ -119,13 +171,12 @@ const toggleOpen = () => {
       transition: width 0.2s ease-in-out;
 
       .iconfont {
-        margin-left: 20rpx;
+        margin-left: 10rpx;
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
-        
-        &.icon-rotated {
-          transform: rotate(180deg);
-        }
+      }
+      .icon-rotated {
+        transform: rotate(180deg) translateX(-10rpx);
       }
 
       .msg-avatar-group-close {
@@ -133,12 +184,28 @@ const toggleOpen = () => {
         align-items: center;
         justify-content: center;
         gap: 10rpx;
+        position: relative;
+        
+        &.avatar-close-show {
+          animation: avatarCloseIn 0.2s ease-in-out forwards;
+        }
+        
+        .u-avatar {
+          position: absolute;
+        }
+      }
+
+      .scroll-view_H {
+        height: 70rpx;
+        
+        &.avatar-open-show {
+          animation: avatarOpenIn 0.2s ease-in-out forwards;
+        }
       }
       .msg-avatar-group-open {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10rpx;
+        gap: 14rpx;
+        max-width: 250rpx;
 
         .avatar-state-success {
           position: relative;
@@ -171,19 +238,36 @@ const toggleOpen = () => {
   }
 }
 
-// 头像组切换动画
-.avatar-fade-enter-active,
-.avatar-fade-leave-active {
-  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+// 头像组切换动画 - 使用 CSS animation 替代 transition（兼容 app 环境）
+@keyframes avatarCloseIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.avatar-fade-enter-from {
-  opacity: 0;
-  transform: translateX(-20rpx);
+@keyframes avatarOpenIn {
+  from {
+    opacity: 0;
+    transform: translateX(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-.avatar-fade-leave-to {
-  opacity: 0;
-  transform: translateX(20rpx);
+.icon-a-mengbanzu135 {
+  color: #adadad;
+}
+
+:deep(.uni-scroll-view-content) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

@@ -7,9 +7,24 @@
 -->
 <script setup>
 
-import { inject } from 'vue';
+import { inject, ref, onMounted } from 'vue';
+import { isChineseLocale } from '@/utils/index';
 
 const vm = inject("loginVM");
+
+// 判断是否为国内用户的状态
+const isChineseUser = ref(true); // 默认假设为国内用户
+
+// 初始化时获取用户地区信息
+onMounted(() => {
+  try {
+    // 使用工具函数判断当前是否为国内语言环境
+    isChineseUser.value = isChineseLocale();
+  } catch (e) {
+    console.log('获取语言设置失败', e);
+    // 默认保持为国内用户
+  }
+});
 </script>
 
 <template>
@@ -21,10 +36,11 @@ const vm = inject("loginVM");
         <text>-其他登录方式-</text>
       </view>
       <view class="login-type-icon">
-        <text class="iconfont icon-denglu_weixin iconfont__btn"></text>
+        <!-- 国内显示微信登录，国外显示谷歌登录 -->
+        <text v-if="isChineseUser" class="iconfont icon-denglu_weixin iconfont__btn"></text>
+        <text v-else class="iconfont icon-denglu_guge iconfont__btn"></text>
+        <!-- 始终显示苹果登录 -->
         <text class="iconfont icon-denglu_pingguo iconfont__btn"></text>
-        <text class="iconfont icon-denglu_guge iconfont__btn"></text>
-        <!-- <text class="iconfont icon-denglu_shouji"></text> -->
       </view>
     </view>
   </view>
