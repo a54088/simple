@@ -50,8 +50,8 @@ const handleMobileLogin = (formType) => {
         />
       </view>
       <view class="login-mobile__wrapper">
-        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale">{{ t('login.mobileLogin') }}</view>
-        <view class="login-mobile" @tap="handleMobileLogin('email_login')" v-else>{{ t('login.email') }}</view>
+        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale">{{ t('login.enterAquan') }}</view>
+        <view class="login-mobile" @tap="handleMobileLogin('email_login')" v-else>{{ t('login.enterAquan') }}</view>
       </view>
       <LoginType></LoginType>
     </template>
