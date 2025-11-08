@@ -55,7 +55,7 @@ const onToChatDetail = () => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 8rpx 20rpx;
+        padding: 8rpx 0 8rpx 20rpx;
 
         .chat-item__content__time {
             font-size: 24rpx;
