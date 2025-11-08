@@ -175,7 +175,7 @@ function loadModel(modelUrl) {
       if (gltf.animations && gltf.animations.length > 0) {
         if (mixer) mixer.stopAllAction()
         mixer = new THREE.AnimationMixer(model)
-        const a1 = gltf.animations[1]
+        const a1 = gltf.animations[0]
         if (a1) {
           mixer.clipAction(a1).play()
         }
