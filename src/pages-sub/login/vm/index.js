@@ -317,10 +317,13 @@ export class LoginVM extends ViewModel {
       if (data.inviteFlag && !data.recommendUserId) {
         this.formType = "invite_code";
       } else {
-        uni.showToast({
-          title: t("login.loginSuccess"),
-          icon: "none",
+        uni.switchTab({
+          url: "/pages/home/index",
         });
+        // uni.showToast({
+        //   title: t("login.loginSuccess"),
+        //   icon: "none",
+        // });
       }
       }
     } catch (e) {

@@ -12,5 +12,7 @@
   "login.getCode": "Get Code",
   "login.emailLoginCodeSent": "Email Code Sent",
   "login.enterAquan": "Enter Aquan",
-  "login.otherLogin": "Other Login"
+  "login.otherLogin": "Other Login",
+  "login.placeholder.mobile": "Please input mobile",
+  "login.placeholder.code": "Please input code"
 }

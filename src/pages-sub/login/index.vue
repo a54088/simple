@@ -16,9 +16,16 @@ import LoginMobileType from "./components/login-mobile-type/index.vue";
 import { LoginVM } from "./vm/index";
 // import { onLoad, onUnmounted } from "@dcloudio/uni-app";
 import { useI18n } from 'vue-i18n'
-import { isChineseLocale } from '@/utils/index';
+import { isChineseLocale, saveLanguageSetting } from '@/utils/index';
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+// 切换语言
+const toggleLanguage = () => {
+  locale.value = locale.value === 'zh-Hans' ? 'en' : 'zh-Hans';
+  // 保存语言设置
+  saveLanguageSetting(locale.value);
+}
 let vm = new LoginVM();
 
 provide("loginVM", vm);
@@ -41,7 +48,11 @@ const handleMobileLogin = (formType) => {
 
 <template>
   <view class="login__layout">
+      <!-- <view class="language-toggle" @tap="toggleLanguage">
+        {{ locale === 'zh-Hans' ? 'English' : '中文' }}
+      </view> -->
     <template v-if="vm.formType === 'mobile_auto_login'">
+      <!-- 语言切换按钮 -->
       <view class="login__logo">
         <image class="login__logo_img" src="@/static/images/login/aquan.png" />
         <image
@@ -80,6 +91,19 @@ const handleMobileLogin = (formType) => {
   flex-direction: column;
   box-sizing: border-box;
   // padding: 130rpx 70rpx 0;
+  
+  // 语言切换按钮样式
+  .language-toggle {
+    position: absolute;
+    top: 60rpx;
+    right: 40rpx;
+    padding: 10rpx 20rpx;
+    border: 1px solid #000;
+    border-radius: 20rpx;
+    font-size: 28rpx;
+    color: #000;
+    z-index: 10;
+  }
   // Logo部分
   .login__logo {
     // 保持原有样式

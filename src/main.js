@@ -10,6 +10,7 @@ import { createPinia } from "pinia";
 
 import uViewNext from "@/uni_modules/uview-next";
 import { i18n } from "@/locale";
+import { saveLanguageSetting, getLanguageSetting } from "@/utils/index.js";
 
 import 'animate.css';
 import devTools from "./devTools/index.js";
@@ -22,6 +23,13 @@ import App from "./App.vue";
 export function createApp() {
   const app = createSSRApp(App);
   const pinia = createPinia();
+  
+  // 根据保存的语言设置初始化i18n
+  const savedLanguage = getLanguageSetting();
+  if (savedLanguage) {
+    i18n.global.locale.value = savedLanguage;
+  }
+  
   app.use(uViewNext);
 
   //混入DevTools生命周期监听

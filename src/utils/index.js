@@ -106,6 +106,22 @@ export function getSystemLanguage() {
 }
 
 /**
+ * 获取保存的语言设置
+ * @returns {string|null} 保存的语言代码，如果没有则返回null
+ */
+export function getLanguageSetting() {
+  try {
+    if (typeof uni !== 'undefined') {
+      return uni.getStorageSync('systemLanguage') || null;
+    }
+    return null;
+  } catch (e) {
+    console.error('获取语言设置失败:', e);
+    return null;
+  }
+}
+
+/**
  * 保存语言设置到本地存储
  * @param {string} language 语言代码
  */

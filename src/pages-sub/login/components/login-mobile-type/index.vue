@@ -22,10 +22,10 @@ const handleTap = (type) => {
     <view class="login-type-content">
       <!-- 这里可以添加登录类型选择的具体内容 -->
       <view class="login-type-text" v-if="vm.formType === 'sms_login'">
-        <text @tap="handleTap('password_login')">-密码登录-</text>
+        <text @tap="handleTap('password_login')">-{{$t('login.mobileLogin')}}-</text>
       </view>
       <view class="login-type-text" v-if="vm.formType === 'password_login'">
-        <text @tap="handleTap('sms_login')">-验证码登录-</text>
+        <text @tap="handleTap('sms_login')">-{{$t('login.otherLogin')}}-</text>
       </view>
     </view>
   </view>

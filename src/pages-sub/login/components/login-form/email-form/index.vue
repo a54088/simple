@@ -12,7 +12,7 @@ import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
 
-const smsLoginCodeRef = ref();
+const emailLoginCodeRef = ref();
 
 const emailFormRef = ref();
 
@@ -22,7 +22,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 vm.emailFormRef = emailFormRef;
-vm.smsLoginCodeRef = smsLoginCodeRef;
+vm.emailLoginCodeRef = emailLoginCodeRef;
 
 const form = computed({
   set(val) {
@@ -111,7 +111,7 @@ const onLeftClick = () => {
         >
           <template #suffix>
             <u-code
-              ref="smsLoginCodeRef"
+              ref="emailLoginCodeRef"
               @change="codeChange"
               seconds="60"
               changeText="X second get"
