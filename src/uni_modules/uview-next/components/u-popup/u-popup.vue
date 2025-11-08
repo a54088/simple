@@ -195,6 +195,7 @@
 				return {
 					zIndex: this.instanceZIndex,
 					...uni.$u.addStyle(this.customStyle),
+					...uni.$u.addStyle(this.overlayStyle),
 				}
 			},
 			contentStyle() {

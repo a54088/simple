@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+const value1 = ref('')
+</script>
 
 <template>
     <view class="chat__footer">

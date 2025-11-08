@@ -11,6 +11,7 @@ import { createPinia } from "pinia";
 import uViewNext from "@/uni_modules/uview-next";
 import { i18n } from "@/locale";
 
+import 'animate.css';
 import devTools from "./devTools/index.js";
 import devToolsConfig from "./devTools/config.js";
 import mpDevBubble from "./devTools/core/components/mpDevBubble.vue";

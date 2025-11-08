@@ -4,6 +4,8 @@ import ChatOperate from '../../components/chat-operate/index.vue'
 import ChatFooter from './components/chat-footer/index.vue'
 import { ChatVM } from './vm/index.js'
 import { onMounted, onUnmounted, provide } from 'vue'
+import IMMsgList from './components/im-msg-list/index.vue'
+
 let vm = new ChatVM()
 
 provide('chatVM', vm)
@@ -12,6 +14,17 @@ onUnmounted(() => {
     vm = null
 })
 
+const upper = (e) => {
+    console.log(e)
+}
+
+const lower = (e) => {
+    console.log(e)
+}
+
+const scroll = (e) => {
+    console.log(e)
+}
 </script>
 <template>
     <view class="chat__layout">
@@ -40,16 +53,7 @@ onUnmounted(() => {
         </CustomNavbar>
 
         <view class="chat__content">
-            <scroll-view :scroll-top="scrollTop" scroll-y="true" class="chat-list__scroll" @scrolltoupper="upper"
-                @scrolltolower="lower" @scroll="scroll">
-                <view class="chat-ai__layout">
-                    <ChatItem />
-                </view>
-                <view class="chat-item__block__layout" v-for="(item, index) in chatList" :key="index">
-                    <ChatItem />
-                </view>
-                <view class="chat-list__safe__layout"></view>
-            </scroll-view>
+           <IMMsgList />
         </view>
         <view>
             <ChatFooter />

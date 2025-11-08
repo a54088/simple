@@ -40,7 +40,10 @@
             "animationType": "fade-in",
             "animationDuration": 300,
             "navigationBarTitleText": "聊天",
-            "navigationStyle": "custom"
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
           }
         }
       ]
