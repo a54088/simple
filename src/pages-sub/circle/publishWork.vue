@@ -14,7 +14,24 @@
       <scroll-view class="content-scroll" scroll-y>
          <!-- 内容预览区域 -->
          <view class="preview-section">
-            <view class="thumbnail-wrapper">
+            <!-- 图片模式：多图 + 添加图片占位 -->
+            <view v-if="isImageMode" class="image-grid">
+               <view class="image-card" v-for="(img, idx) in imageList" :key="idx">
+                  <image class="image-card__img" :src="img" mode="aspectFill"></image>
+                  <view v-if="idx === 0" class="image-card__badge">封面</view>
+                  <view class="image-card__close" @click="handleRemoveImage(idx)">
+                     <text class="iconfont icon-quxiao" style="font-size: 64rpx; color: #fff;"></text>
+                  </view>
+               </view>
+               <!-- 添加图片占位 -->
+               <view class="image-card image-card__add" @click="handleAddImage">
+                  <view class="image-card__add-plus">+</view>
+                  <text class="image-card__add-text">添加图片</text>
+               </view>
+            </view>
+
+            <!-- 视频模式：单缩略图 -->
+            <view v-else class="thumbnail-wrapper">
                <image class="thumbnail-image" src="/static/circle/portrait.webp" mode="aspectFill"></image>
                <view class="thumbnail-close" @click="handleRemoveThumbnail">
                   <text class="iconfont icon-quxiao" style="font-size: 64rpx; color: #fff;"></text>
@@ -23,7 +40,7 @@
 
             <view class="preview-video-btn" @click="handlePreviewVideo">
                <view class="play-icon">▶</view>
-               <text class="preview-text">预览视频</text>
+               <text class="preview-text">{{ previewText }}</text>
             </view>
 
             <view class="description-input-wrapper">
@@ -113,7 +130,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
 
 // 作品描述
 const description = ref('')
@@ -127,33 +145,58 @@ const visibility = ref('公开可见')
 // 是否显示AI操作按钮
 const showAIActions = ref(true)
 
+// 媒体类型：video | image（通过路由传入）
+const mediaType = ref('image')
+const isImageMode = computed(() => mediaType.value === 'image')
+const previewText = computed(() => (isImageMode.value ? '预览图片' : '预览视频'))
+
+// 图片列表（静态占位）
+const imageList = ref([
+  '/static/circle/portrait.webp',
+  '/static/circle/portrait.webp'
+])
+
+onLoad((options) => {
+  if (options && (options.type === 'image' || options.type === 'video')) {
+    mediaType.value = options.type
+  }
+})
+
 // 选中的标签
 const selectedTags = ref([
-   { text: '#鬼知道我看了多少遍', recommended: true },
-   { text: '#日常分享', recommended: false },
-   { text: '#抽象艺术', recommended: false },
-   { text: '#随便拍', recommended: false }
+  { text: '#鬼知道我看了多少遍', recommended: true },
+  { text: '#日常分享', recommended: false },
+  { text: '#抽象艺术', recommended: false },
+  { text: '#随便拍', recommended: false }
 ])
 
 // 关闭页面
 const handleClose = () => {
-   uni.navigateBack()
+  uni.navigateBack()
 }
 
-// 移除缩略图
+// 移除缩略图（视频）
 const handleRemoveThumbnail = () => {
-   uni.showToast({
-      title: '移除图片',
-      icon: 'none'
-   })
+  uni.showToast({
+    title: '移除视频封面',
+    icon: 'none'
+  })
 }
 
-// 预览视频
+// 添加/移除图片（图片模式占位交互）
+const handleAddImage = () => {
+  uni.showToast({ title: '添加图片', icon: 'none' })
+}
+const handleRemoveImage = (index) => {
+  imageList.value.splice(index, 1)
+}
+
+// 预览
 const handlePreviewVideo = () => {
-   uni.showToast({
-      title: '预览视频',
-      icon: 'none'
-   })
+  uni.showToast({
+    title: isImageMode.value ? '预览图片' : '预览视频',
+    icon: 'none'
+  })
 }
 
 // AI优化
@@ -270,6 +313,73 @@ const handlePublish = () => {
 .preview-section {
    margin-bottom: 40rpx;
 
+   /* 图片模式：图片网格 */
+   .image-grid {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20rpx;
+      margin-bottom: 24rpx;
+
+      .image-card {
+         position: relative;
+         width: 226rpx;
+         height: 400rpx;
+         border-radius: 16rpx;
+         overflow: hidden;
+         background: #F5F5F5;
+
+         &__img {
+            width: 100%;
+            height: 100%;
+            border-radius: 16rpx;
+         }
+
+         &__badge {
+            position: absolute;
+            left: 12rpx;
+            top: 12rpx;
+            padding: 6rpx 14rpx;
+            font-size: 20rpx;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 12rpx;
+         }
+
+         &__close {
+            position: absolute;
+            right: 6rpx;
+            top: 6rpx;
+            width: 48rpx;
+            height: 48rpx;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+         }
+
+         &__add {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #C7C7C7;
+            border: 2rpx dashed #E6E6E6;
+
+            .image-card__add-plus {
+               font-size: 64rpx;
+               line-height: 1;
+               margin-bottom: 12rpx;
+            }
+            .image-card__add-text {
+               font-size: 24rpx;
+               color: #9C9C9C;
+            }
+         }
+      }
+   }
+
+   /* 视频模式：单缩略图 */
    .thumbnail-wrapper {
       position: relative;
       width: 226rpx;
