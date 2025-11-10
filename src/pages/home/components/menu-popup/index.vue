@@ -29,7 +29,7 @@
             <view class="layout-module1">
                 <view class="flex">
                     <view class="layout-module1-left">
-                        <image src="/src/static/map/addFriendsImg.png" mode="widthFix"></image>
+                        <image src="/src/static/images/home/trumpet.png" mode="widthFix"></image>
                     </view>
                     <view class="layout-module1-right">
                         <view class="layout-module1-right-top">
@@ -57,7 +57,7 @@
                 </view>
                 <view class="message-bottom">
                     <view class="message-bottom-left">
-                        <image src="/src/static/map/avatar5.webp" mode="widthFix"></image>
+                        <image src="/src/static/images/home/tongzhi.png" mode="widthFix"></image>
                         <text class="text-ellipsis">系统通知：文案文案文案文案文案文案</text>
                     </view>
                     <view class="message-bottom-right">12:00</view>
@@ -114,15 +114,15 @@
             <!-- 底部操作栏 -->
             <view class="layout-bottom-bar">
                 <view class="layout-bottom-bar-item">
-                    <i class="iconfont icon-paizhao-shezhi"></i>
+                    <i class="iconfont icon-erweima-2"></i>
                     <text>二维码</text>
                 </view>
-                <view class="layout-bottom-bar-item">
-                    <i class="iconfont icon-paizhao-shezhi"></i>
+                <view @click="handleSettingClick" class="layout-bottom-bar-item">
+                    <i class="iconfont icon-shezhi"></i>
                     <text>设置</text>
                 </view>
                 <view class="layout-bottom-bar-item">
-                    <i class="iconfont icon-saoyisao-2"></i>
+                    <i class="iconfont icon-saoyisao-3"></i>
                     <text>扫一扫</text>
                 </view>
             </view>
@@ -145,6 +145,12 @@ const avatarList = ref([icon1, icon2, icon3]);
 
 const close = () => {
     vm.toggleMenuPopup()
+}
+
+const handleSettingClick = () => {
+    uni.navigateTo({
+        url: '/pages-sub/setting/index',
+    })
 }
 </script>
 
@@ -199,6 +205,9 @@ const close = () => {
         }
 
         .layout-module1-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             image {
                 width: 80rpx;
             }
