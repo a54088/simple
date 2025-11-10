@@ -17,7 +17,7 @@
 
       <!-- 图片预览区域 -->
       <view class="image-preview-container">
-         <image class="preview-image" src="/static/demo-image.jpg" mode="aspectFit"></image>
+         <image class="preview-image" src="/static/circle/portrait.webp" mode="aspectFit"></image>
       </view>
 
       <!-- 底部功能区域 -->
@@ -26,7 +26,7 @@
          <view class="quality-enhance">
             <text class="enhance-text">一键提升画质亮度</text>
             <view class="ai-icon">
-               <text class="ai-text">AI</text>
+               <image src="/static/circle/ai.png" mode="widthFix"></image>
             </view>
          </view>
 
@@ -43,13 +43,9 @@
          <!-- 功能按钮行（横向滚动） -->
          <scroll-view class="function-buttons-scroll" scroll-x="true" show-scrollbar="false">
             <view class="function-buttons">
-               <view 
-                  v-for="(item, index) in functionList" 
-                  :key="index" 
-                  class="function-btn"
+               <view v-for="(item, index) in functionList" :key="index" class="function-btn"
                   :class="{ 'function-btn-active': activeFunctions.includes(index) }"
-                  @click="handleFunctionClick(index)"
-               >
+                  @click="handleFunctionClick(index)">
                   <text class="function-text" :class="{ 'function-text-active': activeFunctions.includes(index) }">
                      {{ item }}
                   </text>
@@ -61,13 +57,8 @@
          <view class="mode-selector">
             <!-- 滑动背景块 -->
             <view class="mode-slider" :style="sliderStyle"></view>
-            <view 
-               v-for="(mode, index) in modeList" 
-               :key="index" 
-               class="mode-btn"
-               :class="{ 'mode-btn-active': index === activeMode }" 
-               @click="handleModeChange(index)"
-            >
+            <view v-for="(mode, index) in modeList" :key="index" class="mode-btn"
+               :class="{ 'mode-btn-active': index === activeMode }" @click="handleModeChange(index)">
                <text class="mode-text" :class="{ 'mode-text-active': index === activeMode }">
                   {{ mode }}
                </text>
@@ -92,45 +83,45 @@ const modeList = ref(['图片生成', '动图', '视频'])
 
 // 计算滑动背景的位置
 const sliderStyle = computed(() => {
-  // 每个按钮占容器的百分比（3个按钮，每个占1/3）
-  const itemWidthPercent = 100 / modeList.value.length
-  // 滑动距离 = 当前索引 * 100%（相对于容器宽度）
-  const translateXPercent = activeMode.value * 100
-  return {
-    width: `${itemWidthPercent}%`,
-    transform: `translateX(${translateXPercent}%)`,
-    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-  }
+   // 每个按钮占容器的百分比（3个按钮，每个占1/3）
+   const itemWidthPercent = 100 / modeList.value.length
+   // 滑动距离 = 当前索引 * 100%（相对于容器宽度）
+   const translateXPercent = activeMode.value * 100
+   return {
+      width: `${itemWidthPercent}%`,
+      transform: `translateX(${translateXPercent}%)`,
+      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+   }
 })
 
 const handleClose = () => {
-  uni.navigateBack()
+   uni.navigateBack()
 }
 
 const handleNext = () => {
-  // 下一步逻辑
-  console.log('下一步')
+   // 下一步逻辑
+   console.log('下一步')
 }
 
 const handleGenerate = () => {
-  // 立即生成逻辑
-  console.log('立即生成')
+   // 立即生成逻辑
+   console.log('立即生成')
 }
 
 const handleModeChange = (index) => {
-  activeMode.value = index
+   activeMode.value = index
 }
 
 const handleFunctionClick = (index) => {
-  // 如果已选中，则从数组中移除；否则添加到数组
-  const currentIndex = activeFunctions.value.indexOf(index)
-  if (currentIndex > -1) {
-    // 已选中，取消选中
-    activeFunctions.value.splice(currentIndex, 1)
-  } else {
-    // 未选中，添加到选中列表
-    activeFunctions.value.push(index)
-  }  
+   // 如果已选中，则从数组中移除；否则添加到数组
+   const currentIndex = activeFunctions.value.indexOf(index)
+   if (currentIndex > -1) {
+      // 已选中，取消选中
+      activeFunctions.value.splice(currentIndex, 1)
+   } else {
+      // 未选中，添加到选中列表
+      activeFunctions.value.push(index)
+   }
 }
 </script>
 
@@ -142,14 +133,12 @@ const handleFunctionClick = (index) => {
    display: flex;
    flex-direction: column;
    color: #3D3D3D;
-
 }
 
 /* 顶部导航栏 */
 .header {
    padding: 20rpx 32rpx 24rpx;
    background-color: #EEF1FA;
-   position: absolute;
    width: 100%;
 
    .header-nav {
@@ -191,25 +180,24 @@ const handleFunctionClick = (index) => {
    display: flex;
    align-items: center;
    justify-content: center;
-   padding: 20rpx 160rpx;
-   position: relative;
-   top: 180rpx;
-
+   padding: 0rpx 160rpx 30rpx;
 
    .preview-image {
       width: 100%;
-      max-width: 600rpx;
-      height: 800rpx;
+      height: 673rpx;
       border-radius: 16rpx;
-      background-color: #f5f5f5;
+      // background-color: #f5f5f5;
    }
 }
 
 /* 底部功能区域 */
 .bottom-section {
    background-color: #FFFFFF;
-   padding: 180rpx 32rpx 32rpx;
+   padding: 50rpx 32rpx 32rpx;
    border-radius: 32rpx 32rpx 0 0;
+   position: relative;
+   z-index: 0;
+   padding-bottom: env(safe-area-inset-bottom, 32rpx);
 }
 
 /* 一键提升画质 */
@@ -228,30 +216,14 @@ const handleFunctionClick = (index) => {
    .ai-icon {
       width: 56rpx;
       height: 56rpx;
-      background: linear-gradient(135deg, #9B59B6, #3498DB);
-      border-radius: 12rpx;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
 
-      .ai-text {
-         font-size: 22rpx;
-         color: #fff;
-         font-weight: 600;
-      }
-
-      // AI图标的光效
-      &::after {
-         content: '';
-         position: absolute;
-         top: -2rpx;
-         right: -2rpx;
-         width: 12rpx;
-         height: 12rpx;
-         background: radial-gradient(circle, #fff 0%, transparent 70%);
-         border-radius: 50%;
-         opacity: 0.8;
+      image {
+         width: 100%;
+         height: 100%;
       }
    }
 }
@@ -286,7 +258,6 @@ const handleFunctionClick = (index) => {
          flex-direction: column;
          justify-content: center;
          align-items: center;
-
       }
    }
 
@@ -317,10 +288,10 @@ const handleFunctionClick = (index) => {
 
          .function-text {
             font-size: 24rpx;
-        
          }
       }
-      .function-btn-active{
+
+      .function-btn-active {
          color: #3D3D3D;
       }
    }
@@ -331,7 +302,7 @@ const handleFunctionClick = (index) => {
    position: relative;
    display: flex;
    width: 75%;
-   margin-bottom: 66rpx;
+   margin-bottom: 32rpx;
    background-color: #F4F4F4;
    border-radius: 12rpx;
    overflow: hidden;
@@ -354,7 +325,6 @@ const handleFunctionClick = (index) => {
       position: relative;
       z-index: 2;
       border-radius: 0;
-      
 
       // 第一个按钮左边圆角
       &:first-child {
@@ -388,6 +358,7 @@ const handleFunctionClick = (index) => {
    background-color: #000;
    border-radius: 473rpx;
    text-align: center;
+   margin-bottom: 32rpx;
 
    .generate-text {
       font-size: 32rpx;
