@@ -17,7 +17,30 @@
 
       <!-- 图片预览区域 -->
       <view class="image-preview-container">
-         <image class="preview-image" src="/static/circle/portrait.webp" mode="aspectFit"></image>
+         <view class="main-preview">
+            <image 
+               class="preview-image" 
+               :src="currentStyleImage" 
+               mode="aspectFit"
+            ></image>
+         </view>
+         
+         <!-- 风格选择缩略图 -->
+         <view class="style-thumbnails">
+            <view 
+               v-for="(style, index) in styleList" 
+               :key="index"
+               class="thumbnail-item"
+               :class="{ 'thumbnail-active': selectedStyle === index }"
+               @click="handleStyleChange(index)"
+            >
+               <image 
+                  class="thumbnail-image" 
+                  :src="style.image" 
+                  mode="aspectFill"
+               ></image>
+            </view>
+         </view>
       </view>
 
       <!-- 底部功能区域 -->
@@ -78,8 +101,33 @@ import { ref, computed } from 'vue'
 
 const activeMode = ref(0)
 const activeFunctions = ref([]) // 改为数组，支持多选
+const selectedStyle = ref(0) // 选中的风格索引
 const functionList = ref(['画质修复', '一键出片', '夜景提升', 'AI扩图', '去掉水印', 'AI数'])
 const modeList = ref(['图片生成', '动图', '视频'])
+
+// 风格列表数据
+const styleList = ref([
+   {
+      id: 0,
+      name: '风格1',
+      image: '/static/circle/portrait.webp'
+   },
+   {
+      id: 1,
+      name: '风格2',
+      image: '/static/circle/portrait.webp' // 可以替换为不同的风格图片
+   },
+   {
+      id: 2,
+      name: '风格3',
+      image: '/static/circle/portrait.webp' // 可以替换为不同的风格图片
+   }
+])
+
+// 当前显示的风格图片
+const currentStyleImage = computed(() => {
+   return styleList.value[selectedStyle.value].image
+})
 
 // 计算滑动背景的位置
 const sliderStyle = computed(() => {
@@ -122,6 +170,11 @@ const handleFunctionClick = (index) => {
       // 未选中，添加到选中列表
       activeFunctions.value.push(index)
    }
+}
+
+// 切换风格
+const handleStyleChange = (index) => {
+   selectedStyle.value = index
 }
 </script>
 
@@ -178,15 +231,47 @@ const handleFunctionClick = (index) => {
 .image-preview-container {
    flex: 1;
    display: flex;
+   flex-direction: column;
    align-items: center;
-   justify-content: center;
    padding: 0rpx 160rpx 30rpx;
 
-   .preview-image {
+   .main-preview {
       width: 100%;
-      height: 673rpx;
-      border-radius: 16rpx;
-      // background-color: #f5f5f5;
+      margin-bottom: 24rpx;
+
+      .preview-image {
+         width: 100%;
+         height: 673rpx;
+         border-radius: 16rpx;
+      }
+   }
+
+   /* 风格选择缩略图 */
+   .style-thumbnails {
+      display: flex;
+      gap: 16rpx;
+      justify-content: center;
+      width: 100%;
+
+      .thumbnail-item {
+         width: 68rpx;
+         height: 68rpx;
+         border-radius: 12rpx;
+         overflow: hidden;
+         border: 2rpx solid transparent;
+         transition: border-color 0.3s ease;
+         padding: 4rpx;
+
+         &.thumbnail-active {
+            border-color: #16C5FF;
+         }
+
+         .thumbnail-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 8rpx;
+         }
+      }
    }
 }
 
