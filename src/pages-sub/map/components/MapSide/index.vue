@@ -45,7 +45,7 @@ const handleLogoClick = (item) => {
 <style scoped>
 .map-logo-menu {
    position: absolute;
-   top: 40rpx;
+   top: 60rpx;
    right: 24rpx;
    z-index: 1000;
    /* 确保在其他元素之上 */

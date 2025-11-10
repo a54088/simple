@@ -9,10 +9,15 @@
     <CustomTabbar />
   </template>
 <script setup>
-import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
+import { onLaunch, onShow, onHide,  } from "@dcloudio/uni-app";
 import checkUpdate from "@/uni_modules/uni-upgrade-center-app/utils/check-update";
 import CustomTabbar from '@/components/custom-tabbar/index.vue'
+import { IMVM } from "@/pages-im/vm/index.js";
+import { onUnmounted } from 'vue'
+let imVM = new IMVM()
+provide('imVM', imVM)
 onLaunch(() => {
+  imVM.init()
   console.log("App Launch");
 });
 onShow(async () => {
@@ -28,6 +33,11 @@ onShow(async () => {
 onHide(() => {
   console.log("App Hide");
 });
+
+onUnmounted(() => {
+  imVM.closeSocket()
+  imVM = ''
+})
 </script>
 <style lang="scss">
 @import '@zebra-ui/swiper/index.scss';
