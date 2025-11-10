@@ -11,7 +11,7 @@ import { onLoad } from "@dcloudio/uni-app";
 import MsgStatusBar from "@/pages/home/components/msg-status-bar/index.vue";
 import OperationBar from "@/pages/home/components/operation-bar/index.vue";
 import SceneModel from "./components/scene-model/index.vue";
-import MenuPopup from "./menu-popup/index.vue";
+import MenuPopup from "./components/menu-popup/index.vue";
 import MessageList from "./components/message-list/index.vue";
 
 import { HomeVM } from "@/pages/home/vm/index.js";

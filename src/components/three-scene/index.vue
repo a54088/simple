@@ -11,7 +11,7 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  model: { type: String, default: '/static/models/fox.glb' },
+  model: { type: String, default: '/static/models/meinv.glb' },
   autoRotate: { type: Boolean, default: false }
 })
 
