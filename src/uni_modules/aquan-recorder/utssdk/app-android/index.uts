@@ -1,0 +1,122 @@
+/**
+ * 引用 Android 系统库，示例如下：
+ * import { Context } from "android.content.Context";
+ * [可选实现，按需引入]
+ */
+
+/* 引入 interface.uts 文件中定义的变量 */
+import { MyApiOptions, MyApiResult, 
+RecordCallbacks，RecordSliceInfoData，
+MyApi, MyApiSync，OnFrameRecorded } from '../interface.uts';
+
+/* 引入 unierror.uts 文件中定义的变量 */
+
+import RecordSliceManager from "com.aquan.recorder.RecordSliceManager";
+import RecordFrameCallback from "com.aquan.recorder.RecordFrameCallback";
+import RecordSliceInfo from "com.aquan.recorder.RecordSliceInfo";
+
+
+export class UTSRecordManager {
+  private recordManager: RecordSliceManager | null = null;
+  private callbacks: RecordCallbacks | null = null;
+
+  /**
+   * 初始化录音（对接AAR）
+   * @param targetFrameSize 目标帧大小（字节）
+   * @param callbacks 回调配置
+   */
+  init(targetFrameSize: number, callbacks: RecordCallbacks) {
+    this.callbacks = callbacks;
+
+    const nativeCallback: RecordFrameCallback = {
+      onFrameRecorded: (nativeSliceInfo: RecordSliceInfo) => {
+        const sliceInfoData: RecordSliceInfoData = {
+          sliceData: nativeSliceInfo.getSliceData(), 
+          sliceIndex: nativeSliceInfo.getSliceIndex(),
+          sliceDuration: nativeSliceInfo.getSliceDuration(),
+          sliceSize: nativeSliceInfo.getSliceSize(),
+          mimeType: nativeSliceInfo.getMimeType(),
+        };
+
+        // 转发给外部传入的回调
+        this.callbacks?.onFrameRecorded(sliceInfoData);
+      },
+
+      // 其他状态回调转发
+      onRecordPaused: () => {
+        this.callbacks?.onRecordPaused?.();
+      },
+
+      onRecordResumed: () => {
+        this.callbacks?.onRecordResumed?.();
+      },
+
+      onRecordFinished: (totalSliceCount: number, totalDuration: number) => {
+        this.callbacks?.onRecordFinished?.(totalSliceCount, totalDuration);
+      },
+
+      onRecordError: (errorMsg: string) => {
+        this.callbacks?.onRecordError?.(errorMsg);
+      },
+    };
+    this.recordManager = new RecordSliceManager(
+      UTSAndroid.getAppContext(), 
+      nativeCallback,
+    );
+
+    this.recordManager.setTargetFrameSize(targetFrameSize);
+    this.recordManager.setSaveToFile(true); 
+  }
+
+  /**
+   * 开始录音（对外暴露的API）
+   */
+  start() {
+    if (!this.recordManager) {
+      this.callbacks?.onRecordError?.("请先调用init初始化");
+      return;
+    }
+    this.recordManager.start();
+  }
+
+  /**
+   * 暂停录音（对外暴露的API）
+   */
+  pause() {
+    this.recordManager?.pause();
+  }
+
+  /**
+   * 恢复录音（对外暴露的API）
+   */
+  resume() {
+    this.recordManager?.resume();
+  }
+
+  /**
+   * 停止录音（对外暴露的API）
+   */
+  stop() {
+    this.recordManager?.stop();
+  }
+
+  /**
+   * 销毁资源（对外暴露的API）
+   */
+  destroy() {
+    this.recordManager?.destroy();
+    this.recordManager = null;
+    this.callbacks = null;
+  }
+}
+
+// 对外暴露单例（方便外部使用）
+export const utsRecordManager = new UTSRecordManager();
+
+
+
+
+
+
+
+
