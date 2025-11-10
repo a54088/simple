@@ -17,7 +17,8 @@ import { LoginVM } from "./vm/index";
 // import { onLoad, onUnmounted } from "@dcloudio/uni-app";
 import { useI18n } from 'vue-i18n'
 import { isChineseLocale, saveLanguageSetting } from '@/utils/index';
-
+import { useUserStore } from "@/store/index";
+import { onLoad } from "@dcloudio/uni-app";
 const { t, locale } = useI18n()
 
 // 切换语言
@@ -40,10 +41,15 @@ const handleMobileLogin = (formType) => {
 //   vm = null;
 // });
 
-// onLoad((options) => {
-//   options.tabType && vm.setTab(options.tabType);
-//   options.inviteCode && vm.setInviteCode(options.inviteCode);
-// });
+onLoad((options) => {
+  // options.tabType && vm.setTab(options.tabType);
+  // options.inviteCode && vm.setInviteCode(options.inviteCode);
+  if (useUserStore().getToken) {
+    vm.formType = "visit_login";
+  }
+  // useUserStore().setToken(accessToken);
+  //     useUserStore().setUserId(userId);
+});
 </script>
 
 <template>
@@ -54,14 +60,15 @@ const handleMobileLogin = (formType) => {
     <template v-if="vm.formType === 'mobile_auto_login'">
       <!-- 语言切换按钮 -->
       <view class="login__logo">
-        <image class="login__logo_img" src="@/static/images/login/aquan.png" />
+        <image class="login__logo_img" v-if="isChineseLocale()" src="@/static/images/login/aquan.png" />
+        <image class="login__logo_img-en" v-else src="@/static/images/login/aquan-en.png" />
         <image
           class="login__logo_Ball"
           src="@/static/images/login/dengluye.png"
         />
       </view>
       <view class="login-mobile__wrapper">
-        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale">{{ t('login.enterAquan') }}</view>
+        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale()">{{ t('login.enterAquan') }}</view>
         <view class="login-mobile" @tap="handleMobileLogin('email_login')" v-else>{{ t('login.enterAquan') }}</view>
       </view>
       <LoginType></LoginType>
@@ -146,6 +153,11 @@ const handleMobileLogin = (formType) => {
     }
     .login__logo_img {
       width: 373rpx;
+      height: 172rpx;
+      margin-bottom: 80rpx;
+    }
+    .login__logo_img-en {
+      width: 538rpx;
       height: 172rpx;
       margin-bottom: 80rpx;
     }

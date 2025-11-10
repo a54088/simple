@@ -4,6 +4,7 @@
  * @returns {boolean} 返回true表示国内语言，false表示国外语言
  */
 export function isChineseLocale() {
+  // return false
   try {
     // 1. 首先尝试从navigator获取语言设置
     let lang = '';
