@@ -126,6 +126,18 @@
             "navigationBarTitleText": "上传图片形象",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "setting/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "setting/account-security/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
         }
       ]
     }
