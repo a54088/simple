@@ -28,20 +28,10 @@ export class UTSRecordManager {
   init(targetFrameSize: number, callbacks: RecordCallbacks) {
     this.callbacks = callbacks;
     const nativeCallback: RecordFrameCallback = {
-      onFrameRecorded: (nativeSliceInfo: RecordSliceInfo) => {
-        const sliceInfoData: RecordSliceInfoData = {
-          sliceData: nativeSliceInfo.getSliceData(), 
-          sliceIndex: nativeSliceInfo.getSliceIndex(),
-          sliceDuration: nativeSliceInfo.getSliceDuration(),
-          sliceSize: nativeSliceInfo.getSliceSize(),
-          mimeType: nativeSliceInfo.getMimeType(),
-        };
-
-        // 转发给外部传入的回调
-        this.callbacks?.onFrameRecorded(sliceInfoData);
-      },
-
-      // 其他状态回调转发
+          onFrameRecorded: (nativeSliceInfo: RecordSliceInfo) => {
+            const sliceInfoData: RecordSliceInfoData = this.convertToUTSData(nativeSliceInfo);
+            this.callbacks?.onFrameRecorded(sliceInfoData);
+          },
       onRecordPaused: () => {
         this.callbacks?.onRecordPaused?.();
       },
@@ -50,9 +40,23 @@ export class UTSRecordManager {
         this.callbacks?.onRecordResumed?.();
       },
 
-      onRecordFinished: (totalSliceCount: number, totalDuration: number) => {
-        this.callbacks?.onRecordFinished?.(totalSliceCount, totalDuration);
-      },
+       onRecordFinished: (
+              totalSliceCount: number,
+              totalDuration: number,
+              nativeAllSlices: List<RecordSliceInfo> // AAR传入的Java List
+            ) => {
+              // 转换：Java List<RecordSliceInfo> → UTS RecordSliceInfoData[]
+              const allSlices: RecordSliceInfoData[] = [];
+              const size = nativeAllSlices.size();
+              for (let i = 0; i < size; i++) {
+                const nativeSlice = nativeAllSlices.get(i);
+                allSlices.push(this.convertToUTSData(nativeSlice));
+              }
+      
+              // 转发给外部回调
+              this.callbacks?.onRecordFinished?.(totalSliceCount, totalDuration, allSlices);
+            },
+
 
       onRecordError: (errorMsg: string) => {
         this.callbacks?.onRecordError?.(errorMsg);
@@ -71,6 +75,16 @@ export class UTSRecordManager {
     this.recordManager.setTargetFrameSize(targetFrameSize);
     this.recordManager.setSaveToFile(true); 
   }
+  
+    private convertToUTSData(nativeSlice: RecordSliceInfo): RecordSliceInfoData {
+      return {
+        sliceData: nativeSlice.getSliceData(), 
+        sliceIndex: nativeSlice.getSliceIndex(),
+        sliceDuration: nativeSlice.getSliceDuration(),
+        sliceSize: nativeSlice.getSliceSize(),
+        mimeType: nativeSlice.getMimeType(),
+      };
+    }
 
   /**
    * 开始录音（对外暴露的API）

@@ -36,7 +36,7 @@ export type RecordSliceInfoData = {
 
 export type OnRecordPaused = () => void;
 export type OnRecordResumed = () => void;
-export type OnRecordFinished = (totalSliceCount: number, totalDuration: number) => void;
+export type OnRecordFinished = (totalSliceCount: number, totalDuration: number,allSlices: RecordSliceInfoData[]) => void;
 export type OnRecordError = (errorMsg: string) => void;
 
 
