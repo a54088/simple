@@ -3,6 +3,14 @@ import CustomNavbar from '@/components/custom-navbar/index.vue'
 import PersonalInfo from './components/personal-info/index.vue'
 import DailyUpdates from './components/daily-updates/index.vue'
 import HomepageOperate from './components/homepage-operate/index.vue'
+import {onUnmounted} from 'vue'
+import { HomepageVM } from './vm/index.js'
+
+let vm = new HomepageVM()
+provide('homepageVM', vm)
+onUnmounted(() => {
+    vm = ''
+})
 </script>
 
 <template>

@@ -1,14 +1,28 @@
 <script setup>
 import SafeBottom from '@/components/safe-bottom/index.vue'
+import AddFriendPopup from './components/add-friend-popup/index.vue'
+import { inject } from 'vue'
+
+const vm = inject('homepageVM')
+
+const onTapChat = () => {
+    uni.navigateTo({
+        url: '/pages-im/views/chat/index'
+    })
+}
+
+const openAddFriendPopup = () => {
+    vm.showAddFriendPopup = true
+}
 </script>
 
 <template>
     <view class="homepage-operate__layout">
         <view class="homepage-operate__content">
-            <view class="homepage-operate__add">
+            <view class="homepage-operate__add" @tap="openAddFriendPopup">
                 <text class="iconfont icon-tianjiahaoyou-"></text>
             </view>
-            <view class="homepage-operate__button">
+            <view class="homepage-operate__button" @tap="onTapChat">
                 <text>聊天</text>
             </view>
 
@@ -16,6 +30,7 @@ import SafeBottom from '@/components/safe-bottom/index.vue'
         </view>
         <SafeBottom />
     </view>
+    <AddFriendPopup />
 </template>
 
 <style lang="scss" scoped>
@@ -41,8 +56,11 @@ import SafeBottom from '@/components/safe-bottom/index.vue'
     .homepage-operate__add {
         background: #181818;
         border-radius: 50%;
-        padding: 32rpx;
-
+        width: 96rpx;
+        height: 96rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         .icon-tianjiahaoyou- {
             color: #fff;
             font-size: 32rpx;
