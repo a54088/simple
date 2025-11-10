@@ -45,6 +45,18 @@
               "bounce": "none"
             }
           }
+        },
+         {
+          "path": "views/chat-setting/index",
+          "style": {
+            "animationType": "fade-in",
+            "animationDuration": 300,
+            "navigationBarTitleText": "聊天设置",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
         }
       ]
     },
