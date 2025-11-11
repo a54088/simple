@@ -7,7 +7,42 @@
 -->
 <script setup>
 import { inject } from "vue";
+import VoiceButton from '@/components/voice-button/index.vue';
+
 const vm = inject("homeVM");
+
+
+// 录音事件处理
+const handleRecordStart = () => {
+  console.log('开始录音')
+  uni.showToast({
+    title: '开始录音',
+    icon: 'none',
+    duration: 1000
+  })
+}
+
+const handleRecordStop = () => {
+  console.log('停止录音')
+}
+
+const handleRecordFrame = (sliceInfo) => {
+  console.log('收到录音分片:', sliceInfo)
+  // 可以在这里处理分片数据，例如上传到服务器
+}
+
+const handleRecordFinished = (data) => {
+  console.log('录音完成:', data)
+  uni.showToast({
+    title: `录音完成，共${data.totalSliceCount}个分片，时长${Math.floor(data.totalDuration / 1000)}秒`,
+    icon: 'none',
+    duration: 2000
+  })
+}
+
+const handleRecordError = (errorMsg) => {
+  console.error('录音错误:', errorMsg)
+}
 </script>
 
 <template>
@@ -27,11 +62,16 @@ const vm = inject("homeVM");
     </view>
 
     <view>
-      <button class="operation-bar-btn" @tap="vm.showToast">
-        <text class="iconfont icon-jianpan iconfont__btn"></text>
-        <text class="operation-bar-btn-text">按住说话</text>
-        <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
-      </button>
+      <text class="iconfont icon-jianpan iconfont__btn"></text>
+      <VoiceButton 
+        :target-frame-size="10240"
+        @start="handleRecordStart"
+        @stop="handleRecordStop"
+        @frame="handleRecordFrame"
+        @finished="handleRecordFinished"
+        @error="handleRecordError"
+      />
+      <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
     </view>
   </view>
 </template>

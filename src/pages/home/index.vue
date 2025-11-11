@@ -10,7 +10,7 @@ import { provide, ref } from "vue";
 import { onLoad } from "@dcloudio/uni-app";
 import MsgStatusBar from "@/pages/home/components/msg-status-bar/index.vue";
 import OperationBar from "@/pages/home/components/operation-bar/index.vue";
-import ThreeScene from '@/components/three-scene/index.vue';
+// import ThreeScene from '@/components/three-scene/index.vue';
 
 import { HomeVM } from "@/pages/home/vm/index.js";
 
@@ -35,12 +35,12 @@ const error = (err) => {
 <template>
   <view class="home__layout">
     <MsgStatusBar></MsgStatusBar>
-    <ThreeScene 
+    <!-- <ThreeScene 
       model="/static/models/meinv.glb"
       @load="threeLoad"
       @progress="progress"
       @error="error"
-    />
+    /> -->
     <OperationBar></OperationBar>
   </view>
 </template>
