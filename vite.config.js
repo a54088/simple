@@ -41,6 +41,14 @@ export default defineConfig({
         comments: false, // 去除所有注释
       },
     },
+    rollupOptions: {
+      external: [
+        // Externalize AAR Java class imports
+        "com.aquan.recorder.RecordSliceManager",
+        "com.aquan.recorder.RecordFrameCallback",
+        "com.aquan.recorder.RecordSliceInfo",
+      ],
+    },
   },
   css: {
     preprocessorOptions: {
