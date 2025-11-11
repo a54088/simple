@@ -111,6 +111,12 @@
           }
         },
         {
+          "path": "circle/publishWork",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "login/index",
           "style": {
             "navigationStyle": "custom"
@@ -134,6 +140,18 @@
           "path": "create/photo-create",
           "style": {
             "navigationBarTitleText": "上传图片形象",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "setting/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "setting/account-security/index",
+          "style": {
             "navigationStyle": "custom"
           }
         }
