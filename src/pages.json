@@ -43,6 +43,26 @@
           }
         },
         {
+          "path": "views/add-friend/index",
+          "style": {
+            "navigationBarTitleText": "添加朋友",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
+          "path": "views/my-group/index",
+          "style": {
+            "navigationBarTitleText": "我的群组",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
           "path": "views/chat/index",
           "style": {
             "navigationBarTitleText": "聊天",
