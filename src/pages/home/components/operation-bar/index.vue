@@ -20,13 +20,24 @@
           <i class="iconfont icon-dianhua"></i>
         </view>
         <view class="operation-bar-btn">
-          <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
-          <text class="operation-bar-btn-text">按住说话</text>
-          <text 
-            @tap="toggleOpen" 
-            class="iconfont icon-quxiao"
-            :class="[isShowMenu && 'icon-rotated']"
-          ></text>
+          <voice-button
+            :duration="60000"
+            :min-duration="1"
+            :show-toast="true"
+            @record-complete="handleRecordComplete"
+            @record-error="handleRecordError"
+          >
+            <template #leftIcon>
+              <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
+            </template>
+            <template #rightIcon>
+              <text 
+                @tap.stop="toggleMenuOpen" 
+                class="iconfont icon-quxiao"
+                :class="[isShowMenu && 'icon-rotated']"
+              ></text>
+            </template>
+          </voice-button>
         </view>
       </view>
     </view>
@@ -39,6 +50,7 @@
       <view
         v-for="item in menuList"
         :key="item.key"
+        @tap="handleMenuClick(item.handle)"
         class="menu-item"
       >
         <text class="iconfont" :class="item.icon"></text>
@@ -49,36 +61,186 @@
 </template>
 
 <script setup>
-import { inject } from "vue";
+import { inject, ref } from "vue";
+import { chooseFile, uploadFile } from "@/utils/file.js";
+import VoiceButton from "@/components/voice-button/index.vue";
+
 const vm = inject("homeVM");
+const isShowMenu = ref(false);
 
-const menuList = ref([
-    {
-      title: '相册',
-      icon: "iconfont icon-xiangce",
-      key: "album",
-    },
-    {
-      title: '相机',
-      icon: "iconfont icon-xiangji",
-      key: "camera",
-    },
-    {
-      title: '文件',
-      icon: "iconfont icon-wenjian",
-      key: "file",
-    },
-    {
-      title: '数据导入',
-      icon: "iconfont icon-shujudaoru",
-      key: "dataExport",
-    },
-])
-const isShowMenu = ref(false)
+// 定义事件
+const emit = defineEmits(['record-complete', 'record-error']);
 
-const toggleOpen = () => {
+const toggleMenuOpen = () => {
   isShowMenu.value = !isShowMenu.value;
-}
+};
+
+// 菜单列表 - 需要在函数定义之后
+const menuList = ref([
+  {
+    title: '相册',
+    icon: "iconfont icon-xiangce",
+    key: "album",
+    handle: 'openAlbum'
+  },
+  {
+    title: '相机',
+    icon: "iconfont icon-xiangji",
+    key: "camera",
+    handle: 'openCamera'
+  },
+  {
+    title: '文件',
+    icon: "iconfont icon-wenjian",
+    key: "file",
+    handle: 'openFile'
+  },
+  {
+    title: '数据导入',
+    icon: "iconfont icon-shujudaoru",
+    key: "dataExport",
+    handle: 'openDataExport'
+  },
+]);
+/* ====================== 上传文件 start ====================== */
+const handleMenuClick = (handle) => {
+  const map = {
+    openAlbum: openAlbum,
+    openCamera: openCamera,
+    openFile: openFile,
+    openDataExport: openDataExport
+  }
+  map[handle]();
+};
+const openAlbum = async () => {
+  try {
+    // 选择相册图片
+    const files = await chooseFile({
+      type: 'image',
+      count: 9,
+      sourceType: 'album'
+    });
+    
+    if (files && files.length > 0) {
+      // 这里可以处理选中的图片
+      console.log('选中的图片:', files);
+      
+      // 如果需要上传，可以调用 uploadFile
+      // const result = await uploadFile(files[0], {
+      //   getPresignedUrlApi: '/api/oss/get-presigned-url',
+      //   onProgress: (progress) => {
+      //     console.log(`上传进度: ${progress}%`);
+      //   }
+      // });
+    }
+  } catch (error) {
+    console.warn('打开相册失败:', error);
+  }
+};
+
+const openCamera = async () => {
+  try {
+    // 选择相机拍照
+    const files = await chooseFile({
+      type: 'image',
+      count: 1,
+      sourceType: 'camera'
+    });
+    
+    if (files && files.length > 0) {
+      console.log('拍摄的照片:', files);
+      
+      // 如果需要上传，可以调用 uploadFile
+      // const result = await uploadFile(files[0], {
+      //   getPresignedUrlApi: '/api/oss/get-presigned-url',
+      //   compress: true,
+      //   quality: 80,
+      //   onProgress: (progress) => {
+      //     console.log(`上传进度: ${progress}%`);
+      //   }
+      // });
+    }
+  } catch (error) {
+    console.warn('打开相机失败:', error);
+  }
+};
+
+const openFile = async () => {
+  try {
+    // 选择文件
+    const files = await chooseFile({
+      type: 'file',
+      count: 1
+    });
+    
+    if (files && files.length > 0) {
+      console.log('选中的文件:', files);
+      
+      // 如果需要上传，可以调用 uploadFile
+      // const result = await uploadFile(files[0], {
+      //   getPresignedUrlApi: '/api/oss/get-presigned-url',
+      //   onProgress: (progress) => {
+      //     console.log(`上传进度: ${progress}%`);
+      //   }
+      // });
+    }
+  } catch (error) {
+    console.warn('选择文件失败:', error);
+  }
+};
+
+const openDataExport = () => {
+  console.log('数据导入');
+  uni.showToast({
+    title: '数据导入功能开发中',
+    icon: 'none'
+  });
+};
+/* ====================== 上传文件 end ====================== */
+
+/* ====================== 按住说话 start ====================== */
+// 处理录音完成
+const handleRecordComplete = (data) => {
+  console.log('录音完成:', data);
+  // 触发事件通知父组件
+  emit('record-complete', data);
+  
+  // 如果需要自动上传，可以在这里处理
+  // uploadRecordFile(data.filePath);
+};
+
+// 处理录音错误
+const handleRecordError = (err) => {
+  console.error('录音错误:', err);
+  // 触发错误事件
+  emit('record-error', err);
+};
+
+// 上传录音文件（可选）
+const uploadRecordFile = async (filePath) => {
+  try {
+    // 使用文件上传工具上传录音
+    // const result = await uploadFile({
+    //   tempFilePath: filePath,
+    //   name: `voice_${Date.now()}.mp3`,
+    //   type: 'audio/mp3'
+    // }, {
+    //   getPresignedUrlApi: '/api/oss/get-presigned-url',
+    //   onProgress: (progress) => {
+    //     console.log(`上传进度: ${progress}%`);
+    //   }
+    // });
+    // console.log('录音上传成功:', result);
+  } catch (error) {
+    console.error('录音上传失败:', error);
+    uni.showToast({
+      title: '录音上传失败',
+      icon: 'none'
+    });
+  }
+};
+/* ====================== 按住说话 end ====================== */
+
 </script>
 
 <style lang="scss" scoped>
@@ -163,14 +325,15 @@ const toggleOpen = () => {
     border-radius: 100rpx;
     color: #fff;
     padding: 24rpx 30rpx;
-
-    .operation-bar-btn-text {
-      font-size: 32rpx;
-      font-weight: 500;
-      letter-spacing: 0em;
-      color: #ffffff;
-      position: relative;
-    }
+  }
+  
+  .icon-quxiao {
+    font-size: 60rpx;
+    width: 60rpx;
+    height: 60rpx;
+    overflow: hidden;
+    margin-right: -10rpx;
+    flex-shrink: 0;
   }
 } 
 
