@@ -126,12 +126,20 @@
             </view>
          </view>
       </view>
+
+      <!-- 权限选择弹层 -->
+      <PermissionSetPopup
+         v-model:show="showPermissionPopup"
+         :value="visibility"
+         @confirm="(val) => (visibility = val)"
+      />
    </view>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import PermissionSetPopup from './components/PermissionSetPopup.vue'
 
 // 作品描述
 const description = ref('')
@@ -141,13 +149,14 @@ const location = ref('机场路一巷')
 
 // 可见性
 const visibility = ref('公开可见')
+const showPermissionPopup = ref(false)
 
 // 是否显示AI操作按钮
 const showAIActions = ref(true)
 
 // 媒体类型：video | image（通过路由传入）
 const mediaType = ref('image')
-const isImageMode = computed(() => mediaType.value === 'image')
+const isImageMode = computed(() => mediaType.value === 'video')
 const previewText = computed(() => (isImageMode.value ? '预览图片' : '预览视频'))
 
 // 图片列表（静态占位）
@@ -255,10 +264,7 @@ const handleSelectLocation = () => {
 
 // 选择可见性
 const handleSelectVisibility = () => {
-   uni.showToast({
-      title: '选择可见性',
-      icon: 'none'
-   })
+  showPermissionPopup.value = true
 }
 
 // 存草稿
