@@ -101,6 +101,12 @@
           }
         },
         {
+          "path": "circle/publishWork",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "login/index",
           "style": {
             "navigationStyle": "custom"
