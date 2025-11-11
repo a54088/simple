@@ -33,6 +33,16 @@
           }
         },
         {
+          "path": "views/new-friend/index",
+          "style": {
+            "navigationBarTitleText": "新的朋友",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
           "path": "views/chat/index",
           "style": {
             "navigationBarTitleText": "聊天",
