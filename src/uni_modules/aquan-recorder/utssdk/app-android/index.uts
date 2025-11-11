@@ -6,11 +6,9 @@
 
 /* 引入 interface.uts 文件中定义的变量 */
 import { MyApiOptions, MyApiResult, 
-RecordCallbacks，RecordSliceInfoData，
-MyApi, MyApiSync，OnFrameRecorded} from '../interface.uts';
+RecordCallbacks,RecordSliceInfoData,
+MyApi,MyApiSync,OnFrameRecorded} from '../interface.uts';
 
-/* 引入 unierror.uts 文件中定义的变量 */
-import AudioFormat from 'android.media.AudioFormat';
 
 import RecordSliceManager from "com.aquan.recorder.RecordSliceManager";
 import RecordFrameCallback from "com.aquan.recorder.RecordFrameCallback";
@@ -62,14 +60,12 @@ export class UTSRecordManager {
         this.callbacks?.onRecordError?.(errorMsg);
       },
     };
-
+	
   
     this.recordManager = new RecordSliceManager(
       UTSAndroid.getAppContext(), 
       nativeCallback,
-      44100, 
-      AudioFormat.CHANNEL_IN_MONO, 
-      AudioFormat.ENCODING_PCM_16BIT 
+      44100
     );
 
     this.recordManager.setTargetFrameSize(targetFrameSize);
