@@ -13,28 +13,37 @@ import AutoImport from "unplugin-auto-import/vite";
 import { resolve } from "path";
 import { createHtmlPlugin } from "vite-plugin-html";
 
-// 自定义插件：处理 UTS Java 类导入
-// 这些 Java 类导入应该由 UTS 编译器在运行时处理
-// 插件让 Rollup 知道这些导入是有效的，但保留原始导入语句供 UTS 编译器使用
-function utsJavaClassPlugin() {
-  return {
-    name: "uts-java-class-plugin",
-    resolveId(id) {
-      // 如果是 Java 类导入（以 com. 或 android. 开头），标记为外部依赖
-      // 但不提供 globals，这样运行时由 UTS 编译器处理
-      if (id.startsWith("com.") || id.startsWith("android.")) {
-        return { id, external: true };
-      }
-      return null;
-    },
-  };
-}
-
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
   plugins: [
-    utsJavaClassPlugin(), // 处理 UTS Java 类导入
+    // 自定义插件：必须在 uni() 插件之前，以拦截 Android 系统库导入
+    {
+      name: 'vite-plugin-ignore-uts-imports',
+      enforce: 'pre', // 确保在其他插件之前执行
+      resolveId(id) {
+        // 如果是 Android 系统库或 Java/Kotlin 类导入，返回虚拟模块
+        // 这些导入在开发模式下不需要解析，会在编译到 Android 时由 UTS 编译器处理
+        if (id.startsWith('android.') || (id.startsWith('com.') && !id.startsWith('./') && !id.startsWith('../'))) {
+          return '\0virtual:' + id; // 使用虚拟模块前缀
+        }
+        return null;
+      },
+      load(id) {
+        // 为虚拟模块返回一个简单的对象，避免 Vite 报错
+        // 实际的导入和实现会在 UTS 编译时被正确处理
+        if (id.startsWith('\0virtual:android.') || id.startsWith('\0virtual:com.')) {
+          const moduleId = id.replace('\0virtual:', '');
+          return `
+// 虚拟模块占位符：${moduleId}
+// 此模块仅在开发模式下使用，实际编译到 Android 时会由 UTS 编译器处理
+// 开发模式下返回空对象以避免 Vite 解析错误
+export default {};
+`;
+        }
+        return null;
+      },
+    },
     createHtmlPlugin({
       minify: true,
       transform(html) {
@@ -52,11 +61,33 @@ export default defineConfig({
     alias: {
       "@": resolve("./src"),
     },
+    // 为 Android 系统库和 Java/Kotlin 类提供虚拟模块，避免 Vite 解析错误
+    // 这些导入在编译到 Android 时会被 UTS 编译器正确处理
+    dedupe: ['vue'],
+  },
+  optimizeDeps: {
+    exclude: [
+      // 排除 UTS 文件，这些应该由 uni-app UTS 编译器处理
+      /\.uts$/,
+    ],
   },
   build: {
     terserOptions: {
       format: {
         comments: false, // 去除所有注释
+      },
+    },
+    rollupOptions: {
+      external: (id) => {
+        // 排除 Android 系统库导入，这些应该由 UTS 编译器处理
+        if (id.startsWith('android.')) {
+          return true
+        }
+        // 排除 Java/Kotlin 类导入（但不排除相对路径导入，如 ./com/xxx）
+        if (id.startsWith('com.') && !id.startsWith('./') && !id.startsWith('../')) {
+          return true
+        }
+        return false
       },
     },
   },
