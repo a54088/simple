@@ -315,7 +315,10 @@ export class LoginVM extends ViewModel {
         useUserStore().setUserInfo(data);
       // 存在邀请码
       if (data.inviteFlag && !data.recommendUserId) {
-        this.formType = "invite_code";
+        uni.navigateTo({
+          url: "/pages-sub/invite/index",
+        });
+        // this.formType = "invite_code";
       } else {
         uni.switchTab({
           url: "/pages/home/index",

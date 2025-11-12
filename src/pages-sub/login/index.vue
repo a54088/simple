@@ -44,7 +44,7 @@ const handleMobileLogin = (formType) => {
 onLoad((options) => {
   // options.tabType && vm.setTab(options.tabType);
   // options.inviteCode && vm.setInviteCode(options.inviteCode);
-  if (useUserStore().getToken) {
+  if (useUserStore().getUserInfo.inviteFlag && !useUserStore().getUserInfo.recommendUserId) {
     vm.formType = "visit_login";
   }
   // useUserStore().setToken(accessToken);

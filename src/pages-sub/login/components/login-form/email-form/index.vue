@@ -20,6 +20,7 @@ const codeButtonText = ref("get code");
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
+import { isChineseLocale } from '@/utils/index';
 
 vm.emailFormRef = emailFormRef;
 vm.emailLoginCodeRef = emailLoginCodeRef;
@@ -80,7 +81,8 @@ const onLeftClick = () => {
   <view class="sms-form">
     <CustomNavbar leftIconColor="#000" title="" bgColor="transparent" :autoBack="false" :leftClick="onLeftClick"/>
     <view class="sms-form__logo">
-      <image class="img_left" src="@/static/images/login/zhuceye-aquan.png" />
+      <!-- <image class="img_left" src="@/static/images/login/zhuceye-aquan.png" v-if="isChineseLocale()"/> -->
+      <image class="img_left-en" src="@/static/images/login/zhuceye-aquan-en.png"/>
       <image class="img_right" src="@/static/images/login/zhuceye-icon.png" />
     </view>
     <u-form
@@ -151,6 +153,10 @@ const onLeftClick = () => {
   .img_left {
     width: 222rpx;
     height: 144rpx;
+  }
+  .img_left-en{
+    width: 305rpx;
+    height: 136rpx;
   }
   .img_right {
     width: 192rpx;
