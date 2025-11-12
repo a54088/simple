@@ -173,6 +173,12 @@
           }
         },
         {
+          "path": "social/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "invite/index",
           "style": {
             "navigationStyle": "custom"
