@@ -8,6 +8,9 @@
 <script setup lang="js">
 import { inject } from 'vue';
 import { H5Url } from "@/config/index.js";
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const vm = inject('loginVM')
 
@@ -44,19 +47,19 @@ const onToAgreement2 = (path, title, type) => {
       ></u-icon>
     </text>
     <view class="login-agreement__right">
-      <text @click="onAgreement">我已阅读并同意</text>
+      <text @click="onAgreement">{{ t('login.agreeTo') }}</text>
       <text
         class="agreement"
         @click="onToAgreement('/pages-agreement/auction-service/index')"
-        >《隐私政策》</text
+        >{{ t('login.privacyPolicy') }}</text
       >
-      <text>和</text>
+      <text>{{ t('and') }}</text>
       <text
         class="agreement"
         @click="
           onToAgreement('pages-agreement/privacy/index', '隐私政策', 'ys')
         "
-        >《用户服务协议》</text
+        >{{ t('login.userAgreement') }}</text
       >
     </view>
   </view>

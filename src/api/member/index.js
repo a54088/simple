@@ -23,6 +23,12 @@ const UserApi = {
   /** 发送邮箱验证码 */
   sendEmailLoginCode: (parameter) =>
     client.createPostJSON("/member/auth/send-email-code", parameter),
+  /** 获取邀请码掷筛子配置 */
+  getRollConfig: (parameter) =>
+    client.createGet("/member/userInviteCode/getRollConfig", parameter),
+  /** 掷筛子 */
+  rollDice: (parameter) =>
+    client.createGet("/member/userInviteCode/rollDice", parameter),
 };
 
 export default UserApi;

@@ -20,8 +20,8 @@ const locales = {
 };
 
 const config = {
-  locale: "zh-Hans", // 默认显示语言
-  fallbackLocale: "en", // 回退语言
+  locale: "en", // 默认显示语言
+  fallbackLocale: "zh-Hans", // 回退语言
   messages: locales,
   legacy: false,
 };

@@ -4,6 +4,7 @@
  * @returns {boolean} 返回true表示国内语言，false表示国外语言
  */
 export function isChineseLocale() {
+  // return false
   try {
     // 1. 首先尝试从navigator获取语言设置
     let lang = '';
@@ -102,6 +103,22 @@ export function getSystemLanguage() {
   } catch (e) {
     console.error('获取系统语言时出错:', e);
     return '';
+  }
+}
+
+/**
+ * 获取保存的语言设置
+ * @returns {string|null} 保存的语言代码，如果没有则返回null
+ */
+export function getLanguageSetting() {
+  try {
+    if (typeof uni !== 'undefined') {
+      return uni.getStorageSync('systemLanguage') || null;
+    }
+    return null;
+  } catch (e) {
+    console.error('获取语言设置失败:', e);
+    return null;
   }
 }
 

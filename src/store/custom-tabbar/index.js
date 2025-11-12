@@ -37,7 +37,7 @@ export const useCustomTabbarStore = defineStore("CustomTabbarStore", {
         switchTab(index) {
             this.currentTabIndex = index
             if (this.swiperRef) {
-                debugger
+                
                 this.swiperRef.swiper.slideTo(index)
             }
         },

@@ -11,6 +11,12 @@
   "login.loginSuccess": "Login Success",
   "login.getCode": "Get Code",
   "login.emailLoginCodeSent": "Email Code Sent",
-  "login.enterAquan": "Enter Aquan",
-  "login.otherLogin": "Other Login"
+  "login.enterAquan": "Continue with Email",
+  "login.otherLogin": "OR",
+  "login.placeholder.mobile": "Please input mobile",
+  "login.placeholder.code": "Please input code",
+  "login.privacyPolicy": "Privacy Policy",
+  "login.userAgreement": "User Agreement",
+  "login.agreeTo": "I agree to",
+  "and": "and"
 }
