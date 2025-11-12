@@ -1,0 +1,18 @@
+{
+    "id": "dice-tag",
+    "name": "单个骰子组件",
+    "displayName": "单个骰子组件",
+    "version": "1.0.0",
+    "description": "筛子组件点击进行转动",
+    "keywords": [
+        "组件",
+        "筛子",
+        "骰子"
+    ],
+    "dcloudext": {
+        "category": [
+            "前端组件",
+            "通用组件"
+        ]
+    }
+}

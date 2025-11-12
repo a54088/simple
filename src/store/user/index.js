@@ -14,6 +14,7 @@ import {
   clear,
 } from "@/shared/utils/storage.js";
 import userApi from "@/api/user/index";
+import memberApi from "@/api/member/index";
 
 export const useUserStore = defineStore("UserStore", {
   state: () => {
@@ -91,7 +92,7 @@ export const useUserStore = defineStore("UserStore", {
       userInfo.set(val);
     },
     async getUserInfo() {
-      const { data, code } = await userApi.getUserInfo();
+      const { data, code } = await memberApi.getUserInfo();
       if (code === 0) {
         this.setUserInfo(data);
       }

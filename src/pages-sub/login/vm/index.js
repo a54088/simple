@@ -315,12 +315,18 @@ export class LoginVM extends ViewModel {
         useUserStore().setUserInfo(data);
       // 存在邀请码
       if (data.inviteFlag && !data.recommendUserId) {
-        this.formType = "invite_code";
-      } else {
-        uni.showToast({
-          title: t("login.loginSuccess"),
-          icon: "none",
+        uni.navigateTo({
+          url: "/pages-sub/invite/index",
         });
+        // this.formType = "invite_code";
+      } else {
+        uni.switchTab({
+          url: "/pages/home/index",
+        });
+        // uni.showToast({
+        //   title: t("login.loginSuccess"),
+        //   icon: "none",
+        // });
       }
       }
     } catch (e) {

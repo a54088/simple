@@ -12,14 +12,14 @@ import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
 
-const emailLoginCodeRef = ref();
+const smsLoginCodeRef = ref();
 
 const smsFormRef = ref();
 
 const codeButtonText = ref("获取验证码");
 
 vm.smsFormRef = smsFormRef;
-vm.emailLoginCodeRef = emailLoginCodeRef;
+vm.smsLoginCodeRef = smsLoginCodeRef;
 
 const form = computed({
   set(val) {
@@ -101,7 +101,7 @@ const onLeftClick = () => {
           v-model="form.mobile"
           border="none"
           type="number"
-          placeholder="请输入手机号"
+          :placeholder="$t('login.placeholder.mobile')"
         >
         </u-input>
     </u-form-item>
@@ -110,12 +110,12 @@ const onLeftClick = () => {
         <u-input
           v-model="form.code"
           border="none"
-          placeholder="请输入验证码"
+          :placeholder="$t('login.placeholder.code')"
           type="number"
         >
           <template #suffix>
             <u-code
-              ref="emailLoginCodeRef"
+              ref="smsLoginCodeRef"
               @change="codeChange"
               seconds="60"
               changeText="X秒重新获取"

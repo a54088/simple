@@ -16,9 +16,17 @@ import LoginMobileType from "./components/login-mobile-type/index.vue";
 import { LoginVM } from "./vm/index";
 // import { onLoad, onUnmounted } from "@dcloudio/uni-app";
 import { useI18n } from 'vue-i18n'
-import { isChineseLocale } from '@/utils/index';
+import { isChineseLocale, saveLanguageSetting } from '@/utils/index';
+import { useUserStore } from "@/store/index";
+import { onLoad } from "@dcloudio/uni-app";
+const { t, locale } = useI18n()
 
-const { t } = useI18n()
+// 切换语言
+const toggleLanguage = () => {
+  locale.value = locale.value === 'zh-Hans' ? 'en' : 'zh-Hans';
+  // 保存语言设置
+  saveLanguageSetting(locale.value);
+}
 let vm = new LoginVM();
 
 provide("loginVM", vm);
@@ -33,24 +41,40 @@ const handleMobileLogin = (formType) => {
 //   vm = null;
 // });
 
-// onLoad((options) => {
-//   options.tabType && vm.setTab(options.tabType);
-//   options.inviteCode && vm.setInviteCode(options.inviteCode);
-// });
+onLoad(async (options) => {
+  // options.tabType && vm.setTab(options.tabType);
+  // options.inviteCode && vm.setInviteCode(options.inviteCode);
+  await useUserStore().getUserInfo()
+  console.log(useUserStore().userInfo, 'kkk');
+  
+  if (useUserStore().userInfo.inviteFlag && !useUserStore().getUserInfo.recommendUserId) {
+    // vm.formType = "visit_login";
+    uni.navigateTo({
+      url: "/pages-sub/invite/index",
+    });
+  }
+  // useUserStore().setToken(accessToken);
+  //     useUserStore().setUserId(userId);
+});
 </script>
 
 <template>
   <view class="login__layout">
+      <!-- <view class="language-toggle" @tap="toggleLanguage">
+        {{ locale === 'zh-Hans' ? 'English' : '中文' }}
+      </view> -->
     <template v-if="vm.formType === 'mobile_auto_login'">
+      <!-- 语言切换按钮 -->
       <view class="login__logo">
-        <image class="login__logo_img" src="@/static/images/login/aquan.png" />
+        <image class="login__logo_img" v-if="isChineseLocale()" src="@/static/images/login/aquan.png" />
+        <image class="login__logo_img-en" v-else src="@/static/images/login/aquan-en.png" />
         <image
           class="login__logo_Ball"
           src="@/static/images/login/dengluye.png"
         />
       </view>
       <view class="login-mobile__wrapper">
-        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale">{{ t('login.enterAquan') }}</view>
+        <view class="login-mobile" @tap="handleMobileLogin('sms_login')" v-if="isChineseLocale()">{{ t('login.enterAquan') }}</view>
         <view class="login-mobile" @tap="handleMobileLogin('email_login')" v-else>{{ t('login.enterAquan') }}</view>
       </view>
       <LoginType></LoginType>
@@ -80,6 +104,19 @@ const handleMobileLogin = (formType) => {
   flex-direction: column;
   box-sizing: border-box;
   // padding: 130rpx 70rpx 0;
+  
+  // 语言切换按钮样式
+  .language-toggle {
+    position: absolute;
+    top: 60rpx;
+    right: 40rpx;
+    padding: 10rpx 20rpx;
+    border: 1px solid #000;
+    border-radius: 20rpx;
+    font-size: 28rpx;
+    color: #000;
+    z-index: 10;
+  }
   // Logo部分
   .login__logo {
     // 保持原有样式
@@ -122,6 +159,11 @@ const handleMobileLogin = (formType) => {
     }
     .login__logo_img {
       width: 373rpx;
+      height: 172rpx;
+      margin-bottom: 80rpx;
+    }
+    .login__logo_img-en {
+      width: 538rpx;
       height: 172rpx;
       margin-bottom: 80rpx;
     }

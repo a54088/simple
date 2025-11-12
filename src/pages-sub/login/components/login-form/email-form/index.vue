@@ -12,7 +12,7 @@ import { inject, ref } from "vue";
 
 const vm = inject("loginVM");
 
-const smsLoginCodeRef = ref();
+const emailLoginCodeRef = ref();
 
 const emailFormRef = ref();
 
@@ -20,9 +20,10 @@ const codeButtonText = ref("get code");
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
+import { isChineseLocale } from '@/utils/index';
 
 vm.emailFormRef = emailFormRef;
-vm.smsLoginCodeRef = smsLoginCodeRef;
+vm.emailLoginCodeRef = emailLoginCodeRef;
 
 const form = computed({
   set(val) {
@@ -80,7 +81,8 @@ const onLeftClick = () => {
   <view class="sms-form">
     <CustomNavbar leftIconColor="#000" title="" bgColor="transparent" :autoBack="false" :leftClick="onLeftClick"/>
     <view class="sms-form__logo">
-      <image class="img_left" src="@/static/images/login/zhuceye-aquan.png" />
+      <!-- <image class="img_left" src="@/static/images/login/zhuceye-aquan.png" v-if="isChineseLocale()"/> -->
+      <image class="img_left-en" src="@/static/images/login/zhuceye-aquan-en.png"/>
       <image class="img_right" src="@/static/images/login/zhuceye-icon.png" />
     </view>
     <u-form
@@ -111,7 +113,7 @@ const onLeftClick = () => {
         >
           <template #suffix>
             <u-code
-              ref="smsLoginCodeRef"
+              ref="emailLoginCodeRef"
               @change="codeChange"
               seconds="60"
               changeText="X second get"
@@ -151,6 +153,10 @@ const onLeftClick = () => {
   .img_left {
     width: 222rpx;
     height: 144rpx;
+  }
+  .img_left-en{
+    width: 305rpx;
+    height: 136rpx;
   }
   .img_right {
     width: 192rpx;

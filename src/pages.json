@@ -1,6 +1,5 @@
 {
   "pages": [
-    //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
     {
       "path": "pages/home/index",
       "aliasPath": "/",
@@ -102,7 +101,6 @@
           "path": "index",
           "style": {
             "navigationStyle": "custom",
-            // #ifdef APP-PLUS
             "softinputMode": "adjustResize",
             "backgroundColor": "transparent",
             "animationDuration": 1,
@@ -110,7 +108,6 @@
             "popGesture": "none",
             "bounce": "none",
             "titleNView": false,
-            // #endif
             "app-plus": {
               "usingComponents": true,
               "nvueCompiler": "uni-app",
@@ -174,6 +171,18 @@
           "style": {
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "social/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "invite/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
         }
       ]
     }
@@ -184,22 +193,6 @@
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },
-  // "tabBar": {
-  //   "list": [
-  //     {
-  //       "pagePath": "pages/home/index",
-  //       "text": "首页"
-  //     },
-  //     {
-  //       "pagePath": "pages/map/index",
-  //       "text": "地图"
-  //     }
-  //   ],
-  //   "fontSize": "12px",
-  //   "color": "#979797",
-  //   "selectedColor": "#FF612F",
-  //   "backgroundColor": "#fff"
-  // },
   "easycom": {
     "autoscan": true,
     "custom": {}
@@ -208,9 +201,9 @@
     "current": 0, //当前激活的模式(list 的索引项)
     "list": [
       {
-        "name": "地图", //模式名称
-        "path": "pages-im/index", //启动页面，必选
-        "query": "" //启动参数，在页面的onLoad函数里面得到
+        "name": "地图",
+        "path": "pages-im/index",
+        "query": ""
       }
     ]
   }

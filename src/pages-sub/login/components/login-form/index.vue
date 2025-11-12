@@ -12,8 +12,7 @@ import SmsForm from "./sms-form/index.vue";
 import ForgetPasswordForm from "./forget-password-form/index.vue";
 import InviteForm from "./invite-form/index.vue";
 import EmailForm from "./email-form/index.vue";
-
-
+import DiceFrom from "./invite-form/dice.vue";
 
 const vm = inject("loginVM");
 </script>
@@ -24,6 +23,7 @@ const vm = inject("loginVM");
   <SmsForm v-show="vm.formType === 'sms_login'" />
   <!-- <ForgetPasswordForm v-show="vm.formType === 'forget_password'" /> -->
   <InviteForm v-show="vm.formType === 'invite_code'" />
+  <!-- <DiceFrom v-show="vm.formType === 'invite_code'" /> -->
   <EmailForm v-show="vm.formType === 'email_login'" />
 </template>
 

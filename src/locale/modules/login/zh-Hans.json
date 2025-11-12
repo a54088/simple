@@ -12,5 +12,11 @@
   "login.getCode": "获取验证码",
   "login.emailLoginCodeSent": "邮箱验证码已发送",
   "login.enterAquan": "进入阿圈",
-  "login.otherLogin": "其他登录方式"
+  "login.otherLogin": "其他登录方式",
+  "login.placeholder.mobile": "请输入手机号",
+  "login.placeholder.code": "请输入验证码"  ,
+  "login.privacyPolicy": "隐私政策",
+  "login.userAgreement": "用户协议",
+  "login.agreeTo": "我已阅读并同意",
+  "and": "和"
 }
