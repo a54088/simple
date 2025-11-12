@@ -144,6 +144,12 @@
           "style": {
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "social/index",
+          "style": {
+            "navigationStyle": "custom",
+          }
         }
       ]
     }
