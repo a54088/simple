@@ -99,7 +99,11 @@ const onClick = async () => {
         uni.switchTab({
           url: "/pages/home/index",
         });
-        // vm.formType = "sms_login";
+      } else {
+        uni.showToast({
+          title: res.msg || "邀请码校验失败",
+          icon: "none",
+        });
       }
     })
     .catch((err) => {
