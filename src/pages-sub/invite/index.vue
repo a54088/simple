@@ -146,6 +146,7 @@ const onClick = async () => {
           <u-input
             v-model="form.inviteCode"
             border="none"
+            fontSize="28rpx"
             placeholder="请输入你的邀请码"
             :disabled="form.btnDisabled"
           >
@@ -202,6 +203,7 @@ const onClick = async () => {
     align-items: center;
     justify-content: center;
     margin-top: 60rpx;
+    margin-bottom: 16rpx;
   }
   .invite-form__hyq {
     width: 408rpx;
