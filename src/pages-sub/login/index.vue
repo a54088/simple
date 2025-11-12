@@ -41,11 +41,17 @@ const handleMobileLogin = (formType) => {
 //   vm = null;
 // });
 
-onLoad((options) => {
+onLoad(async (options) => {
   // options.tabType && vm.setTab(options.tabType);
   // options.inviteCode && vm.setInviteCode(options.inviteCode);
-  if (useUserStore().getUserInfo.inviteFlag && !useUserStore().getUserInfo.recommendUserId) {
-    vm.formType = "visit_login";
+  await useUserStore().getUserInfo()
+  console.log(useUserStore().userInfo, 'kkk');
+  
+  if (useUserStore().userInfo.inviteFlag && !useUserStore().getUserInfo.recommendUserId) {
+    // vm.formType = "visit_login";
+    uni.navigateTo({
+      url: "/pages-sub/invite/index",
+    });
   }
   // useUserStore().setToken(accessToken);
   //     useUserStore().setUserId(userId);
