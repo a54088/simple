@@ -25,7 +25,8 @@ const tabIndex = ref(0)
         <view class="my-group__content">
             <u-row>
                 <u-col span="4" v-for="(item, index) in tabList" :key="item.label">
-                    <view :class="{'new-friend__item--active': index === tabIndex}" class="new-friend__item" @tap="tabIndex = index">
+                    <view :class="{ 'new-friend__item--active': index === tabIndex }" class="new-friend__item"
+                        @tap="tabIndex = index">
                         <view class="new-friend__item__num">
                             {{ item.num }}
                         </view>
@@ -36,6 +37,15 @@ const tabIndex = ref(0)
                 </u-col>
 
             </u-row>
+
+            <view class="my-group__list">
+                <view class="my-group__item">
+                    <u-avatar src="" size="88rpx" />
+                    <view class="my-group__item-content">
+                        美人与野兽
+                    </view>
+                </view>
+            </view>
         </view>
     </view>
 </template>
@@ -44,11 +54,30 @@ const tabIndex = ref(0)
     margin-top: 54rpx;
 }
 
+.my-group__list {
+    margin-top: 34rpx;
+    padding: 32rpx;
+
+    .my-group__item {
+        display: flex;
+        align-items: center;
+        .my-group__item-content {
+            width: 100%;
+            padding: 44rpx 0;
+            margin-left: 20rpx;
+            border-bottom: 1rpx solid rgba(35, 35, 35, 0.1);;
+        }
+    }
+}
+
+
+
 .new-friend__item--active {
     &:after {
         display: block !important;
     }
 }
+
 .new-friend__item {
     display: flex;
     flex-direction: column;
