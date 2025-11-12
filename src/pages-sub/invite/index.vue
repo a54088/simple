@@ -78,6 +78,12 @@ const onDiceTagLayoutClick = async() => {
   }
 };
 
+const onLeftClick = () => {
+  uni.navigateBack({
+    delta: 1,
+  });
+}
+
 const onClick = async () => {
   // await inviteFormRef.value.validate();
   if (!form.inviteCode) {
@@ -122,6 +128,8 @@ const onClick = async () => {
       leftIconColor="#000"
       title=""
       bgColor="transparent"
+      :autoBack="false" :leftClick="onLeftClick"
+      style="position: relative;z-index: 2;"
     />
     <img src="@/static/images/login/invite/yq.gif" class="invite-form__gif" />
 
