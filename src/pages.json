@@ -24,9 +24,37 @@
         {
           "path": "index",
           "style": {
-            "animationType": "fade-in",
-            "animationDuration": 300,
             "navigationBarTitleText": "IM",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
+          "path": "views/new-friend/index",
+          "style": {
+            "navigationBarTitleText": "新的朋友",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
+          "path": "views/add-friend/index",
+          "style": {
+            "navigationBarTitleText": "添加朋友",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
+          "path": "views/my-group/index",
+          "style": {
+            "navigationBarTitleText": "我的群组",
             "navigationStyle": "custom",
             "app-plus": {
               "bounce": "none"
@@ -36,8 +64,6 @@
         {
           "path": "views/chat/index",
           "style": {
-            "animationType": "fade-in",
-            "animationDuration": 300,
             "navigationBarTitleText": "聊天",
             "navigationStyle": "custom",
             "app-plus": {
@@ -45,12 +71,20 @@
             }
           }
         },
-         {
+        {
           "path": "views/chat-setting/index",
           "style": {
-            "animationType": "fade-in",
-            "animationDuration": 300,
             "navigationBarTitleText": "聊天设置",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
+        {
+          "path": "views/homepage/index",
+          "style": {
+            "navigationBarTitleText": "我的主页",
             "navigationStyle": "custom",
             "app-plus": {
               "bounce": "none"
@@ -94,6 +128,12 @@
           }
         },
         {
+          "path": "circle/publishWork",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "login/index",
           "style": {
             "navigationStyle": "custom"
@@ -113,22 +153,28 @@
             "navigationStyle": "custom"
           }
         },
-        // {
-        //   "path": "dice-example/index",
-        //   "style": {
-        //     "navigationBarTitleText": "骰子示例"
-        //   }
-        // },
         {
-            "path": "create/photo-create",
+          "path": "create/photo-create",
           "style": {
             "navigationBarTitleText": "上传图片形象",
             "navigationStyle": "custom"
           }
-        }, {
+        },
+        {
+          "path": "setting/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "setting/account-security/index",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "invite/index",
           "style": {
-            "navigationBarTitleText": "邀请好友",
             "navigationStyle": "custom"
           }
         }
@@ -145,8 +191,8 @@
     "autoscan": true,
     "custom": {}
   },
-  "condition": {
-    "current": 0,
+  "condition": { //模式配置，仅开发期间生效
+    "current": 0, //当前激活的模式(list 的索引项)
     "list": [
       {
         "name": "地图",
