@@ -1,4 +1,6 @@
 import { ViewModel } from "@/shared/class/view-model.js";
+import onSocketStateChange from './init/onSocketStateChange'
+import onAppActivateStateChange from './init/onAppActivateStateChange'
 
 export class IMVM extends ViewModel {
   showChatOperate = false
@@ -28,6 +30,15 @@ export class IMVM extends ViewModel {
 
   socketTask = null
 
+  socketConnectState = null
+
+  appActivateState = null
+
+  systemInfo = uni.getSystemInfoSync()
+
+  // 全局响应式心跳，用于更新消息距离当前时长 等
+  heartbeat = ''
+
   constructor() {
     super()
   }
@@ -42,6 +53,25 @@ export class IMVM extends ViewModel {
         console.log('ws 链接失败', e)
       },
     });
+    onSocketStateChange((state, count) => {
+      this.socketConnectState = state;
+      if (count > 1) {
+        // TODO 大于1，说明是断开后重连；获取socket断开时丢失的数据
+      }
+    });
+    // 监听应用处于“活动状态”，并记录状态和变成活动状态的次数。
+    onAppActivateStateChange((state, count) => {
+      this.appActivateState = state;
+      if (!state) return;
+      // #ifdef APP
+      this.socketConnectState = state;
+      // #endif
+    });
+
+     //时间戳心跳（定时器）用于刷新：消息或会话与当前的时间差。ps：全局共享一个定时器变量。比启多个定时器性能更好
+  setInterval(() => {
+    this.heartbeat = Date.now();
+  }, 1000)
   }
 
   sendMessage(message) {

@@ -3,7 +3,7 @@ import { useCustomTabbarStore } from '@/store/index'
 import { ref } from 'vue'
 
 const props = defineProps({
-    is: {
+    isAi: {
         type: String,
         default: ''
     }
@@ -17,25 +17,27 @@ const onToChatDetail = () => {
 </script>
 
 <template>
-    <view class="chat-item__layout" @tap="onToChatDetail">
+    <view :class="['chat-item__layout', { 'chat-item__layout--ai': isAi }]" @tap="onToChatDetail">
         <u-avatar :src="''" size="96rpx"></u-avatar>
         <view class="chat-item__content">
             <view class="chat-item__content__title__layout">
                 <text
-                    class="chat-item__content__title text_ellipsis">这是一段很长的文本内容，用来演示省略号组件的基本功能。当文本超出指定行数时，会自动显示省略号。</text>
+                    class="chat-item__content__title text_ellipsis">
+                {{ isAi ? '啊圈AI' : '用户' }}
+                </text>
                 <view class="chat-item__content__time">1分钟前</view>
             </view>
-            <view class="chat-item__content__des text_ellipsis">这是一段很长的文本内容，用来演示省略号组件的基本功能。当文本超出指定行数时，会自动显示省略号。</view>
+            <view class="chat-item__content__des text_ellipsis">
+                {{ isAi ? '有什么问题尽管问' : '' }}
+            </view>
         </view>
     </view>
 </template>
 
 <style lang="scss" scoped>
-.chat-item__layout {
-    width: 100%;
-    display: flex;
+.chat-item__layout--ai {
     position: relative;
-    padding: 0 32rpx;
+
     &:before {
         content: '';
         position: absolute;
@@ -48,6 +50,14 @@ const onToChatDetail = () => {
         background: #16C5FF;
         z-index: 99;
     }
+}
+
+.chat-item__layout {
+    width: 100%;
+    display: flex;
+
+    padding: 0 32rpx;
+
 
     .chat-item__content {
         width: 300rpx;

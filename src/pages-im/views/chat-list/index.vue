@@ -6,9 +6,7 @@ import ChatOperate from '../../components/chat-operate/index.vue'
 
 const imVM = inject('imVM')
 
-const chatList = [
-    1, 2, 3, 4, 5, 6, 1, 1, 11, , 1, 1, 1, 1, 1, 1, 1,
-]
+const chatList = []
 
 const chatOperateList = computed(() => imVM.chatOperateList)
 
@@ -53,7 +51,7 @@ const open = () => {
             <scroll-view  scroll-y="true" class="chat-list__scroll" @scrolltoupper="upper"
                 @scrolltolower="lower" @scroll="scroll">
                 <view class="chat-ai__layout">
-                    <ChatItem />
+                    <ChatItem :isAi="true" />
                 </view>
                 <view class="chat-item__block__layout" v-for="(item, index) in chatList" :key="index">
                     <ChatItem />
