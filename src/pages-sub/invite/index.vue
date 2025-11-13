@@ -131,10 +131,11 @@ const onClick = async () => {
       :autoBack="false" :leftClick="onLeftClick"
       style="position: relative;z-index: 2;"
     />
-    <img src="@/static/images/login/invite/yq.gif" class="invite-form__gif" />
-
+    <image src="@/static/images/login/invite/yq.gif" class="invite-form__gif" />
+     <!-- GIF占位符 -->
+    <view class="invite-form__gif-placeholder"></view>
     <view class="invite-form__form">
-      <img
+      <image
         src="@/static/images/login/invite/hyq.png"
         class="invite-form__hyq"
       />
@@ -173,13 +174,17 @@ const onClick = async () => {
 <style lang="scss" scoped>
 .dice-form {
   //   padding: 130rpx 0 0;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   position: relative;
   background: url("@/static/images/login/invite/yaoqingbeijing.png");
-  //   background-size: cover;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: center;
+//   padding-top: calc(env(safe-area-inset-top));
   padding-bottom: calc(env(safe-area-inset-bottom) + 30rpx);
+  box-sizing: border-box;
+  overflow-y: auto;
+  // 使用padding-top留出顶部安全区域
   .invite-form__gif {
     position: absolute;
     top: 0;
@@ -187,6 +192,13 @@ const onClick = async () => {
     width: 100%;
     height: 535rpx;
     z-index: 1;
+  }
+  
+  // 添加GIF图片的占位符来解决样式塌陷
+  .invite-form__gif-placeholder {
+    width: 100%;
+    height: 535rpx;
+    visibility: hidden;
   }
 
   .login_button__layout {
@@ -247,7 +259,7 @@ const onClick = async () => {
   .invite-form__form {
     display: flex;
     justify-content: center;
-    margin-top: 500rpx;
+    // margin-top: 420rpx;
     margin-bottom: 40rpx;
   }
   .invite-form__tips1 {
@@ -257,17 +269,19 @@ color: #666666;
 text-align: center;
 margin-bottom: 16rpx;
   }
-  .invite-form__tips2 {
-    
+    .invite-form__tips2 {
 font-size: 24rpx;
 color: #9E9E9E;
 text-align: center;
   }
-  .invite-form__tips3 {
+
+ .invite-form__tips3 {
     
 font-size: 24rpx;
 color: #9E9E9E;
 text-align: center;
+margin-top: 20rpx;
+margin-bottom: 30rpx;
 width: 245rpx;
 height: 57rpx;
 border-radius: 80rpx;
