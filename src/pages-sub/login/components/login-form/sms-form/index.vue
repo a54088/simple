@@ -159,10 +159,10 @@ const onLeftClick = () => {
 }
 .sms-form__layout {
   ::v-deep.u-form-item {
-    margin-bottom: 32rpx;
+    margin-bottom: 42rpx;
   }
   ::v-deep.u-form-item:last-child {
-    margin-bottom: 60rpx;
+    margin-bottom: 80rpx;
   }
   ::v-deep.u-form-item__body {
     width: 100%;
