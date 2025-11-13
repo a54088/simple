@@ -47,12 +47,12 @@ onLoad(async (options) => {
   await useUserStore().getUserInfo()
   console.log(useUserStore().userInfo, 'kkk');
   
-  if (useUserStore().userInfo.inviteFlag && !useUserStore().getUserInfo.recommendUserId) {
-    // vm.formType = "visit_login";
-    uni.navigateTo({
-      url: "/pages-sub/invite/index",
-    });
-  }
+  if (useUserStore().userInfo.inviteFlag && (useUserStore().getUserInfo.recommendUserId === undefined || useUserStore().getUserInfo.recommendUserId === null || useUserStore().getUserInfo.recommendUserId === '')) {
+     // vm.formType = "visit_login";
+     uni.navigateTo({
+       url: "/pages-sub/invite/index",
+     });
+    }
   // useUserStore().setToken(accessToken);
   //     useUserStore().setUserId(userId);
 });

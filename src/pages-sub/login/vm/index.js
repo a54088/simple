@@ -314,12 +314,12 @@ export class LoginVM extends ViewModel {
       if (code == 0) {
         useUserStore().setUserInfo(data);
       // 存在邀请码
-      if (data.inviteFlag && !data.recommendUserId) {
-        uni.navigateTo({
-          url: "/pages-sub/invite/index",
-        });
-        // this.formType = "invite_code";
-      } else {
+      if (data.inviteFlag && (data.recommendUserId === undefined || data.recommendUserId === null || data.recommendUserId === '')) {
+         uni.navigateTo({
+           url: "/pages-sub/invite/index",
+         });
+         // this.formType = "invite_code";
+        } else {
         uni.switchTab({
           url: "/pages/home/index",
         });
