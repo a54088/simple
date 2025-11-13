@@ -1,0 +1,93 @@
+<template>
+  <view class="map-logo-menu">
+    <!-- 固定展开的菜单容器 -->
+    <view class="logo-menu-container">
+      <image src="/static/map/global.webp" class="logo-global" mode="widthFix"></image>
+      <view 
+        class="logo-item" 
+        v-for="(item, index) in logoItems" 
+        :key="index" 
+        @tap="handleLogoClick(item)">
+        <image :src="item.logo" class="logo-img" mode="widthFix"></image>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup>
+// 接收logo配置项
+const props = defineProps({
+  logoItems: {
+    type: Array,
+    default: () => [
+      {
+        name: '招商信息',
+        logo: '/static/map/side-icon1.webp',
+        action: 'business'
+      },
+      {
+        name: '小时自助',
+        logo: '/static/map/side-icon2.webp',
+        action: 'selfService'
+      },
+      {
+        name: '小时自助',
+        logo: '/static/map/side-icon3.webp',
+        action: 'selfService'
+      }
+    ]
+  }
+});
+
+// 触发点击事件
+const emit = defineEmits(['logo-click']);
+const handleLogoClick = (item) => {
+  emit('logo-click', item);
+};
+</script>
+
+<style lang="scss" scoped>
+.map-logo-menu {
+  position: absolute;
+  top: 60rpx;
+  right: 24rpx;
+  background-color: transparent;
+}
+
+.logo-menu-container {
+  padding-top: 15rpx;
+  padding-bottom: 15rpx;
+  padding-left: 15rpx;
+  padding-right: 15rpx;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+
+.logo-item {
+  width: 96rpx;
+  height: 96rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 25rpx;
+  padding-top: 5rpx;
+  padding-bottom: 5rpx;
+  padding-left: 5rpx;
+  padding-right: 5rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 30rpx;
+}
+
+.logo-global {
+  width: 96rpx;
+  height: 96rpx;
+  margin-bottom: 30rpx;
+}
+
+.logo-img {
+  width: 48rpx;
+  height: 48rpx;
+}
+</style>

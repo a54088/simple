@@ -9,11 +9,12 @@
         }"
         overlayOpacity="0.6"
         bgColor="#F7F7F7"
-        :customStyle="{padding: '40rpx 32rpx 16rpx'}"
+        :customStyle="{padding: '10rpx 32rpx 16rpx'}"
         width="550rpx"
         @close="close"
     >
         <view class="menu-popup__layout">
+            <u-status-bar></u-status-bar>
             <!-- 个人信息 -->
             <view class="layout-header">
                 <view class="layout-header-left">

@@ -3,47 +3,26 @@
   <view v-if="shouldRender" class="map-popup">
     <!-- 遮罩层（可选，点击关闭弹框） -->
     <view :class="['popup-mask', { 'popup-mask-show': isShow }]" @tap="handleClose"></view>
-    <!-- 弹框顶部操作内容 -->
-
-    <!-- <u-icon name="search"></u-icon> -->
 
     <!-- 弹框主体 -->
     <view class="popup-content" :style="{ transform: `translateY(${isShow ? 0 : screenHeightPx}px)` }">
-      <!-- 头部信息 -->
-      <view class="popup-header">
-        <view>
-          <view class="popup-header-icons">
-            <view class="popup-header-icons-item" @tap="handleClose">
-              <image src="/static/map/icon-down.png" mode="widthFix" class="icon"></image>
-            </view>
-            <view class="popup-header-icons-item">
-              <image src="/static/map/icon-search.png" mode="widthFix" class="icon"></image>
-            </view>
-          </view>
-          <view>
-            <text class="title">{{ title }}</text>
-            <text class="desc">{{ desc }}</text>
-          </view>
-        </view>
-        <image src="/static/map/addFriendsImg.webp" mode="widthFix" class="add-friends-img"></image>
+      <view @tap="handleClose" class="popup-content-arrow-down">
+        <image src="/static/images/common/xiala.png" mode="aspectFit" style="width: 40rpx; height: 40rpx;"></image>
       </view>
-      <!-- 添加好友 -->
-      <view class="add">
-        <image src="/static/map/userCommunication.webp" mode="widthFix" class="avatar-imgs"></image>
-        <!-- 操作按钮 -->
-        <view class="action-btn" @tap="handleAction">
-          <text class="action-btn-plus">+</text>
-          <text class="action-btn-text">添加好友</text>
-        </view>
+      <view>
+        <text @tap="handleNearbyShops" class="popup-content-title">以为您在附近找到以下餐厅</text>
       </view>
-      <MapFooter></MapFooter>
+
+      <view>
+        <NearbyItem v-for="i in 2" :key="i" />
+      </view>
     </view>
   </view>
 </template>
 
 <script setup>
 import { ref, watch, nextTick, defineProps, defineEmits } from 'vue';
-import MapFooter from '../MapFooter/index.nvue'
+import NearbyItem from '../NearbyItem/index.nvue';
 
 // 定义组件属性
 const props = defineProps({
@@ -85,7 +64,7 @@ watch(() => props.visible, (newVal) => {
   if (newVal) {
     // 显示时：先渲染元素，然后触发进入动画
     shouldRender.value = true;
-    isShow.value = false;
+    // isShow.value = false;
     nextTick(() => {
       // 延迟一帧，确保初始状态已渲染
       setTimeout(() => {
@@ -109,6 +88,12 @@ const handleClose = () => {
 // 操作按钮点击事件
 const handleAction = () => {
   emit('action');
+};
+
+const handleNearbyShops = () => {
+  uni.navigateTo({
+    url: '/pages-sub/map/nearbyShops'
+  });
 };
 
 // import { computed } from 'vue';
@@ -165,7 +150,7 @@ const handleAction = () => {
 .popup-content {
   position: relative;
   width: 750rpx;
-  background-color: #1a1a1a;
+  background-color: #fff;
   border-top-left-radius: 20rpx;
   border-top-right-radius: 20rpx;
   padding-top: 40rpx;
@@ -178,105 +163,19 @@ const handleAction = () => {
   transition-duration: 200ms;
   transition-timing-function: ease-out;
 
-  /* 头部信息 */
-  .popup-header {
-    margin-bottom: 30rpx;
+  .popup-content-arrow-down {
+    margin-bottom: 20rpx;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    .popup-header-icons {
-      display: flex;
-      flex-direction: row;
-      margin-bottom: 40rpx;
-
-      .popup-header-icons-item {
-        width: 72rpx;
-        height: 72rpx;
-        border-radius: 105rpx;
-        background-color: #1F1F1F;
-        border-width: 1px;
-        border-style: solid;
-        border-color: #3D3D3D;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        margin-right: 30rpx;
-
-        .icon {
-          width: 32rpx;
-          height: 32rpx;
-        }
-      }
-    }
-
-    .title {
-      font-size: 50rpx;
-      font-weight: 600;
-      color: #ffffff;
-      lines: 1;
-    }
-
-    .desc {
-      font-size: 32rpx;
-      color: #DCDCDC;
-      margin-top: 10rpx;
-      lines: 1;
-    }
-
-    .add-friends-img {
-      width: 225rpx;
-      height: 248rpx;
-    }
+    justify-content: center;
+    align-items: center;
   }
 
-  /* 头像列表 */
-  .add {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 240rpx;
-    border-radius: 20rpx;
-    overflow: hidden;
-    border-width: 2rpx;
-    border-style: solid;
-    border-color: #3D3D3D;
-    padding-top: 28rpx;
-    padding-bottom: 32rpx;
-    padding-left: 10rpx;
-    padding-right: 10rpx;
-    background-color: transparent;
-
-    .avatar-imgs {
-      width: 380rpx;
-      height: 200rpx;
-      margin-bottom: 34rpx;
-    }
-
-    /* 操作按钮 */
-    .action-btn {
-      width: 240rpx;
-      height: 72rpx;
-      border-radius: 168rpx;
-      background-color: #39393B;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .action-btn-plus {
-      font-size: 40rpx;
-      color: #ffffff;
-      margin-right: 10rpx;
-    }
-
-    .action-btn-text {
-      font-size: 32rpx;
-      color: #ffffff;
-    }
+  .popup-content-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 10rpx;
   }
 }
 

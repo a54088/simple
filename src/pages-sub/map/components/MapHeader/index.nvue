@@ -1,0 +1,88 @@
+<template>
+  <!-- 外层容器：承载阴影层和内容层 -->
+  <view class="header-container">
+    <!-- 阴影模拟层（底层） -->
+    <view class="shadow-layer"></view>
+    <!-- 原始内容层（上层） -->
+    <view class="header-content">
+      <text class="title">{{ title }}</text>
+      <view class="stats">
+        <text class="stats_item">活动 {{ activityCount }}</text>
+        <text class="stats_item">圈友 {{ memberCount }}</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup>
+defineProps({
+  title: {
+    type: String,
+    default: '闸弄口街道'
+  },
+  activityCount: {
+    type: Number,
+    default: 10
+  },
+  memberCount: {
+    type: Number,
+    default: 29919
+  }
+})
+</script>
+
+<style lang="scss" scoped>
+.header-container {
+  position: absolute;
+  top: 40rpx;
+  left: 0;
+  right: 0;
+  height: 329rpx;
+  background-color: transparent;
+}
+
+.shadow-layer {
+  position: absolute;
+  top: 2rpx;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+}
+
+.header-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: 40rpx;
+  padding-bottom: 24rpx;
+  padding-left: 24rpx;
+  padding-right: 24rpx;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+
+  .title {
+    font-size: 50rpx;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 16rpx;
+    lines: 1;
+  }
+
+  .stats {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .stats_item {
+      font-size: 32rpx;
+      color: #ffffff;
+      margin-right: 30rpx;
+      lines: 1;
+    }
+  }
+}
+</style>

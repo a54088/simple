@@ -1,0 +1,105 @@
+<template>
+    <view class="container">
+        
+        <!-- 头部导航栏 -->
+        <view class="header-navbar" :style="{ paddingTop: statusBarHeightRpx + 'rpx', top: '0' }">
+            <view class="back-btn" @tap="handleBack">
+                <image class="back-icon" src="/static/images/common/back.png" mode="aspectFit"></image>
+                <text class="back-text">返回地图</text>
+            </view>
+            <view class="search-btn" @tap="handleSearch">
+                <image class="search-icon" src="/static/images/common/search.png" mode="aspectFit"></image>
+            </view>
+        </view>
+
+        <scroll-view class="scroll-container" :style="{ paddingTop: totalHeaderHeightRpx + 'rpx' }" scroll-y :show-scrollbar="false">
+            <NearbyItem v-for="i in 20" :key="i" />
+        </scroll-view>
+    </view>
+</template>
+
+<script setup>
+import NearbyItem from './components/NearbyItem/index.nvue';
+
+// 获取系统信息，计算状态栏高度（rpx）
+const systemInfo = uni.getSystemInfoSync();
+const statusBarHeightPx = systemInfo.statusBarHeight || 0;
+const statusBarHeightRpx = (statusBarHeightPx / systemInfo.windowWidth) * 750;
+const navbarHeightRpx = 88; // 导航栏高度
+const totalHeaderHeightRpx = statusBarHeightRpx + navbarHeightRpx;
+
+const handleBack = () => {
+    uni.navigateBack();
+}
+
+const handleSearch = () => {
+    console.log('搜索');
+    // TODO: 实现搜索功能
+}
+</script>
+
+<style lang="scss" scoped>
+.container {
+    width: 750rpx;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 0 32rpx;
+}
+
+.header-navbar {
+    width: 750rpx;
+    height: 150rpx;
+    padding-left: 24rpx;
+    padding-right: 24rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 100;
+}
+
+.back-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60rpx;
+    padding-left: 8rpx;
+    padding-right: 16rpx;
+}
+
+.back-icon {
+    width: 32rpx;
+    height: 32rpx;
+    margin-right: 12rpx;
+}
+
+.back-text {
+    font-size: 36rpx;
+    color: #333333;
+    font-weight: bold;
+}
+
+.search-btn {
+    width: 48rpx;
+    height: 48rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-icon {
+    width: 38rpx;
+    height: 38rpx;
+}
+
+.scroll-container {
+    flex: 1;
+}
+</style>
