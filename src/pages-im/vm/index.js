@@ -2,6 +2,7 @@ import { ViewModel } from "@/shared/class/view-model.js";
 import onSocketStateChange from './init/onSocketStateChange'
 import onAppActivateStateChange from './init/onAppActivateStateChange'
 import Apis from '@/api/index.js'
+import { Conversation } from './class/Conversation.js'
 export class IMVM extends ViewModel {
   showChatOperate = false
 
@@ -27,6 +28,8 @@ export class IMVM extends ViewModel {
       key: 'sys'
     },
   ]
+
+  conversation = new Conversation()
 
   socketTask = null
 
@@ -68,19 +71,41 @@ export class IMVM extends ViewModel {
       // #endif
     });
 
-     //时间戳心跳（定时器）用于刷新：消息或会话与当前的时间差。ps：全局共享一个定时器变量。比启多个定时器性能更好
-  setInterval(() => {
-    this.heartbeat = Date.now();
-  }, 1000)
+    //时间戳心跳（定时器）用于刷新：消息或会话与当前的时间差。ps：全局共享一个定时器变量。比启多个定时器性能更好
+    setInterval(() => {
+      this.heartbeat = Date.now();
+    }, 1000)
+  }
+
+  async getConversationList() {
+    const { data } = await Apis.imApi.getConversationList({
+      "pageNum": 1,
+      "pageSize": 10,
+    })
   }
 
   sendMessage(message) {
     if (this.socketTask) {
+      const data = {
+        "type": "send_message",
+        "content": '',
+      }
+      data.content = JSON.stringify({
+        "conversationId": 1,
+        "clientMsgId": "cli_20241026153500_u1002",
+        "messageType": 2,
+        "content": message,
+        "contentType": "image/jpeg",
+        "fileUrl": "https://storage.example.com/images/act_20241026.jpg",
+        "fileName": "活动现场.jpg",
+        "fileSize": 204800,
+        "fileDuration": null,
+        "thumbnailUrl": "https://storage.example.com/thumbnails/act_20241026_100x100.jpg",
+        "replyMessageId": null
+      })
+      console.log('ws 消息发送', data)
       this.socketTask.send({
-        data: {
-          "type": "send_message",
-          "content": "{\"conversationId\":1,\"clientMsgId\":\"cli_20241026153500_u1002\",\"messageType\":2,\"content\":\"这是今天活动的现场照片\",\"contentType\":\"image/jpeg\",\"fileUrl\":\"https://storage.example.com/images/act_20241026.jpg\",\"fileName\":\"活动现场.jpg\",\"fileSize\":204800,\"fileDuration\":null,\"thumbnailUrl\":\"https://storage.example.com/thumbnails/act_20241026_100x100.jpg\",\"replyMessageId\":null}"
-        },
+        data,
         success: (e) => {
           console.log('ws 消息发送成功', e)
         },

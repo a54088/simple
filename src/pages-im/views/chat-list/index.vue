@@ -33,6 +33,10 @@ const close = () => {
 const open = () => {
     imVM.showChatOperate = true
 }
+
+onMounted(async () => {
+    await imVM.getConversationList()
+})
 </script>
 <template>
     <view class="chat-list__layout">
