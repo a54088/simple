@@ -15,7 +15,9 @@
 </template>
 
 <script setup>
-// 接收logo配置项
+import { ref } from 'vue';
+
+const emits = defineEmits(['iconClick']);
 const props = defineProps({
   logoItems: {
     type: Array,
@@ -38,11 +40,8 @@ const props = defineProps({
     ]
   }
 });
-
-// 触发点击事件
-const emit = defineEmits(['logo-click']);
 const handleLogoClick = (item) => {
-  emit('logo-click', item);
+  emits('iconClick', item);
 };
 </script>
 
