@@ -363,7 +363,7 @@ const handleSettingClick = () => {
                 .copy-text {
                     padding: 5rpx 10rpx;
                     border: 1px solid #fff;
-                    color: #F5222D;
+                    color: #fff;
                     border-radius: 10rpx;
                 }
             }

@@ -25,8 +25,6 @@ import NearbyItem from './components/NearbyItem/index.nvue';
 const systemInfo = uni.getSystemInfoSync();
 const statusBarHeightPx = systemInfo.statusBarHeight || 0;
 const statusBarHeightRpx = (statusBarHeightPx / systemInfo.windowWidth) * 750;
-const navbarHeightRpx = 88; // 导航栏高度
-const totalHeaderHeightRpx = statusBarHeightRpx + navbarHeightRpx;
 
 const handleBack = () => {
     uni.navigateBack();
