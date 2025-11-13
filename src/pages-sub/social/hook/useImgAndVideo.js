@@ -22,6 +22,11 @@ export function useImgAndVideo(feedList) {
     if (!feedStates.has(index)) {
       feedStates.set(index, {
         isPlaying: false,
+        isMuted: true, // 添加音频静音状态
+        currentTime: 0,
+        duration: 0,
+        progress: 0,
+        autoplay: false,
         isLiked: feedList[index]?.isLiked || false,
         likeCount: feedList[index]?.likeCount || 0,
         isExpanded: false,
@@ -33,7 +38,6 @@ export function useImgAndVideo(feedList) {
 
   // 滑动改变
   const onSlideChange = (swiper) => {
-    console.log('滑动切换，当前索引:', swiper.activeIndex)
     currentIndex.value = swiper.activeIndex
     
     // 暂停其他视频并重置状态
@@ -43,15 +47,12 @@ export function useImgAndVideo(feedList) {
           const videoContext = uni.createVideoContext(`video-${index}`)
           if (index !== currentIndex.value) {
             videoContext?.pause()
-            console.log(`暂停视频 ${index}`)
             getFeedState(index).isPlaying = false
           } else {
             // 确保当前视频状态重置，让组件重新控制播放
             getFeedState(index).isPlaying = false
-            console.log(`准备播放视频 ${index}`)
           }
         } catch (error) {
-          console.warn(`操作视频 ${index} 时出错:`, error)
         }
       }
     })
@@ -78,39 +79,34 @@ export function useImgAndVideo(feedList) {
 
   // 评论
   const handleComment = (item, index) => {
-    console.log('评论', item)
     // TODO: 打开评论页面
   }
 
   // 分享
   const handleShare = (item, index) => {
-    console.log('分享', item)
     // TODO: 打开分享面板
   }
 
   // 更多
   const handleMore = (item, index) => {
-    console.log('更多', item)
     // TODO: 打开更多选项
   }
 
   // 头像点击
   const handleAvatarClick = (item) => {
-    console.log('查看用户', item)
     // TODO: 跳转到用户主页
   }
 
   // 图片点击
   const handleImageClick = (index, imgIndex) => {
-    console.log('查看图片', index, imgIndex)
     // TODO: 打开图片预览
   }
 
   // 视频播放
   const handleVideoPlay = (index) => {
-    console.log('视频播放', index)
     // 记录播放状态
-    getFeedState(index).isPlaying = true
+    const state = getFeedState(index)
+    state.isPlaying = true
     
     // 确保其他视频暂停
     feedList.forEach((item, idx) => {
@@ -121,10 +117,78 @@ export function useImgAndVideo(feedList) {
       }
     })
   }
+  
+  // 视频时间更新处理函数
+  const onVideoTimeUpdate = (index, event) => {
+    const video = event.target;
+    const currentTime = video.currentTime;
+    const duration = video.duration;
+    const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+    
+    // 更新状态
+    const state = getFeedState(index);
+    state.currentTime = currentTime;
+    state.duration = duration;
+    state.progress = progress;
+  };
+  
+  // 视频加载完成后处理
+  const onVideoLoaded = (index) => {
+    const state = getFeedState(index);
+    state.autoplay = true;
+    
+    // 获取视频元素并设置默认静音
+    try {
+      const video = document.getElementById(`video-${index}`);
+      if (video) {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.currentTime = 0;
+      }
+    } catch (error) {
+      // 忽略在不支持DOM的环境中的错误
+    }
+  };
+  
+  // 设置视频静音状态
+  const setVideoMute = (index, muted) => {
+    try {
+      const state = getFeedState(index);
+      state.isMuted = muted;
+      
+      const videoContext = uni.createVideoContext(`video-${index}`);
+      if (videoContext) {
+        if (muted) {
+          videoContext.muted(true);
+        } else {
+          videoContext.muted(false);
+        }
+      }
+      
+      // 同时尝试直接操作视频元素
+      try {
+        const video = document.getElementById(`video-${index}`);
+        if (video) {
+          video.muted = muted;
+        }
+      } catch (domError) {
+        // 忽略在不支持DOM的环境中的错误
+      }
+    } catch (error) {
+      // 忽略错误
+    }
+  };
+  
+  // 切换视频静音状态
+  const toggleVideoMute = (index) => {
+    const state = getFeedState(index);
+    const newMuteState = !state.isMuted;
+    setVideoMute(index, newMuteState);
+    return newMuteState;
+  };
 
   // 视频暂停
   const handleVideoPause = (index) => {
-    console.log('视频暂停', index)
     // 记录暂停状态
     getFeedState(index).isPlaying = false
   }
@@ -141,7 +205,6 @@ export function useImgAndVideo(feedList) {
 
   // 监听 feedList 变化，初始化状态映射
   watch(() => feedList, (newList) => {
-    console.log('feedList 数据更新，共', newList?.length || 0, '条数据')
     // 清除旧的状态
     feedStates.clear()
     
@@ -172,8 +235,6 @@ export function useImgAndVideo(feedList) {
     })
     // 清理状态
     feedStates.clear()
-    // 清理事件监听
-    uni.offWindowResize()
   })
 
   // 获取feed项状态的辅助函数
@@ -197,6 +258,10 @@ export function useImgAndVideo(feedList) {
     handleVideoPause,
     toggleExpand,
     onImageSlideChange,
-    getFeedItemState
+    getFeedItemState,
+    onVideoTimeUpdate,
+    onVideoLoaded,
+    setVideoMute,
+    toggleVideoMute
   }
 }
