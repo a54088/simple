@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { useRecord } from '@/hooks/index.js'
+import { useRecord } from '@/shared/hooks/index.js'
 
 /**
  * 组件 Props
