@@ -64,7 +64,7 @@
                   <view class="action-item avatar-item" @click="handleAvatarClick(item)">
                      <image :src="item.userAvatar" mode="aspectFill" class="avatar-img"></image>
                      <view class="follow-btn">
-                        <image src="/static/social/add.svg" style="width: 48rpx; height: 48rpx;"></image>
+                        <image src="/static/images/social/add.svg" style="width: 48rpx; height: 48rpx;"></image>
                      </view>
                   </view>
 
@@ -79,7 +79,7 @@
                   <!-- 评论 -->
                   <view class="action-item" @click="handleComment(item, index)">
                      <view class="action-icon">
-                        <image src="/static/social/pinglun.svg" style="width: 52rpx; height: 52rpx;"></image>
+                        <image src="/static/images/social/pinglun.svg" style="width: 52rpx; height: 52rpx;"></image>
                      </view>
                      <text class="action-count">{{ formatCount(item.commentCount) }}</text>
                   </view>

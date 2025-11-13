@@ -49,7 +49,7 @@
          <view class="quality-enhance">
             <text class="enhance-text">一键提升画质亮度</text>
             <view class="ai-icon">
-               <image src="/static/circle/ai.png" mode="widthFix"></image>
+               <image src="/static/images/circle/ai.png" mode="widthFix"></image>
             </view>
          </view>
 
@@ -110,17 +110,17 @@ const styleList = ref([
    {
       id: 0,
       name: '风格1',
-      image: '/static/circle/portrait.webp'
+      image: '/static/images/circle/portrait.webp'
    },
    {
       id: 1,
       name: '风格2',
-      image: '/static/circle/portrait.webp' // 可以替换为不同的风格图片
+      image: '/static/images/circle/portrait.webp' // 可以替换为不同的风格图片
    },
    {
       id: 2,
       name: '风格3',
-      image: '/static/circle/portrait.webp' // 可以替换为不同的风格图片
+      image: '/static/images/circle/portrait.webp' // 可以替换为不同的风格图片
    }
 ])
 

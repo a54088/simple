@@ -32,7 +32,7 @@
 
             <!-- 视频模式：单缩略图 -->
             <view v-else class="thumbnail-wrapper">
-               <image class="thumbnail-image" src="/static/circle/portrait.webp" mode="aspectFill"></image>
+               <image class="thumbnail-image" src="/static/images/circle/portrait.webp" mode="aspectFill"></image>
                <view class="thumbnail-close" @click="handleRemoveThumbnail">
                   <text class="iconfont icon-quxiao" style="font-size: 64rpx; color: #fff;"></text>
                </view>
@@ -55,11 +55,11 @@
                <view class="ai-banner-left">
                   <text class="ai-banner-text">让啊圈AI来帮你优化文案吧~</text>
                   <view class="ai-banner-tips">
-                     <image class="sparkle-icon" src="/static/circle/optimizationTips.webp" mode="aspectFill"></image>
+                     <image class="sparkle-icon" src="/static/images/circle/optimizationTips.webp" mode="aspectFill"></image>
                      <text class="optimize-tips">优化Tips</text>
                   </view>
                </view>
-               <image src="/static/circle/AIDigitalHuman.webp" mode="aspectFill" class="ai-banner-right"></image>
+               <image src="/static/images/circle/AIDigitalHuman.webp" mode="aspectFill" class="ai-banner-right"></image>
             </view>
             <!--                <image class="ai-character" src="/static/circle/ai.png" mode="aspectFit"></image>
  -->
@@ -161,8 +161,8 @@ const previewText = computed(() => (isImageMode.value ? '预览图片' : '预览
 
 // 图片列表（静态占位）
 const imageList = ref([
-  '/static/circle/portrait.webp',
-  '/static/circle/portrait.webp'
+  '/static/images/circle/portrait.webp',
+  '/static/images/circle/portrait.webp'
 ])
 
 onLoad((options) => {
@@ -472,7 +472,7 @@ const handlePublish = () => {
          width: 588rpx;
          height: 82rpx;
          line-height: 82rpx;
-         background: url('../../static/circle/tipBg.webp');
+         background: url('../../static/images/circle/tipBg.webp');
          background-size: 100% 100%;
          padding: 0rpx 30rpx;
          display: flex;
