@@ -1,0 +1,256 @@
+<template>
+  <!-- 弹框容器：通过 shouldRender 控制显示 -->
+  <view v-if="shouldRender" class="name-card-model">
+    <!-- 弹框主体 -->
+    <view class="model-content" :style="{ transform: `translateX(${isShow ? 0 : -680}rpx)`, opacity: `${isShow ? 1 : 0}` }">
+      <view @click="handleClose" class="close-box">
+        <image class="close-btn" src="/static/images/common/white-close.png" mode="aspectFill"></image>
+      </view>
+      <view class="model-content-body">
+        <view class="flex-row model-content-body-header">
+          <view class="left-box flex-row">
+            <view class="avatar-box">
+              <image class="avatar-img" src="https://p26-passport.byteacctimg.com/img/user-avatar/60225805f9c3509ee8cb69a96d65e2a9~40x40.awebp" mode="aspectFill"></image>
+            </view>
+            <view class="left-box-content">
+              <text class="name-text">泡泡大人</text>
+              <text class="desc-text">杭州市·天蝎座</text>
+            </view>
+          </view>
+          <view class="action-box">
+            <text class="action-text">关注</text>
+          </view>
+        </view>
+        <!-- 内容 -->
+        <view class="model-content-body-content">
+          <view class="content-tag flex-row">
+            <text class="tag-text" v-for="item in 4" :key="item">标签{{ item }}</text>
+          </view>
+          <view class="content-footer flex-row">
+            <view class="content-footer-img-box">
+              <image class="content-footer-img" src="/static/images/map/add-firend.png" mode="aspectFill"></image>
+            </view>
+            <view class="content-footer-text-box">
+              <text class="text">与分身对话</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup>
+import { ref, watch, nextTick, defineProps, defineEmits } from 'vue';
+
+// 定义组件属性
+const props = defineProps({
+  // 是否显示弹框
+  visible: {
+    type: Boolean,
+    default: false
+  },
+  // 标题文本
+  title: {
+    type: String,
+    default: '用户名称'
+  },
+  // 描述文本
+  desc: {
+    type: String,
+    default: '已持续和28位用户交流'
+  },
+  // 头像列表（最多显示5个）
+  avatars: {
+    type: Array,
+    default: () => []
+  },
+});
+
+const emit = defineEmits(['close', 'action']);
+
+// 获取屏幕高度（px）
+const systemInfo = uni.getSystemInfoSync();
+const screenHeightPx = systemInfo.windowHeight;
+
+// 控制元素是否渲染
+const shouldRender = ref(false);
+// 控制动画状态
+const isShow = ref(false);
+
+// 动画
+watch(() => props.visible, (newVal) => {
+  if (newVal) {
+    // 显示时：先渲染元素，然后触发进入动画
+    shouldRender.value = true;
+    isShow.value = false;
+    nextTick(() => {
+      // 延迟一帧，确保初始状态已渲染
+      setTimeout(() => {
+        isShow.value = true;
+      }, 50);
+    });
+  } else {
+    // 隐藏时：先触发退出动画，动画完成后移除元素
+    isShow.value = false;
+    setTimeout(() => {
+      shouldRender.value = false;
+    }, 200);
+  }
+}, { immediate: true });
+
+// 关闭弹框
+const handleClose = () => {
+  emit('close');
+};
+
+// 操作按钮点击事件
+const handleAction = () => {
+  emit('action');
+};
+
+const handleNearbyShops = () => {
+  uni.navigateTo({
+    url: '/pages-sub/map/nearbyShops'
+  });
+};
+</script>
+
+<style lang="scss" scoped>
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.name-card-model {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 200rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: transparent;
+  padding: 0 36rpx;
+}
+
+.model-content {
+  width: 680rpx;
+  padding: 0 32rpx;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 40rpx;
+  border: 1px solid #fff;
+  position: relative;
+  margin: 0 auto;
+  transition-property: transform, opacity;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+
+  .close-box {
+    position: absolute;
+    top: 32rpx;
+    right: 32rpx;
+  }
+  .close-btn {
+    width: 24rpx;
+    height: 24rpx;
+  }
+
+  .model-content-body {
+    padding: 70rpx 26rpx 37rpx;
+    color: #fff;
+
+    .model-content-body-header {
+      justify-content: space-between;
+      padding-bottom: 32rpx;
+      border-bottom: 1px dashed #E4E4E4;
+
+      .left-box {
+        .avatar-box {
+          margin-right: 20rpx;
+          .avatar-img {
+            width: 96rpx;
+            height: 96rpx;
+            border-radius: 96rpx;
+          }
+        }
+
+        .name-text {
+          font-weight: bold;
+          font-size: 32rpx;
+          color: #FFFFFF;
+          margin-bottom: 4rpx;
+        }
+        .desc-text {
+          color: #D8D8D8;
+          font-size: 24rpx;
+        }
+      }
+      .action-box {
+        background: #FF194A;
+        padding: 14rpx 24rpx;
+        border-radius: 12rpx;
+        .action-text {
+          color: #FFFFFF;
+          font-weight: bold;
+          font-size: 24rpx;
+        }
+      }
+    }
+    .model-content-body-content {
+      padding-top: 24rpx;
+
+      .content-tag {
+        margin-bottom: 32rpx;
+        .tag-text {
+          padding: 12rpx 24rpx;
+          color: #FFFFFF;
+          font-size: 24rpx;
+          background: #FF194A;
+          border-radius: 50rpx;
+          margin-right: 20rpx;
+        }
+      }
+
+      .content-footer {
+        .content-footer-img-box {
+          height: 96rpx;
+          width: 96rpx;
+          border-radius: 96rpx;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #000000;
+          margin-right: 24rpx;
+          .content-footer-img {
+            height: 38rpx;
+            width: 38rpx;
+          }
+        }
+
+        .content-footer-text-box {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 96rpx;
+          border: 1px solid #fff;
+          background: rgba(0, 0, 0, 0.9);
+          border-radius: 100px;
+
+          .text {
+            color: #FFFFFF;
+            font-size: 32rpx;
+            font-weight: bold;
+          }
+        }
+        
+      }
+    }
+  }
+}
+</style>

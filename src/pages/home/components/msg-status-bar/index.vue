@@ -103,7 +103,9 @@ const handleAvatarClick = (item) => {
 }
 
 const handleLogoClick = () => {
-  console.log('logo');
+  uni.navigateTo({
+    url: '/pages-sub/map/index',
+  })
 }
 </script>
 

@@ -38,6 +38,12 @@
         @close="nearbyPopupShow = false"
         @action="handleNearbyPopupShow"
     />
+
+    <NameCardModel 
+      :visible="nameCardPopupShow"
+      @close="nameCardPopupShow = false"
+      @action="handleNameCardPopupShow"
+    />
   </view>
 </template>
 
@@ -49,7 +55,7 @@ import MapFooter from './components/MapFooter/index.nvue';
 import MapSide from './components/MapSide/index.nvue';
 import AddFriend from './components/AddFriend/index.nvue';
 import NearbyPopup from './components/NearbyPopup/index.nvue';
-
+import NameCardModel from './components/NameCardModel/index.nvue';
 // 获取屏幕高度
 const systemInfo = uni.getSystemInfoSync();
 const screenHeight = systemInfo.windowHeight;
@@ -142,6 +148,13 @@ const handleNearbyPopupShow = () => {
 }
 /* ==================== 附近的内容 end ==================== */
 
+/* ==================== 个人名片 start ==================== */
+const nameCardPopupShow = ref(false);
+
+const handleNameCardPopupShow = () => {
+    nameCardPopupShow.value = true;
+}
+/* ==================== 个人名片 end ==================== */
 
 //展示弹框
 const popupShow = ref(false);
@@ -158,7 +171,8 @@ const handleMarkerTap = (e) => {
   const markerId = e.detail.markerId;
   const clickedMarker = markers.value.find(marker => marker.id === markerId);
 //   popupShow.value = true;
-  nearbyPopupShow.value = true;
+  // nearbyPopupShow.value = true;
+  nameCardPopupShow.value = true;
   console.log('弹框显示:', popupShow.value);
 }
 
