@@ -5,3 +5,5 @@
  * @LastEditTime: 2025-10-27 16:50:25
  * @Description:
  */
+
+export { useRecord } from './useRecord.js'
