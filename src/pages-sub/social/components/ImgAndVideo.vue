@@ -211,10 +211,59 @@ const onSlideChange = (swiper) => {
    playCurrentVideo(swiper.activeIndex)
 }
 
+// 暂停所有其他视频
+const pauseOtherVideos = (currentIndex) => {
+   try {
+      console.log(`暂停除 ${currentIndex} 之外的所有视频`)
+      
+      // 遍历所有视频引用
+      videoRefs.value.forEach((video, index) => {
+         if (video && index !== currentIndex && props.feedList[index]?.type === 'video') {
+            try {
+               console.log(`暂停视频 ${index}`)
+               video.pause()
+               // 更新状态
+               const state = getFeedItemState(index)
+               if (state) {
+                  state.isPlaying = false
+               }
+            } catch (pauseError) {
+               console.warn(`暂停视频 ${index} 失败:`, pauseError)
+            }
+         }
+      })
+      
+      // 同时也尝试通过DOM查询暂停可能存在但未在refs中的视频
+      props.feedList.forEach((item, index) => {
+         if (item.type === 'video' && index !== currentIndex && !videoRefs.value[index]) {
+            try {
+               const domVideo = document.getElementById(`video-${index}`)
+               if (domVideo) {
+                  console.log(`通过DOM暂停视频 ${index}`)
+                  domVideo.pause()
+                  // 更新状态
+                  const state = getFeedItemState(index)
+                  if (state) {
+                     state.isPlaying = false
+                  }
+               }
+            } catch (pauseError) {
+               console.warn(`通过DOM暂停视频 ${index} 失败:`, pauseError)
+            }
+         }
+      })
+   } catch (error) {
+      console.error('暂停其他视频时出错:', error)
+   }
+}
+
 // 尝试播放指定索引的视频
 const playCurrentVideo = async (index) => {
    try {
       console.log(`准备播放视频 ${index}，videoRefs内容:`, videoRefs.value)
+      
+      // 首先暂停所有其他视频
+      pauseOtherVideos(index)
 
       // 方法1: 通过refs获取视频元素
       let video = videoRefs.value[index]
@@ -239,10 +288,6 @@ const playCurrentVideo = async (index) => {
 
       if (video && props.feedList[index]?.type === 'video') {
          console.log(`尝试播放视频 ${index}`, video)
-
-         // // 确保静音（自动播放的必要条件）
-         // video.muted = true
-         // video.defaultMuted = true
 
          // 确保视频元素已准备好
          if (video.readyState < 2) {
