@@ -102,7 +102,7 @@ const onClick = async () => {
           title: "邀请码校验成功",
           icon: "success",
         });
-        uni.switchTab({
+        uni.reLaunch({
           url: "/pages/home/index",
         });
       } else {
