@@ -121,6 +121,18 @@
           }
         },
         {
+          "path": "map/nearbyShops",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "map/storeDetails",
+          "style": {
+            "navigationStyle": "custom"
+          }
+        },
+        {
           "path": "create/photo-create",
           "style": {
             "navigationBarTitleText": "上传图片形象",

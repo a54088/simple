@@ -33,7 +33,7 @@
         <scroll-view 
           v-if="isOpen"
           class="scroll-view_H msg-avatar-group-open-wrapper avatar-open-show"
-          scroll-x="true" 
+          :scroll-x="true" 
           @scroll="avatarScroll" 
         >
           <view class="msg-avatar-group-open">
