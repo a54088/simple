@@ -64,7 +64,7 @@ watch(() => props.visible, (newVal) => {
   if (newVal) {
     // 显示时：先渲染元素，然后触发进入动画
     shouldRender.value = true;
-    // isShow.value = false;
+    isShow.value = false;
     nextTick(() => {
       // 延迟一帧，确保初始状态已渲染
       setTimeout(() => {
