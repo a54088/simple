@@ -1,0 +1,251 @@
+<template>
+  <view class="map_container" :style="{ height: screenHeightRpx + 'rpx' }">
+    <map 
+      class="map_component"
+      :style="{ height: screenHeightRpx + 'rpx' }"
+      :markers="markers" 
+      :latitude="currentLatitude" 
+      :longitude="currentLongitude"
+      :polygons="polygons"
+      :circles="circles"
+      ref="mapRef" 
+      @markertap="handleMarkerTap" 
+      @updated="handleMapUpdated"
+      :show-location="true"
+      show-compass
+    >
+      <cover-image src="/static/map/mapBackground.png" style="height: 329px;"></cover-image>
+      <!-- 自定义定位按钮 -->
+      <cover-view class="location-btn" @tap="moveToCurrentLocation">
+        <cover-image src="/static/map/position.png" mode="aspectFit" @tap="moveToCurrentLocation" class="location-btn-image"></cover-image>
+      </cover-view>
+    </map>
+    <MapHeader class="header_wrap" />
+    <MapSide class="side_wrap" />
+    <MapFooter class="footer_wrap" />
+    <AddFriend 
+      :visible="popupShow" 
+      title="不会捏蛋" 
+      desc="已持续和28位用户交流" 
+      :avatars="userAvatars" 
+      buttonText="+ 添加好友"
+      @close="popupShow = false" 
+      @action="handleAddFriend"
+    />
+
+    <NearbyPopup 
+        :visible="nearbyPopupShow"
+        @close="nearbyPopupShow = false"
+        @action="handleNearbyPopupShow"
+    />
+  </view>
+</template>
+
+<script setup>
+import { ref, onMounted, nextTick } from "vue";
+import { useMap } from './hooks/useMap';
+import MapHeader from './components/MapHeader/index.nvue';
+import MapFooter from './components/MapFooter/index.nvue';
+import MapSide from './components/MapSide/index.nvue';
+import AddFriend from './components/AddFriend/index.nvue';
+import NearbyPopup from './components/NearbyPopup/index.nvue';
+
+// 获取屏幕高度
+const systemInfo = uni.getSystemInfoSync();
+const screenHeight = systemInfo.windowHeight;
+const screenHeightRpx = (screenHeight / systemInfo.windowWidth) * 750;
+
+/* ==================== 地图 start ==================== */
+
+// 地图实例引用
+const mapRef = ref(null);
+// 初始化地图钩子
+const { markers, currentLatitude, currentLongitude, initMap } = useMap();
+
+// 多边形图形数据
+const polygons = ref([
+  {
+    points: [{ latitude: 39.909, longitude: 116.39742 }, { latitude: 39.9, longitude: 116.39 }, { latitude: 39.915, longitude: 116.405 }],
+    strokeColor: '#ff6b6b',
+    strokeWidth: 2,
+  },
+  {
+    points: [{ latitude: 30.287755, longitude: 120.191172 }, { latitude: 30.297755, longitude: 120.101172 }, { latitude: 30.309955, longitude: 120.291172 }],
+    strokeColor: '#ff6b6b',
+    strokeWidth: 2,
+  }
+]);
+
+// 圆形
+const circles = ref([
+    {
+        latitude: 39.909,
+        longitude: 116.39742,
+        radius: 500,
+        fillColor: '#16c5ff1a',
+        strokeWidth: 2,
+        color: '#16C5FF',
+    },
+    {
+        latitude: 30.287755,
+        longitude: 120.191172,
+        radius: 500,
+        fillColor: '#16c5ff1a',
+        strokeWidth: 2,
+        color: '#16C5FF',
+    }
+]);
+// 地图更新事件处理
+const handleMapUpdated = () => {
+  console.log('地图已更新');
+};
+
+// 获取当前位置并移动地图
+const moveToCurrentLocation = () => {
+  uni.getLocation({
+    type: 'gcj02',
+    timeout: 5000,
+    success: (res) => {
+      currentLatitude.value = res.latitude;
+      currentLongitude.value = res.longitude;
+      // 延迟调用 moveToLocation，确保地图实例完全准备好
+      setTimeout(() => {
+        if (mapRef.value && typeof mapRef.value.moveToLocation === 'function') {
+          try {
+            mapRef.value.moveToLocation({
+              latitude: res.latitude,
+              longitude: res.longitude
+            });
+          } catch (error) {
+            console.warn('调用 moveToLocation 失败:', error);
+            // 如果 moveToLocation 失败，直接更新坐标，地图会自动更新
+          }
+        } else {
+          console.warn('地图实例未准备好，moveToLocation 不可用');
+        }
+      }, 300);
+    },
+    fail: (err) => {
+      console.warn('定位失败:', err);
+      uni.showToast({ title: '定位失败', icon: 'none' });
+    }
+  });
+};
+/* ==================== 地图 start ==================== */
+
+
+/* ==================== 附近的内容 start ==================== */
+const nearbyPopupShow = ref(false);
+
+const handleNearbyPopupShow = () => {
+    nearbyPopupShow.value = true;
+}
+/* ==================== 附近的内容 end ==================== */
+
+
+//展示弹框
+const popupShow = ref(false);
+const userAvatars = ref([
+  '/static/map/avatar1.webp',
+  '/static/map/avatar2.webp',
+  '/static/map/avatar3.webp',
+  '/static/map/avatar4.webp',
+  '/static/map/avatar5.webp',
+]);
+
+// handleMarkerTap
+const handleMarkerTap = (e) => {
+  const markerId = e.detail.markerId;
+  const clickedMarker = markers.value.find(marker => marker.id === markerId);
+//   popupShow.value = true;
+  nearbyPopupShow.value = true;
+  console.log('弹框显示:', popupShow.value);
+}
+
+// 添加好友
+const handleAddFriend = (e) => {
+  // 处理添加好友逻辑
+}
+
+onMounted(() => {
+  // 等待组件渲染完成后再获取地图实例
+  nextTick(() => {
+    // 延迟初始化，确保 map 组件完全加载
+    setTimeout(() => {
+      if (mapRef.value) {
+        initMap(mapRef.value);
+      } else {
+        console.warn('地图引用未找到，重试初始化');
+        setTimeout(() => {
+          if (mapRef.value) {
+            initMap(mapRef.value);
+          }
+        }, 500);
+      }
+    }, 300);
+  });
+});
+</script>
+
+<style lang="scss" scoped>
+/* nvue 样式规范：
+ * 1. 不支持 position: fixed，只支持 absolute 和 relative
+ * 2. 不支持 z-index
+ * 3. 不支持 box-sizing
+ * 4. 不支持 pointer-events
+ * 5. 不支持 ::v-deep 深度选择器
+ * 6. 必须明确指定 flex-direction
+ * 7. 所有容器必须设置背景色（避免透明重影）
+ * 8. 不支持百分比宽度，需要使用固定值或 flex
+ */
+
+.map_container {
+  width: 750rpx;
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
+
+.overlay_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 750rpx;
+  background-color: transparent;
+}
+
+.map_component {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 750rpx;
+}
+
+.location-btn {
+  position: absolute;
+  bottom: 340rpx;
+  left: 40rpx;
+  width: 96rpx;
+  height: 96rpx;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 24rpx;
+  border-radius: 25rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  .location-btn-image {
+    width: 48rpx;
+    height: 48rpx;
+  }
+}
+</style>
