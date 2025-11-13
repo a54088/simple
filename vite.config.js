@@ -66,10 +66,8 @@ export default {};
     dedupe: ['vue'],
   },
   optimizeDeps: {
-    exclude: [
-      // 排除 UTS 文件，这些应该由 uni-app UTS 编译器处理
-      /\.uts$/,
-    ],
+    // 排除可能导致问题的模块
+    exclude: [],
   },
   build: {
     terserOptions: {

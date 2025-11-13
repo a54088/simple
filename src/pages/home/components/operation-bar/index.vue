@@ -21,7 +21,7 @@
           <i class="iconfont icon-dianhua"></i>
         </view>
         <view class="operation-bar-btn">
-          <voice-button
+          <!-- <voice-button
             :duration="60000"
             :min-duration="1"
             :show-toast="true"
@@ -38,7 +38,7 @@
                 :class="[isShowMenu && 'icon-rotated']"
               ></text>
             </template>
-          </voice-button>
+          </voice-button> -->
         </view>
       </view>
     </view>
@@ -64,7 +64,7 @@
 <script setup>
 import { inject, ref } from "vue";
 import { chooseFile, uploadFile } from "@/utils/file.js";
-import VoiceButton from "@/components/voice-button/index.vue";
+// import VoiceButton from "@/components/voice-button/index.vue";
 
 const vm = inject("homeVM");
 const isShowMenu = ref(false);
