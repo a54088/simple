@@ -6,7 +6,7 @@ export function useImgAndVideo(feedList) {
   const swiperHeight = ref(0)
   const statusBarHeight = ref(0)
   
-  // 创建响应式状态对象，避免直接修改props
+  // 创建响应式状态对象
   const feedStates = reactive(new Map())
 
   // 计算屏幕高度
@@ -101,22 +101,6 @@ export function useImgAndVideo(feedList) {
   const handleImageClick = (index, imgIndex) => {
     // TODO: 打开图片预览
   }
-
-  // 视频播放
-  const handleVideoPlay = (index) => {
-    // 记录播放状态
-    const state = getFeedState(index)
-    state.isPlaying = true
-    
-    // 确保其他视频暂停
-    feedList.forEach((item, idx) => {
-      if (idx !== index && item.type === 'video') {
-        const videoContext = uni.createVideoContext(`video-${idx}`)
-        videoContext?.pause()
-        getFeedState(idx).isPlaying = false
-      }
-    })
-  }
   
   // 视频时间更新处理函数
   const onVideoTimeUpdate = (index, event) => {
@@ -150,47 +134,101 @@ export function useImgAndVideo(feedList) {
     }
   };
   
-  // 设置视频静音状态
-  const setVideoMute = (index, muted) => {
+  // 切换视频播放状态
+  const toggleVideoPlayState = (index) => {
     try {
-      const state = getFeedState(index);
-      state.isMuted = muted;
+      const state = getFeedState(index)
+      if (!state) return
       
-      const videoContext = uni.createVideoContext(`video-${index}`);
-      if (videoContext) {
-        if (muted) {
-          videoContext.muted(true);
-        } else {
-          videoContext.muted(false);
-        }
-      }
-      
-      // 同时尝试直接操作视频元素
-      try {
-        const video = document.getElementById(`video-${index}`);
-        if (video) {
-          video.muted = muted;
-        }
-      } catch (domError) {
-        // 忽略在不支持DOM的环境中的错误
+      if (state.isPlaying) {
+        // 如果正在播放，则暂停
+        pauseVideo(index)
+      } else {
+        // 如果暂停或未播放，则播放
+        playVideo(index)
       }
     } catch (error) {
-      // 忽略错误
+      console.error('切换视频播放状态失败:', error)
     }
-  };
+  }
   
-  // 切换视频静音状态
-  const toggleVideoMute = (index) => {
-    const state = getFeedState(index);
-    const newMuteState = !state.isMuted;
-    setVideoMute(index, newMuteState);
-    return newMuteState;
-  };
-
-  // 视频暂停
-  const handleVideoPause = (index) => {
-    // 记录暂停状态
-    getFeedState(index).isPlaying = false
+  // 播放视频
+  const playVideo = (index) => {
+    try {
+      const state = getFeedState(index)
+      if (!state) return
+      
+      // 先暂停其他视频
+      pauseOtherVideos(index)
+      
+      // 使用uni.createVideoContext API播放
+      const videoContext = uni.createVideoContext(`video-${index}`)
+      if (videoContext && typeof videoContext.play === 'function') {
+        videoContext.play()
+        // 更新状态
+        state.isPlaying = true
+      } else {
+        // 备用方案：尝试通过DOM获取并播放
+        if (typeof document !== 'undefined') {
+          const video = document.getElementById(`video-${index}`)
+          if (video && typeof video.play === 'function') {
+            const playPromise = video.play()
+            if (playPromise) {
+              playPromise.then(() => {
+                state.isPlaying = true
+              }).catch(playError => {
+                console.error('播放视频失败:', playError)
+              })
+            } else {
+              // 旧浏览器可能不返回Promise
+              state.isPlaying = true
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('播放视频失败:', error)
+    }
+  }
+  
+  // 暂停视频
+  const pauseVideo = (index) => {
+    try {
+      const state = getFeedState(index)
+      if (!state) return
+      
+      // 使用uni.createVideoContext API暂停
+      const videoContext = uni.createVideoContext(`video-${index}`)
+      if (videoContext && typeof videoContext.pause === 'function') {
+        videoContext.pause()
+        // 更新状态
+        state.isPlaying = false
+      } else {
+        // 备用方案：尝试通过DOM获取并暂停
+        if (typeof document !== 'undefined') {
+          const video = document.getElementById(`video-${index}`)
+          if (video && typeof video.pause === 'function') {
+            video.pause()
+            state.isPlaying = false
+          }
+        }
+      }
+    } catch (error) {
+      console.error('暂停视频失败:', error)
+    }
+  }
+  
+  // 暂停其他视频
+  const pauseOtherVideos = (currentIndex) => {
+    try {
+      feedList.forEach((item, index) => {
+        if (index !== currentIndex && item.type === 'video') {
+          pauseVideo(index)
+        }
+      })
+    } catch (error) {
+      console.error('暂停其他视频失败:', error)
+    }
   }
 
   // 展开/收起描述
@@ -254,14 +292,14 @@ export function useImgAndVideo(feedList) {
     handleMore,
     handleAvatarClick,
     handleImageClick,
-    handleVideoPlay,
-    handleVideoPause,
     toggleExpand,
     onImageSlideChange,
     getFeedItemState,
     onVideoTimeUpdate,
     onVideoLoaded,
-    setVideoMute,
-    toggleVideoMute
+    toggleVideoPlayState,
+    playVideo,
+    pauseVideo,
+    pauseOtherVideos
   }
 }

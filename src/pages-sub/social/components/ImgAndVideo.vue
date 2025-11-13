@@ -42,9 +42,8 @@
                         :preload="'auto'" :autoplay="false" playsinline webkit-playsinline x5-playsinline
                         x5-video-player-type="h5" x5-video-player-fullscreen="false" class="media-video"
                         @click="toggleVideoPlayState(index)"
-                        @play="handleVideoPlay(index)" @pause="handleVideoPause(index)"
                         @loadeddata="onVideoLoaded(index)" @error="onVideoError(index)" @canplay="onVideoCanPlay(index)"
-                        @waiting="onVideoWaiting(index)" @stalled="onVideoStalled(index)"
+                        @stalled="onVideoStalled(index)"
                         @timeupdate="onVideoTimeUpdate(index, $event)"></video>
                      <!-- 视频进度条 -->
                      <view class="video-progress" v-if="getFeedItemState(index).duration > 0">
@@ -181,15 +180,13 @@ const {
    handleMore,
    handleAvatarClick,
    handleImageClick,
-   handleVideoPlay,
-   handleVideoPause,
    toggleExpand,
    onImageSlideChange,
    getFeedItemState,
    onVideoTimeUpdate,
    onVideoLoaded,
-   setVideoMute,
-   toggleVideoMute
+   pauseOtherVideos,
+   toggleVideoPlayState: hookToggleVideoPlayState
 } = useImgAndVideo(props.feedList)
 
 // 增强的滑动切换处理函数
@@ -200,71 +197,6 @@ const onSlideChange = (swiper) => {
    // 尝试播放当前视频
    playCurrentVideo(swiper.activeIndex)
 }
-
-// 暂停所有其他视频
-const pauseOtherVideos = (currentIndex) => {
-   try {
-      
-      // 遍历所有视频引用
-      videoRefs.value.forEach((video, index) => {
-         if (video && index !== currentIndex && props.feedList[index]?.type === 'video') {
-            try {
-
-               // 检查pause方法是否存在
-               if (typeof video.pause === 'function') {
-                  video.pause()
-                  // 更新状态
-                  const state = getFeedItemState(index)
-                  if (state) {
-                     state.isPlaying = false
-                  }
-               } else {
-
-                  // 尝试使用uni的视频上下文暂停
-                  try {
-                     const videoContext = uni.createVideoContext(`video-${index}`)
-                     if (videoContext && typeof videoContext.pause === 'function') {
-                        videoContext.pause()
-                        const state = getFeedItemState(index)
-                        if (state) {
-                           state.isPlaying = false
-                        }
-
-                     }
-                  } catch (ctxError) {
-
-                  }
-               }
-            } catch (pauseError) {
-
-            }
-         }
-      })
-      
-      // // 同时也尝试通过DOM查询暂停可能存在但未在refs中的视频
-      // props.feedList.forEach((item, index) => {
-      //    if (item.type === 'video' && index !== currentIndex && !videoRefs.value[index]) {
-      //       try {
-      //          const domVideo = document.getElementById(`video-${index}`)
-      //          if (domVideo) {
-      //             console.log(`通过DOM暂停视频 ${index}`)
-      //             domVideo.pause()
-      //             // 更新状态
-      //             const state = getFeedItemState(index)
-      //             if (state) {
-      //                state.isPlaying = false
-      //             }
-      //          }
-      //       } catch (pauseError) {
-      //          console.warn(`通过DOM暂停视频 ${index} 失败:`, pauseError)
-      //       }
-      //    }
-      // })
-   } catch (error) {
-
-   }
-}
-
 // 尝试播放指定索引的视频
 const playCurrentVideo = async (index) => {
    try {
@@ -272,26 +204,8 @@ const playCurrentVideo = async (index) => {
       // 首先暂停所有其他视频
       pauseOtherVideos(index)
 
-      // 方法1: 通过refs获取视频元素
+      // 通过refs获取视频元素
       let video = videoRefs.value[index]
-
-      // 如果refs没有获取到，尝试通过DOM查询获取
-      if (!video) {
-
-         video = document.getElementById(`video-${index}`)
-         if (video) {
-
-            // 更新refs
-            videoRefs.value[index] = video
-         }
-      }
-
-      // 如果仍然没有获取到，尝试通过uni的API
-      if (!video && props.feedList[index]?.type === 'video') {
-
-         fallbackPlayVideo(index)
-         return
-      }
 
       if (video && props.feedList[index]?.type === 'video') {
 
@@ -318,54 +232,16 @@ const playCurrentVideo = async (index) => {
          await attemptPlay(video, index)
       }
    } catch (error) {
-
-      // 尝试备用方案
-      fallbackPlayVideo(index)
    }
 }
 
 // 实际执行播放的辅助函数
 const attemptPlay = async (video, index) => {
    // 设置为自动播放状态
+   
    getFeedItemState(index).autoplay = true
    // 音频控制已移至hook中处理
 }
-
-// 备用播放方案
-const fallbackPlayVideo = (index) => {
-   try {
-      // 使用 UniApp 的视频上下文
-      const videoContext = uni.createVideoContext(`video-${index}`)
-      if (videoContext) {
-         videoContext.play()
-
-         // 标记视频为正在播放
-         getFeedItemState(index).isPlaying = true
-      }
-   } catch (error) {
-
-      // 尝试触发用户交互后再播放
-      triggerUserInteractionPlay(index)
-   }
-}
-
-// 触发用户交互后播放
-const triggerUserInteractionPlay = (index) => {
-
-   // 创建点击事件
-   const clickEvent = new Event('click', { bubbles: true })
-   document.dispatchEvent(clickEvent)
-
-   // 短暂延迟后尝试播放
-   setTimeout(() => {
-      if (index === currentIndex.value) {
-         playCurrentVideo(index)
-      }
-   }, 100)
-}
-
-// onVideoLoaded 函数已移至 useImgAndVideo hook 中
-
 // 视频错误处理
 const onVideoError = (index) => {
 
@@ -394,11 +270,6 @@ const onVideoCanPlay = (index) => {
    }
 }
 
-// 视频等待数据事件处理
-const onVideoWaiting = (index) => {
-   
-}
-
 
 // 视频加载停滞事件处理
 const onVideoStalled = (index) => {
@@ -408,66 +279,9 @@ const onVideoStalled = (index) => {
    }
 }
 
-// 切换视频播放状态 - 简单的播放/暂停切换
+// 切换视频播放状态 - 调用hook中的实现
 const toggleVideoPlayState = (index) => {
-   try {
-      
-      // 获取当前视频状态
-      const state = getFeedItemState(index)
-      if (!state) {
-
-         return
-      }
-      
-      if (state.isPlaying) {
-         // 如果正在播放，则暂停
-
-         handleVideoPause(index)
-      } else {
-         // 如果暂停或未播放，则播放
-
-         try {
-            // 先暂停其他视频
-            pauseOtherVideos(index)
-            
-            // 播放当前视频 - 使用uni.createVideoContext API
-            const videoContext = uni.createVideoContext(`video-${index}`)
-            if (videoContext && typeof videoContext.play === 'function') {
-               videoContext.play()
-
-               // 更新状态
-               state.isPlaying = true
-            } else {
-               // 备用方案：尝试通过DOM获取并播放
-
-               if (typeof document !== 'undefined') {
-                  const video = document.getElementById(`video-${index}`)
-                  if (video && typeof video.play === 'function') {
-                     const playPromise = video.play()
-                     if (playPromise) {
-                        playPromise.then(() => {
-
-                           state.isPlaying = true
-                        }).catch(playError => {
-
-                        })
-                     } else {
-                        // 旧浏览器可能不返回Promise
-                        
-                        state.isPlaying = true
-                     }
-                  } else {
-                     
-                  }
-               }
-            }
-         } catch (error) {
-
-         }
-      }
-   } catch (error) {
-   
-   }
+   hookToggleVideoPlayState(index)
 }
 
 // 监听 currentIndex 变化，确保当前视频播放
