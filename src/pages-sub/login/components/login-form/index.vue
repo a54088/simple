@@ -33,5 +33,6 @@ font-size: 28rpx;
 color: #FF1B1B;
 	line-height: 42rpx;
   height: 0;
+  margin-left: 40rpx !important;
 }
 </style>
