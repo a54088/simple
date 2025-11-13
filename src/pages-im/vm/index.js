@@ -1,7 +1,7 @@
 import { ViewModel } from "@/shared/class/view-model.js";
 import onSocketStateChange from './init/onSocketStateChange'
 import onAppActivateStateChange from './init/onAppActivateStateChange'
-
+import Apis from '@/api/index.js'
 export class IMVM extends ViewModel {
   showChatOperate = false
 
