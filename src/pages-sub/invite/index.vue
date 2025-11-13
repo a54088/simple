@@ -14,7 +14,7 @@ import MemberApi from "@/api/member/index.js";
 import DiceTag from "@/components/dice-tag/dice-tag.vue";
 import { onLoad } from "@dcloudio/uni-app";
 onLoad(() => {
-    getRollConfig();
+  getRollConfig();
 });
 
 const diceTagLeft = ref();
@@ -29,45 +29,45 @@ const form = reactive({
   btnDisabled: false,
 });
 
-const getRollConfig = async() => {
-    let {data} = await MemberApi.getRollConfig()
-    if(data){
-        // form.currentLeftValue = data.dice1Value
-        // form.currentRightValue = data.dice2Value
-        diceTagLeft.value.setCurrentValue(data.dice1Value || 6)
-        diceTagRight.value.setCurrentValue(data.dice2Value || 6)
-        if (data.inviteCode) {
-        form.inviteCode = data.inviteCode
-        form.btnDisabled = true
-        }
-        form.targetSum = data.targetSum || 6
-        form.dailyMaxTimes = data.dailyMaxTimes || 3
+const getRollConfig = async () => {
+  let { data } = await MemberApi.getRollConfig();
+  if (data) {
+    // form.currentLeftValue = data.dice1Value
+    // form.currentRightValue = data.dice2Value
+    diceTagLeft.value.setCurrentValue(data.dice1Value || 6);
+    diceTagRight.value.setCurrentValue(data.dice2Value || 6);
+    if (data.inviteCode) {
+      form.inviteCode = data.inviteCode;
+      form.btnDisabled = true;
     }
-}
+    form.targetSum = data.targetSum || 6;
+    form.dailyMaxTimes = data.dailyMaxTimes || 3;
+  }
+};
 
-const onDiceTagLayoutClick = async() => {
-    if (form.btnDisabled) {
-        uni.showToast({
-            title: "您已经摇中邀请码，不可再摇",
-            icon: "none",
-          });
-        return
-    }
-    if(form.dailyMaxTimes <= 0){
-        uni.showToast({
-            title: "次数已用完",
-            icon: "none",
-          });
-          return;
-    }
-    let {data} = await MemberApi.rollDice()
-    form.currentLeftValue = data.dice1Value
-    form.currentRightValue = data.dice2Value
-    form.dailyMaxTimes = form.dailyMaxTimes - 1
-    if(data.inviteCode){
-        form.inviteCode = data.inviteCode
-        form.btnDisabled = true
-    }
+const onDiceTagLayoutClick = async () => {
+  if (form.btnDisabled) {
+    uni.showToast({
+      title: "您已经摇中邀请码，不可再摇",
+      icon: "none",
+    });
+    return;
+  }
+  if (form.dailyMaxTimes <= 0) {
+    uni.showToast({
+      title: "次数已用完",
+      icon: "none",
+    });
+    return;
+  }
+  let { data } = await MemberApi.rollDice();
+  form.currentLeftValue = data.dice1Value;
+  form.currentRightValue = data.dice2Value;
+  form.dailyMaxTimes = form.dailyMaxTimes - 1;
+  if (data.inviteCode) {
+    form.inviteCode = data.inviteCode;
+    form.btnDisabled = true;
+  }
   if (diceTagLeft.value && diceTagLeft.value.throwDice) {
     diceTagLeft.value.throwDice(data.dice1Value);
     // diceTagRight.value.setCurrentValue(data.dice1Value)
@@ -82,7 +82,7 @@ const onLeftClick = () => {
   uni.navigateBack({
     delta: 1,
   });
-}
+};
 
 const onClick = async () => {
   // await inviteFormRef.value.validate();
@@ -128,11 +128,12 @@ const onClick = async () => {
       leftIconColor="#000"
       title=""
       bgColor="transparent"
-      :autoBack="false" :leftClick="onLeftClick"
-      style="position: relative;z-index: 2;"
+      :autoBack="false"
+      :leftClick="onLeftClick"
+      style="position: relative; z-index: 2"
     />
     <image src="@/static/images/login/invite/yq.gif" class="invite-form__gif" />
-     <!-- GIF占位符 -->
+    <!-- GIF占位符 -->
     <view class="invite-form__gif-placeholder"></view>
     <view class="invite-form__form">
       <image
@@ -154,19 +155,28 @@ const onClick = async () => {
           </u-input>
         </view>
       </view>
-      <view class="login_button__layout" @tap="onClick">
-        确 定
-      </view>
+      <view class="login_button__layout" @tap="onClick"> 确 定 </view>
     </view>
     <view class="invite-form__tips1">没有邀请码？</view>
     <view class="invite-form__tips2">可以点击骰子碰碰运气，</view>
-    <view class="invite-form__tips2">我们会给相加为 {{ form.targetSum }} 的你发放邀请码</view>
+    <view class="invite-form__tips2"
+      >我们会给相加为 {{ form.targetSum }} 的你发放邀请码</view
+    >
     <view class="dice-tag__layout">
-      <DiceTag ref="diceTagLeft" @tap="onDiceTagLayoutClick" :current-value="form.currentLeftValue" style="margin-right: 30rpx;"/>
-      <DiceTag ref="diceTagRight" @tap="onDiceTagLayoutClick" :current-value="form.currentRightValue" />
+      <DiceTag
+        ref="diceTagLeft"
+        @tap="onDiceTagLayoutClick"
+        :current-value="form.currentLeftValue"
+        style="margin-right: 30rpx"
+      />
+      <DiceTag
+        ref="diceTagRight"
+        @tap="onDiceTagLayoutClick"
+        :current-value="form.currentRightValue"
+      />
     </view>
     <view class="invite-form__tips3">
-        剩余次数：{{form.dailyMaxTimes}}次
+      剩余次数：{{ form.dailyMaxTimes }}次
     </view>
   </view>
 </template>
@@ -180,7 +190,7 @@ const onClick = async () => {
   background: url("@/static/images/login/invite/yaoqingbeijing.png");
   background-size: cover;
   background-position: center;
-//   padding-top: calc(env(safe-area-inset-top));
+  //   padding-top: calc(env(safe-area-inset-top));
   padding-bottom: calc(env(safe-area-inset-bottom) + 30rpx);
   box-sizing: border-box;
   overflow-y: auto;
@@ -193,7 +203,7 @@ const onClick = async () => {
     height: 535rpx;
     z-index: 1;
   }
-  
+
   // 添加GIF图片的占位符来解决样式塌陷
   .invite-form__gif-placeholder {
     width: 100%;
@@ -237,15 +247,15 @@ const onClick = async () => {
     .invite-form__layout {
       display: flex;
       justify-content: center;
-    //   position: absolute;
+      //   position: absolute;
       width: 530rpx;
       height: 96rpx;
       border-radius: 258rpx;
       padding: 26rpx 0rpx 26rpx 40rpx;
       background: rgba(0, 0, 0, 0.04);
       border: 1rpx solid rgba(255, 255, 255, 0.1);
-      margin-top: 77rpx;
-      margin-bottom: 103rpx;
+      margin-top: 64rpx;
+      margin-bottom: 113rpx;
     }
     .invite-form__title {
       font-size: 28rpx;
@@ -263,32 +273,30 @@ const onClick = async () => {
     margin-bottom: 40rpx;
   }
   .invite-form__tips1 {
-    
-font-size: 32rpx;
-color: #666666;
-text-align: center;
-margin-bottom: 16rpx;
+    font-size: 32rpx;
+    color: #666666;
+    text-align: center;
+    margin-bottom: 16rpx;
   }
-    .invite-form__tips2 {
-font-size: 24rpx;
-color: #9E9E9E;
-text-align: center;
+  .invite-form__tips2 {
+    font-size: 24rpx;
+    color: #9e9e9e;
+    text-align: center;
   }
 
- .invite-form__tips3 {
-    
-font-size: 24rpx;
-color: #9E9E9E;
-text-align: center;
-margin-top: 20rpx;
-margin-bottom: 30rpx;
-width: 245rpx;
-height: 57rpx;
-border-radius: 80rpx;
-// padding: 10px 30px;
-background: #FFFFFF;
-margin: 0 auto;
-line-height: 57rpx;
+  .invite-form__tips3 {
+    font-size: 24rpx;
+    color: #9e9e9e;
+    text-align: center;
+    margin-top: 20rpx;
+    margin-bottom: 30rpx;
+    width: 245rpx;
+    height: 57rpx;
+    border-radius: 80rpx;
+    // padding: 10px 30px;
+    background: #ffffff;
+    margin: 0 auto;
+    line-height: 57rpx;
   }
 }
 </style>

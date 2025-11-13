@@ -27,4 +27,11 @@ const vm = inject("loginVM");
   <EmailForm v-show="vm.formType === 'email_login'" />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep.u-form-item__body__right__message {
+font-size: 28rpx;
+color: #FF1B1B;
+	line-height: 42rpx;
+  height: 0;
+}
+</style>
