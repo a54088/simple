@@ -116,8 +116,8 @@ const handleItemClick = (index) => {
       transition-timing-function: ease-out;
 
       .icon_wrapper {
-        width: 44rpx;
-        height: 38rpx;
+        width: 48rpx;
+        height: 48rpx;
         display: flex;
         flex-direction: row;
         align-items: center;

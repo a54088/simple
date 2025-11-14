@@ -18,10 +18,10 @@
 
       <view class="input-box">
         <view class="icon-phone-box">
-          <i class="iconfont icon-dianhua"></i>
+          <i class="iconfont icon-dianhua1"></i>
         </view>
         <view class="operation-bar-btn">
-          <!-- <voice-button
+          <voice-button
             :duration="60000"
             :min-duration="1"
             :show-toast="true"
@@ -29,16 +29,16 @@
             @record-error="handleRecordError"
           >
             <template #leftIcon>
-              <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
+              <text class="iconfont icon-jianpan iconfont__btn"></text>
             </template>
             <template #rightIcon>
               <text 
                 @tap.stop="toggleMenuOpen" 
-                class="iconfont icon-quxiao"
+                class="iconfont icon-gengduo"
                 :class="[isShowMenu && 'icon-rotated']"
               ></text>
             </template>
-          </voice-button> -->
+          </voice-button>
         </view>
       </view>
     </view>
@@ -64,7 +64,7 @@
 <script setup>
 import { inject, ref } from "vue";
 import { chooseFile, uploadFile } from "@/utils/file.js";
-// import VoiceButton from "@/components/voice-button/index.vue";
+import VoiceButton from "@/components/voice-button/index.vue";
 
 const vm = inject("homeVM");
 const isShowMenu = ref(false);
@@ -265,7 +265,7 @@ const uploadRecordFile = async (filePath) => {
   margin-right: -10rpx;
 }
 .icon-rotated {
-  transform: rotate(0);
+  transform: rotate(45deg);
 }
 
 .top-btn-box {
@@ -310,9 +310,6 @@ const uploadRecordFile = async (filePath) => {
   }
 
   .icon-jianpan {
-    font-size: 36rpx;
-  }
-  .icon-jianpan-2 {
     font-size: 48rpx;
   }
   .operation-bar-btn {
