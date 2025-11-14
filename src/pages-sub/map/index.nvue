@@ -15,10 +15,10 @@
       :show-location="true"
       :enable-rotate="true"
     >
-      <image class="map-background" src="/static/map/mapBackground.png" style="height: 329px;"></image>
+      <image class="map-background" src="/static/images/map/mapBackground.png" style="height: 329px;"></image>
       <!-- 自定义定位按钮 -->
       <view class="location-btn" @tap="moveToCurrentLocation">
-        <image src="/static/map/position.png" mode="aspectFit" class="location-btn-image"></image>
+        <image src="/static/images/map/position.png" mode="aspectFit" class="location-btn-image"></image>
       </view>
     </map>
     <MapHeader class="header_wrap" />
@@ -160,11 +160,11 @@ const handleNameCardPopupShow = () => {
 //展示弹框
 const popupShow = ref(false);
 const userAvatars = ref([
-  '/static/map/avatar1.webp',
-  '/static/map/avatar2.webp',
-  '/static/map/avatar3.webp',
-  '/static/map/avatar4.webp',
-  '/static/map/avatar5.webp',
+  '/static/images/map/avatar1.webp',
+  '/static/images/map/avatar2.webp',
+  '/static/images/map/avatar3.webp',
+  '/static/images/map/avatar4.webp',
+  '/static/images/map/avatar5.webp',
 ]);
 
 // handleMarkerTap

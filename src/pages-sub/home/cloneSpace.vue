@@ -2,7 +2,7 @@
     <view class="clone-space-box">
         <CustomNavbar class="clone-space-navbar" bgColor="#F7F7F7">
             <template #right>
-                <image class="icon-avatar" src="/static/map/avatar5.webp" />
+                <image class="icon-avatar" src="/static/images/map/avatar5.webp" />
             </template>
         </CustomNavbar>
         <view class="clone-space-content">
@@ -62,11 +62,11 @@ import CustomNavbar from '@/components/custom-navbar/index.vue';
 import AvatarStacking from '@/components/avatar-stacking/index.vue';
 
 const avatarList = ref([
-    '/static/map/avatar1.webp',
-    '/static/map/avatar2.webp',
-    '/static/map/avatar3.webp',
-    '/static/map/avatar3.webp',
-    '/static/map/avatar3.webp',
+    '/static/images/map/avatar1.webp',
+    '/static/images/map/avatar2.webp',
+    '/static/images/map/avatar3.webp',
+    '/static/images/map/avatar3.webp',
+    '/static/images/map/avatar3.webp',
 ]);
 
 const list3 = ref([

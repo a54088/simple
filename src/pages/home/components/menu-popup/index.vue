@@ -18,7 +18,7 @@
             <!-- 个人信息 -->
             <view class="layout-header">
                 <view class="layout-header-left">
-                    <u-avatar :size="34" src="/src/static/map/avatar3.webp"></u-avatar>
+                    <u-avatar :size="34" src="/src/static/images/map/avatar3.webp"></u-avatar>
                     <text class="text-ellipsis">人生无常大肠包小肠1234</text>
                 </view>
                 <view class="layout-header-right">
@@ -136,9 +136,9 @@ import { ref, computed, inject } from 'vue'
 // components
 import AvatarStacking from '@/components/avatar-stacking/index.vue';
 // img
-import icon1 from '@/static/map/avatar5.webp';
-import icon2 from '@/static/map/avatar1.webp';
-import icon3 from '@/static/map/avatar4.webp';
+import icon1 from '@/static/images/map/avatar5.webp';
+import icon2 from '@/static/images/map/avatar1.webp';
+import icon3 from '@/static/images/map/avatar4.webp';
 
 const vm = inject("homeVM");
 
