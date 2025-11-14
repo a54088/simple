@@ -5,7 +5,15 @@
     <view class="shadow-layer"></view>
     <!-- 原始内容层（上层） -->
     <view class="header-content">
-      <text class="title">{{ title }}</text>
+      <view class="title">
+        <view class="title-left">
+          <text class="title-left-text">{{ title }}</text>
+          <image src="/static/images/map/zhibo.png" class="zhibo-icon" mode="widthFix"></image>
+        </view>
+        <view class="title-right">
+          <image src="/static/images/map/more.png" class="more-icon" mode="widthFix"></image>
+        </view>
+      </view>
       <view class="stats">
         <text class="stats_item">活动 {{ activityCount }}</text>
         <text class="stats_item">圈友 {{ memberCount }}</text>
@@ -70,6 +78,37 @@ defineProps({
     color: #ffffff;
     margin-bottom: 16rpx;
     lines: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 30rpx;
+
+    .title-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .title-left-text {
+        font-size: 50rpx;
+        color: #FFFFFF;
+      }
+      .zhibo-icon {
+        width: 78rpx;
+        height: 78rpx;
+        margin-left: 14rpx;
+      }
+    }
+
+    .title-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .more-icon {
+        width: 48rpx;
+        height: 48rpx;
+      }
+    }
   }
 
   .stats {
