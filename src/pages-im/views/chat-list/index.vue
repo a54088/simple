@@ -6,7 +6,7 @@ import ChatOperate from '../../components/chat-operate/index.vue'
 
 const imVM = inject('imVM')
 
-const chatList = []
+const chatList = computed(() => imVM.conversation.dataList)
 
 const chatOperateList = computed(() => imVM.chatOperateList)
 
@@ -37,6 +37,13 @@ const open = () => {
 onMounted(async () => {
     await imVM.getConversationList()
 })
+
+const handleItemTap = (item) => {
+    console.log('handleItemTap', item)
+    if (item.key === 'cjql') {
+        imVM.createConversation()
+    }
+}
 </script>
 <template>
     <view class="chat-list__layout">
@@ -45,7 +52,7 @@ onMounted(async () => {
                 <text class="custom-navbar__title">聊天</text>
             </template>
             <template v-slot:right>
-                   <ChatOperate :operateList="chatOperateList" :show="imVM.showChatOperate" @close="close" @open="open">
+                   <ChatOperate :operateList="chatOperateList" :show="imVM.showChatOperate" @close="close" @open="open" @itemTap="handleItemTap">
                      <text class="iconfont icon-gengduo"></text>
                    </ChatOperate>
             </template>

@@ -21,41 +21,7 @@ export class Conversation extends CloudData {
     if(!Array.isArray(datas)){
       datas = [datas]
     }
-    return datas.reduce((resList, item, index) => {
-      // console.log('resList',resList);
-      // 如果已存在，则直接返回原来的。不需要重复处理
-      let conversation_item = $state.conversation.find(item.id)
-      if (conversation_item) {
-        // console.log('此会话已经存在', conversation_item,conversation_item._update_time)
-        resList.push(conversation_item)
-        return resList
-      }
-      
-      // 把群数据都存到群列表
-      if(item.group_id){
-        $state.group.set(item.group_info)
-        // 删除冗余数据
-        delete item.group_info
-      } else {
-				// 把会话相关的用户信息合并到 $users
-				if(!item.is_temp) {
-					$users.merge({[item.friend_uid]: item.user_info})
-				}
-			}
-      
-      // console.log('新增会话', item)
-      // 插入客户端创建此会话的时间
-      item.client_create_time = Date.now()
-      try{
-        let conversation = new ConversationItem(item)
-        // console.log('新增会话', conversation)
-        resList.push(conversation)
-      }catch(e){
-				console.error('ConversationItem error',e)
-        $utils.reportError(e)
-      }
-      return resList
-    }, [])
+    return datas
   }
   __afterAdd(datas){
     if(!Array.isArray(datas)){

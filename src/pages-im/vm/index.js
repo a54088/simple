@@ -3,6 +3,7 @@ import onSocketStateChange from './init/onSocketStateChange'
 import onAppActivateStateChange from './init/onAppActivateStateChange'
 import Apis from '@/api/index.js'
 import { Conversation } from './class/Conversation.js'
+import { useUserStore } from '@/store/index.js'
 export class IMVM extends ViewModel {
   showChatOperate = false
 
@@ -20,6 +21,7 @@ export class IMVM extends ViewModel {
     {
       icon: 'icon-tianjiahaoyou-',
       text: '添加好友',
+      path: '/pages-im/views/add-friend/index',
       key: 'tjhy'
     },
     {
@@ -28,6 +30,8 @@ export class IMVM extends ViewModel {
       key: 'sys'
     },
   ]
+
+
 
   conversation = new Conversation()
 
@@ -44,6 +48,10 @@ export class IMVM extends ViewModel {
 
   constructor() {
     super()
+  }
+
+  get userId() {
+    return useUserStore().userId
   }
 
   init() {
@@ -77,11 +85,61 @@ export class IMVM extends ViewModel {
     }, 1000)
   }
 
+  initData() {
+    this.getFriendList()
+  }
+
+  async getFriendList() {
+    try {
+      const { data } = await Apis.imApi.getFriendList()
+    } catch(e) {
+      console.log('获取好友列表失败', e)
+    }
+  }
+
   async getConversationList() {
     const { data } = await Apis.imApi.getConversationList({
       "pageNum": 1,
       "pageSize": 10,
     })
+  }
+
+  async createConversation() {
+    try {
+      debugger
+      const parameter = {
+        "conversationType": 1,
+        "conversationName": "新群聊",
+        "conversationAvatar": "",
+        "memberIds": [
+          this.userId,
+          '3566'
+        ]
+      }
+      const { data, code } = await Apis.imApi.createConversation(parameter)
+
+      if (code === 0) {
+        this.conversation.add({
+          ...parameter,
+          id:data
+        })
+      }
+    } catch(e) {
+      console.log('创建会话失败', e)
+    }
+  }
+
+ async getConversationDetail(id) {
+    try {
+      const { data, code } = await Apis.imApi.getConversationDetail({
+        "conversationId": id,
+      })
+      if (code === 0) {
+        this.conversation.add(data)
+      }
+    } catch(e) {
+      console.log('获取会话详情失败', e)
+    }
   }
 
   sendMessage(message) {

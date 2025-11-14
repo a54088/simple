@@ -31,6 +31,16 @@
             }
           }
         },
+         {
+          "path": "views/search-list/index",
+          "style": {
+            "navigationBarTitleText": "搜索列表",
+            "navigationStyle": "custom",
+            "app-plus": {
+              "bounce": "none"
+            }
+          }
+        },
         {
           "path": "views/new-friend/index",
           "style": {

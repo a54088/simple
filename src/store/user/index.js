@@ -23,56 +23,12 @@ export const useUserStore = defineStore("UserStore", {
       userId: userId.get(),
       refreshToken: refreshToken.get(),
       userInfo: userInfo.get(),
-      userMemberInfo: {}, // 会员信息
     };
   },
 
   getters: {
-    /**
-     * 是否签署用户协议
-     * @param {*} state
-     * @returns
-     */
-    isSignedUserAgreement(state) {
-      return state.userInfo.signedUserAgreement === 2;
-    },
-    /**
-     * 会员奖励续期时间
-     * @param {*} state
-     * @returns
-     */
-    nextRecommendTime(state) {
-      return state.userInfo.nextRecommendTime;
-    },
     isLogin(state) {
       return !!state.token;
-    },
-    level(state) {
-      return state.userInfo.level;
-    },
-    /**
-     * 获取用户签署用户协议的状态
-     * @param {*} state
-     * @property {number} 0 - 未提交
-     * @property {number} 1 - 认证中
-     * @property {number} 2 - 认证成功
-     * @property {number} 3 - 认证失败
-     * @returns {UserAuctionAgreementEnum}
-     */
-    signedUserAgreement(state) {
-      return state.userInfo.signedUserAgreement;
-    },
-    /**
-     * 是否实名认证通过
-     * @param {*} state
-     * @returns
-     */
-    isRealName(state) {
-      return state.userInfo.isRealName;
-    },
-    // 账户是否已终止
-    isAccountTerminated(state) {
-      return state.userInfo.score <= 0;
     },
   },
 
@@ -105,16 +61,6 @@ export const useUserStore = defineStore("UserStore", {
     setRefreshToken(val) {
       this.refreshToken = val;
       refreshToken.set(val);
-    },
-    async getUserMemberInfo() {
-      try {
-        const { code, data } = await userApi.getMemberAuthInfo();
-        if (code != 0) return;
-
-        this.userMemberInfo = data || {};
-      } catch (e) {
-        console.log(e);
-      }
     },
   },
 });

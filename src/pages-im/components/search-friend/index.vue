@@ -1,8 +1,14 @@
 <script setup>
+import { ref } from 'vue'
+const onToSearch = () => {
+    uni.navigateTo({
+        url: '/pages-im/views/search-list/index'
+    })
+}
 </script>
 
 <template>
-    <view class="search-friend">
+    <view class="search-friend" @tap="onToSearch">
         <text :class="['iconfont', 'icon-a-zu16', 'search-friend__icon']"></text>
         <text class="search-friend__text">搜索名称/账号</text>
     </view>
