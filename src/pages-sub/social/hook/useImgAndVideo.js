@@ -1,7 +1,6 @@
-import { ref, onMounted, onUnmounted, watch, reactive, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, reactive } from 'vue'
 
 export function useImgAndVideo(feedList) {
-  const swiperRef = ref(null)
   const currentIndex = ref(0)
   const swiperHeight = ref(0)
   const statusBarHeight = ref(0)
@@ -37,8 +36,19 @@ export function useImgAndVideo(feedList) {
   }
 
   // 滑动改变
-  const onSlideChange = (swiper) => {
-    currentIndex.value = swiper.activeIndex
+  const resolveActiveIndex = (payload) => {
+    if (typeof payload === 'number') return payload
+    if (payload && typeof payload.detail?.current === 'number') {
+      return payload.detail.current
+    }
+    if (payload && typeof payload.activeIndex === 'number') {
+      return payload.activeIndex
+    }
+    return currentIndex.value
+  }
+
+  const onSlideChange = (payload) => {
+    currentIndex.value = resolveActiveIndex(payload)
     
     // 暂停其他视频并重置状态
     feedList.forEach((item, index) => {
@@ -48,14 +58,23 @@ export function useImgAndVideo(feedList) {
           if (index !== currentIndex.value) {
             videoContext?.pause()
             getFeedState(index).isPlaying = false
-          } else {
-            // 确保当前视频状态重置，让组件重新控制播放
-            getFeedState(index).isPlaying = false
           }
         } catch (error) {
         }
       }
     })
+    
+    // 自动播放当前视频
+    setTimeout(() => {
+      const currentItem = feedList[currentIndex.value]
+      if (currentItem && currentItem.type === 'video') {
+        // 确保视频处于静音状态以支持自动播放
+        const state = getFeedState(currentIndex.value)
+        state.isMuted = true
+        // 延迟播放以确保视频元素完全加载
+        playVideo(currentIndex.value)
+      }
+    }, 300)
   }
 
   // 格式化数字
@@ -104,9 +123,9 @@ export function useImgAndVideo(feedList) {
   
   // 视频时间更新处理函数
   const onVideoTimeUpdate = (index, event) => {
-    const video = event.target;
-    const currentTime = video.currentTime;
-    const duration = video.duration;
+    const detail = event?.detail || {}
+    const currentTime = detail.currentTime || 0
+    const duration = detail.duration || 0
     const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
     
     // 更新状态
@@ -122,16 +141,7 @@ export function useImgAndVideo(feedList) {
     state.autoplay = true;
     
     // 获取视频元素并设置默认静音
-    try {
-      const video = document.getElementById(`video-${index}`);
-      if (video) {
-        video.muted = true;
-        video.defaultMuted = true;
-        video.currentTime = 0;
-      }
-    } catch (error) {
-      // 忽略在不支持DOM的环境中的错误
-    }
+    state.isMuted = true;
   };
   
   // 切换视频播放状态
@@ -167,24 +177,6 @@ export function useImgAndVideo(feedList) {
         videoContext.play()
         // 更新状态
         state.isPlaying = true
-      } else {
-        // 备用方案：尝试通过DOM获取并播放
-        if (typeof document !== 'undefined') {
-          const video = document.getElementById(`video-${index}`)
-          if (video && typeof video.play === 'function') {
-            const playPromise = video.play()
-            if (playPromise) {
-              playPromise.then(() => {
-                state.isPlaying = true
-              }).catch(playError => {
-                console.error('播放视频失败:', playError)
-              })
-            } else {
-              // 旧浏览器可能不返回Promise
-              state.isPlaying = true
-            }
-          }
-        }
       }
     } catch (error) {
       console.error('播放视频失败:', error)
@@ -203,15 +195,6 @@ export function useImgAndVideo(feedList) {
         videoContext.pause()
         // 更新状态
         state.isPlaying = false
-      } else {
-        // 备用方案：尝试通过DOM获取并暂停
-        if (typeof document !== 'undefined') {
-          const video = document.getElementById(`video-${index}`)
-          if (video && typeof video.pause === 'function') {
-            video.pause()
-            state.isPlaying = false
-          }
-        }
       }
     } catch (error) {
       console.error('暂停视频失败:', error)
@@ -237,8 +220,9 @@ export function useImgAndVideo(feedList) {
   }
 
   // 图片滑动改变
-  const onImageSlideChange = (feedIndex, swiper) => {
-    getFeedState(feedIndex).currentImageIndex = swiper.activeIndex
+  const onImageSlideChange = (feedIndex, payload) => {
+    const nextIndex = resolveActiveIndex(payload)
+    getFeedState(feedIndex).currentImageIndex = nextIndex
   }
 
   // 监听 feedList 变化，初始化状态映射
@@ -281,7 +265,6 @@ export function useImgAndVideo(feedList) {
   }
 
   return {
-    swiperRef,
     currentIndex,
     swiperHeight,
     onSlideChange,
