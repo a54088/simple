@@ -2,7 +2,7 @@
   <view class="bottom_nav">
     <view class="nav_container">
       <view class="nav_container_logo">
-        <image src="/static/map/logo.webp" class="logo" mode="widthFix"></image>
+        <image src="/static/images/map/logo.webp" class="logo" mode="widthFix"></image>
       </view>
       
       <view class="nav_container_items">

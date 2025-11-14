@@ -3,7 +3,7 @@
         <CustomNavbar title="账号与安全"/>
 
         <view class="setting__header flex-column">
-            <u-avatar :size="48" src="/src/static/map/avatar3.webp"></u-avatar>
+            <u-avatar :size="48" src="/src/static/images/map/avatar3.webp"></u-avatar>
             <view class="setting__header-name">不会捏蛋</view>
             <view class="setting__header-id">
                 <text>啊圈号：aquan123</text>
