@@ -16,18 +16,18 @@
 import { ref, onBeforeUnmount } from 'vue'
 
 // 导入骰子动画图片
-import diceA from '@/static/dice-tag/动A.png'
-import diceB from '@/static/dice-tag/动B.png'
-import diceC from '@/static/dice-tag/动C.png'
-import diceD from '@/static/dice-tag/动D.png'
+import diceA from '@/static/images/dice-tag/diceA.png'
+import diceB from '@/static/images/dice-tag/diceB.png'
+import diceC from '@/static/images/dice-tag/diceC.png'
+import diceD from '@/static/images/dice-tag/diceD.png'
 
 // 导入骰子点数图片
-import dice1 from '@/static/dice-tag/1点.png'
-import dice2 from '@/static/dice-tag/2点.png'
-import dice3 from '@/static/dice-tag/3点.png'
-import dice4 from '@/static/dice-tag/4点.png'
-import dice5 from '@/static/dice-tag/5点.png'
-import dice6 from '@/static/dice-tag/6点.png'
+import dice1 from '@/static/images/dice-tag/dice1.png'
+import dice2 from '@/static/images/dice-tag/dice2.png'
+import dice3 from '@/static/images/dice-tag/dice3.png'
+import dice4 from '@/static/images/dice-tag/dice4.png'
+import dice5 from '@/static/images/dice-tag/dice5.png'
+import dice6 from '@/static/images/dice-tag/dice6.png'
 
 // 定义事件
 const emit = defineEmits(['ok'])
