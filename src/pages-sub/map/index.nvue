@@ -15,11 +15,11 @@
       :show-location="true"
       :enable-rotate="true"
     >
-      <cover-image src="/static/map/mapBackground.png" style="height: 329px;"></cover-image>
+      <image class="map-background" src="/static/map/mapBackground.png" style="height: 329px;"></image>
       <!-- 自定义定位按钮 -->
-      <cover-view class="location-btn" @tap="moveToCurrentLocation">
-        <cover-image src="/static/map/position.png" mode="aspectFit" class="location-btn-image"></cover-image>
-      </cover-view>
+      <view class="location-btn" @tap="moveToCurrentLocation">
+        <image src="/static/map/position.png" mode="aspectFit" class="location-btn-image"></image>
+      </view>
     </map>
     <MapHeader class="header_wrap" />
     <MapSide @iconClick="handleIconClick" />
@@ -232,12 +232,16 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 750rpx;
+
+  .map-background {
+    width: 750rpx;
+  }
 }
 
 .location-btn {
   position: absolute;
   bottom: 340rpx;
-  left: 40rpx;
+  right: 40rpx;;
   width: 96rpx;
   height: 96rpx;
   background-color: rgba(0, 0, 0, 0.5);
