@@ -86,7 +86,7 @@
                 <view class="massage-top">
                     <view class="massage-top-title">记事本</view>
                     <view class="massage-top-right">
-                        <i class="iconfont icon-paizhao-jinru"></i>
+                        <i class="iconfont icon-bianqian"></i>
                     </view>
                 </view>
                 <view class="message-bottom">
@@ -102,7 +102,7 @@
                     <view class="massage-top-title">数据导入</view>
                     <view class="massage-top-right">
                         <view>去导入</view>
-                        <i class="iconfont icon-paizhao-jinru"></i>
+                        <i class="iconfont icon-jinru1"></i>
                     </view>
                 </view>
                 <view class="message-bottom">
@@ -115,15 +115,15 @@
             <!-- 底部操作栏 -->
             <view class="layout-bottom-bar">
                 <view class="layout-bottom-bar-item">
-                    <i class="iconfont icon-erweima-2"></i>
+                    <i class="iconfont icon-erweima"></i>
                     <text>二维码</text>
                 </view>
                 <view @click="handleSettingClick" class="layout-bottom-bar-item">
-                    <i class="iconfont icon-shezhi"></i>
+                    <i class="iconfont icon-shezhi-2"></i>
                     <text>设置</text>
                 </view>
                 <view class="layout-bottom-bar-item">
-                    <i class="iconfont icon-saoyisao-3"></i>
+                    <i class="iconfont icon-saoma"></i>
                     <text>扫一扫</text>
                 </view>
             </view>
