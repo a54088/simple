@@ -18,13 +18,13 @@
       </view>
 
       <!-- 引入图片和视频组件 -->
-      <ImgAndVideo :feedList="feedList" />
+      <SocialFeed :feedList="feedList" />
    </view>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import ImgAndVideo from './components/ImgAndVideo.vue'
+import SocialFeed from './components/SocialFeed.nvue'
 
 const currentTab = ref(0) // 0: 落地圈, 1: 社会圈
 
