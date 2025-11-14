@@ -8,8 +8,20 @@
             :key="i" 
             :src="item"
             :size="avatarSize"
-            :style="{'z-index': getZIndex(i), left: i * translate + 'rpx'}"
+            :style="{'z-index': getZIndex(i), 'left': i * translate + 'rpx'}"
         ></u-avatar>
+        <view 
+            v-if="isShowMore" 
+            class="more-box flex-center" 
+            :style="{
+                'height': `${avatarSize}px`, 
+                'width': `${avatarSize}px`,
+                'z-index': getZIndex(showAvatarList.length),
+                'left': showAvatarList.length * translate + 'rpx'
+            }"
+        >
+            +{{ avatarList.length - maxCount }}
+        </view>
     </view>
 </template>
 
@@ -30,6 +42,7 @@ const props = defineProps({
     },
     avatarSize: {
         type: Number,
+        // px值
         default: 31
     },
     direction: {
@@ -38,6 +51,10 @@ const props = defineProps({
         validator: (value) => ['left', 'right'].includes(value)
     }
 });
+
+const isShowMore = computed(() => {
+    return props.direction === 'right';
+})
 
 const showAvatarList = computed(() => {
     return props.avatarList.slice(0, props.maxCount || props.avatarList.length);
@@ -67,6 +84,14 @@ const getZIndex = (index) => {
     }
     
     .u-avatar {
+        position: absolute;
+    }
+
+    .more-box {
+        background: #000000;
+        border-radius: 50%;
+        color: #fff;
+        font-size: 24rpx;
         position: absolute;
     }
 }

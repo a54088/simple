@@ -195,6 +195,12 @@
           "style": {
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "home/cloneSpace",
+          "style": {
+            "navigationStyle": "custom"
+          }
         }
       ]
     }
