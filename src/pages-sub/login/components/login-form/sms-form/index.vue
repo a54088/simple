@@ -17,7 +17,8 @@ const smsLoginCodeRef = ref();
 const smsFormRef = ref();
 
 const codeButtonText = ref("获取验证码");
-
+import { i18n } from '@/locale/index.js'
+const { t } = i18n.global
 vm.smsFormRef = smsFormRef;
 vm.smsLoginCodeRef = smsLoginCodeRef;
 
@@ -49,12 +50,6 @@ const rules = {
   },
 };
 
-const showPassword = ref(false);
-
-const onChangeCode = () => {
-  vm.isSmsLogin = !vm.isSmsLogin;
-};
-
 const codeChange = (text) => {
   codeButtonText.value = text;
 };
@@ -68,10 +63,6 @@ const getCode = () => {
       icon: "none",
     });
   }
-};
-
-const onChangeRegister = () => {
-  vm.formType = "register";
 };
 
 const onLeftClick = () => {
@@ -101,7 +92,7 @@ const onLeftClick = () => {
           v-model="form.mobile"
           border="none"
           type="number"
-          :placeholder="$t('login.placeholder.mobile')"
+          :placeholder="t('login.placeholder.mobile')"
         >
         </u-input>
     </u-form-item>
@@ -110,7 +101,7 @@ const onLeftClick = () => {
         <u-input
           v-model="form.code"
           border="none"
-          :placeholder="$t('login.placeholder.code')"
+          :placeholder="t('login.placeholder.code')"
           type="number"
         >
           <template #suffix>
@@ -168,10 +159,10 @@ const onLeftClick = () => {
 }
 .sms-form__layout {
   ::v-deep.u-form-item {
-    margin-bottom: 32rpx;
+    margin-bottom: 42rpx;
   }
   ::v-deep.u-form-item:last-child {
-    margin-bottom: 60rpx;
+    margin-bottom: 80rpx;
   }
   ::v-deep.u-form-item__body {
     width: 100%;

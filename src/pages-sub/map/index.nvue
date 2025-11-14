@@ -1,6 +1,8 @@
 <template>
   <view class="map_container" :style="{ height: screenHeightRpx + 'rpx' }">
     <map 
+      id="mapComponent"
+      ref="mapRef" 
       class="map_component"
       :style="{ height: screenHeightRpx + 'rpx' }"
       :markers="markers" 
@@ -8,21 +10,21 @@
       :longitude="currentLongitude"
       :polygons="polygons"
       :circles="circles"
-      ref="mapRef" 
       @markertap="handleMarkerTap" 
       @updated="handleMapUpdated"
       :show-location="true"
-      show-compass
+      :enable-rotate="true"
     >
-      <cover-image src="/static/map/mapBackground.png" style="height: 329px;"></cover-image>
+      <image class="map-background" src="/static/map/mapBackground.png" style="height: 329px;"></image>
       <!-- 自定义定位按钮 -->
-      <cover-view class="location-btn" @tap="moveToCurrentLocation">
-        <cover-image src="/static/map/position.png" mode="aspectFit" @tap="moveToCurrentLocation" class="location-btn-image"></cover-image>
-      </cover-view>
+      <view class="location-btn" @tap="moveToCurrentLocation">
+        <image src="/static/map/position.png" mode="aspectFit" class="location-btn-image"></image>
+      </view>
     </map>
     <MapHeader class="header_wrap" />
-    <MapSide class="side_wrap" />
+    <MapSide @iconClick="handleIconClick" />
     <MapFooter class="footer_wrap" />
+
     <AddFriend 
       :visible="popupShow" 
       title="不会捏蛋" 
@@ -38,6 +40,12 @@
         @close="nearbyPopupShow = false"
         @action="handleNearbyPopupShow"
     />
+
+    <NameCardModel 
+      :visible="nameCardPopupShow"
+      @close="nameCardPopupShow = false"
+      @action="handleNameCardPopupShow"
+    />
   </view>
 </template>
 
@@ -49,14 +57,18 @@ import MapFooter from './components/MapFooter/index.nvue';
 import MapSide from './components/MapSide/index.nvue';
 import AddFriend from './components/AddFriend/index.nvue';
 import NearbyPopup from './components/NearbyPopup/index.nvue';
-
+import NameCardModel from './components/NameCardModel/index.nvue';
 // 获取屏幕高度
 const systemInfo = uni.getSystemInfoSync();
 const screenHeight = systemInfo.windowHeight;
 const screenHeightRpx = (screenHeight / systemInfo.windowWidth) * 750;
 
 /* ==================== 地图 start ==================== */
-
+/**
+ * 获取map 上下文 mapContext 对象
+ * https://uniapp.dcloud.net.cn/api/location/map.html
+ */
+const mapContext = uni.createMapContext('mapComponent');
 // 地图实例引用
 const mapRef = ref(null);
 // 初始化地图钩子
@@ -66,12 +78,14 @@ const { markers, currentLatitude, currentLongitude, initMap } = useMap();
 const polygons = ref([
   {
     points: [{ latitude: 39.909, longitude: 116.39742 }, { latitude: 39.9, longitude: 116.39 }, { latitude: 39.915, longitude: 116.405 }],
-    strokeColor: '#ff6b6b',
-    strokeWidth: 2,
+    strokeColor: '#000',
+    fillColor:'#16c5ff1a',
+    strokeWidth: 2
   },
   {
     points: [{ latitude: 30.287755, longitude: 120.191172 }, { latitude: 30.297755, longitude: 120.101172 }, { latitude: 30.309955, longitude: 120.291172 }],
-    strokeColor: '#ff6b6b',
+    strokeColor: '#000',
+    fillColor:'#16c5ff1a',
     strokeWidth: 2,
   }
 ]);
@@ -79,16 +93,8 @@ const polygons = ref([
 // 圆形
 const circles = ref([
     {
-        latitude: 39.909,
-        longitude: 116.39742,
-        radius: 500,
-        fillColor: '#16c5ff1a',
-        strokeWidth: 2,
-        color: '#16C5FF',
-    },
-    {
-        latitude: 30.287755,
-        longitude: 120.191172,
+        latitude: currentLatitude,
+        longitude: currentLongitude,
         radius: 500,
         fillColor: '#16c5ff1a',
         strokeWidth: 2,
@@ -102,36 +108,37 @@ const handleMapUpdated = () => {
 
 // 获取当前位置并移动地图
 const moveToCurrentLocation = () => {
-  uni.getLocation({
-    type: 'gcj02',
-    timeout: 5000,
-    success: (res) => {
-      currentLatitude.value = res.latitude;
-      currentLongitude.value = res.longitude;
-      // 延迟调用 moveToLocation，确保地图实例完全准备好
-      setTimeout(() => {
-        if (mapRef.value && typeof mapRef.value.moveToLocation === 'function') {
-          try {
-            mapRef.value.moveToLocation({
-              latitude: res.latitude,
-              longitude: res.longitude
-            });
-          } catch (error) {
-            console.warn('调用 moveToLocation 失败:', error);
-            // 如果 moveToLocation 失败，直接更新坐标，地图会自动更新
-          }
-        } else {
-          console.warn('地图实例未准备好，moveToLocation 不可用');
-        }
-      }, 300);
-    },
-    fail: (err) => {
-      console.warn('定位失败:', err);
-      uni.showToast({ title: '定位失败', icon: 'none' });
-    }
-  });
+  initMap(mapRef.value);
 };
-/* ==================== 地图 start ==================== */
+
+
+const handleIconClick = (item) => {
+  mapContext.openMapApp({
+    latitude: 30.250796,
+    longitude: 120.140141,
+    destination: '浙江省杭州市西湖区孤山路',
+  });
+
+  // mapContext.poiSearchNearBy({
+  //   point: {
+  //     latitude: currentLatitude,
+  //     longitude: currentLongitude,
+  //   },
+  //   key: '网吧',
+  //   radius: 500,
+  //   index: 1,
+  //   offset: 10
+  // })
+}
+
+onMounted(() => {
+  // 自定义指示图标
+  mapContext.setLocMarkerIcon({
+    iconPath: '/static/logo.png'
+    // iconPath: '/static/images/map/zhishi.png'
+  })
+});
+/* ==================== 地图 end ==================== */
 
 
 /* ==================== 附近的内容 start ==================== */
@@ -142,6 +149,13 @@ const handleNearbyPopupShow = () => {
 }
 /* ==================== 附近的内容 end ==================== */
 
+/* ==================== 个人名片 start ==================== */
+const nameCardPopupShow = ref(false);
+
+const handleNameCardPopupShow = () => {
+    nameCardPopupShow.value = true;
+}
+/* ==================== 个人名片 end ==================== */
 
 //展示弹框
 const popupShow = ref(false);
@@ -158,7 +172,8 @@ const handleMarkerTap = (e) => {
   const markerId = e.detail.markerId;
   const clickedMarker = markers.value.find(marker => marker.id === markerId);
 //   popupShow.value = true;
-  nearbyPopupShow.value = true;
+  // nearbyPopupShow.value = true;
+  nameCardPopupShow.value = true;
   console.log('弹框显示:', popupShow.value);
 }
 
@@ -180,7 +195,7 @@ onMounted(() => {
           if (mapRef.value) {
             initMap(mapRef.value);
           }
-        }, 500);
+        }, 300);
       }
     }, 300);
   });
@@ -188,17 +203,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-/* nvue 样式规范：
- * 1. 不支持 position: fixed，只支持 absolute 和 relative
- * 2. 不支持 z-index
- * 3. 不支持 box-sizing
- * 4. 不支持 pointer-events
- * 5. 不支持 ::v-deep 深度选择器
- * 6. 必须明确指定 flex-direction
- * 7. 所有容器必须设置背景色（避免透明重影）
- * 8. 不支持百分比宽度，需要使用固定值或 flex
- */
-
 .map_container {
   width: 750rpx;
   position: relative;
@@ -228,12 +232,16 @@ onMounted(() => {
   top: 0;
   left: 0;
   width: 750rpx;
+
+  .map-background {
+    width: 750rpx;
+  }
 }
 
 .location-btn {
   position: absolute;
   bottom: 340rpx;
-  left: 40rpx;
+  right: 40rpx;;
   width: 96rpx;
   height: 96rpx;
   background-color: rgba(0, 0, 0, 0.5);

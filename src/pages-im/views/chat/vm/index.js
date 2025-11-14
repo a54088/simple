@@ -61,4 +61,71 @@ export class ChatVM extends ViewModel {
   constructor() {
     super()
   }
+
+  add(param,options = {}) {
+    const {canUpdate = true,unshift = false} = options
+    const paramIsArray = Array.isArray(param)
+    let datas = paramIsArray ? param : [param]
+    
+    // console.time('add __beforeAdd' + this.constructor.name)
+    let res = this.__beforeAdd(datas,options)
+    // console.timeEnd('add __beforeAdd' + this.constructor.name)
+    if(res !== undefined){
+      datas = res
+    }
+    // 插入之前dataList是否为空
+    const isEmpty = this.dataList.length === 0
+    const resData = datas.map(item => {
+      let val;
+      if(this.indexKey){
+        this.indexKey.split('.').forEach(k => {
+          val = val ? val[k] : item[k]
+        })
+      }else{
+        val = item._id || item.id || { [Object.keys(item)[0]]: item[Object.keys(item)[0]] }
+      }
+      // 如果当前数据列表为空或者没有传入索引值，则不检查要插入的数据是否存在
+      let _data = (isEmpty || !val) ? false : this.find(val)
+      // console.log('add _data',{_data,item})
+      // 如果已经存在的，只更新不添加
+      if(_data){
+        if(canUpdate && item != _data){
+          // console.log('添加的对象已经存在，更新对象',{item,item})
+          try{
+            utils.deepAssign(_data,item)
+          }catch(e){
+            console.error('合并更新出错',{item,_data,e})
+          }
+        }
+        return _data
+      }else{
+        if(unshift){
+          this.dataList.unshift(item)
+          item = this.dataList.slice(0,1)[0]
+        }else{
+          this.dataList.push(item)
+          item = this.dataList.slice(-1)[0]
+        }
+        if(this.indexKey){
+          // console.time('dataMap set')
+          let key;
+          this.indexKey.split('.').forEach(k => {
+            key = key ? key[k] : item[k]
+          })
+          const cs = this.__canSeaveToDataMap
+          const val = cs ? cs(item) : true
+          if(val){
+            this.dataMap.set(key, item)
+          }
+          // console.log('this.dataMap',this.dataMap)
+          // console.timeEnd('dataMap set')
+        }
+        return item
+      }
+    })
+    this.__afterAdd(resData,options)
+    // console.error('param',param)
+    // console.timeEnd('add' + this.constructor.name)
+    return paramIsArray ? resData : resData[0]
+  }
 }

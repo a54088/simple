@@ -30,9 +30,9 @@ const props = defineProps({
   navItems: {
     type: Array,
     default: () => [
-      { icon: '/static/map/toolbar-chat.webp', label: '聊天' },
-      { icon: '/static/map/toolbar-eye.webp', label: '圈子' },
-      { icon: '/static/map/toolbar-contacts.webp', label: '通讯录' }
+      { icon: '/static/images/map/chat.png', label: '聊天' },
+      { icon: '/static/images/map/firend.png', label: '朋友' },
+      { icon: '/static/images/map/tongxunlu.png', label: '通讯录' }
     ]
   },
   // 默认选中项索引，支持通过prop传入
@@ -110,10 +110,14 @@ const handleItemClick = (index) => {
       justify-content: center;
       flex: 1;
       background-color: transparent;
+      border: 1rpx solid transparent;
+      transition-property: background, border-radius;
+      transition-duration: 0.2s;
+      transition-timing-function: ease-out;
 
       .icon_wrapper {
-        width: 44rpx;
-        height: 38rpx;
+        width: 48rpx;
+        height: 48rpx;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -124,8 +128,8 @@ const handleItemClick = (index) => {
         background-color: transparent;
 
         .nav_icon {
-          width: 44rpx;
-          height: 38rpx;
+          width: 48rpx;
+          height: 48rpx;
         }
       }
 
@@ -136,8 +140,9 @@ const handleItemClick = (index) => {
 
       // 选中样式
       &.active {
-        background-color: #3A3A3A;
+        background: rgba(58, 58, 58, 0.5);
         border-radius: 168rpx;
+        border: 1rpx solid rgba(255, 255, 255, 0.3);
       }
     }
   }

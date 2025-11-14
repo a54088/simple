@@ -5,11 +5,12 @@
  * @LastEditTime: 2025-10-27 16:36:50
  * @Description: 
 -->
+
 <template>
   <view class="operation-bar">
     <view class="operation-bar-content animate__animated" :class="[!isShowMenu && 'animate__slideInDown']">
       <view class="top-btn-box">
-        <view class="top-btn-box-title">分身空间</view>
+        <view @click="handleCloneSpace" class="top-btn-box-title">分身空间</view>
         <view class="top-btn-box-icon">
           <i class="iconfont icon-shengyin"></i>
         </view>
@@ -17,7 +18,7 @@
 
       <view class="input-box">
         <view class="icon-phone-box">
-          <i class="iconfont icon-dianhua"></i>
+          <i class="iconfont icon-dianhua1"></i>
         </view>
         <view class="operation-bar-btn">
           <voice-button
@@ -28,12 +29,12 @@
             @record-error="handleRecordError"
           >
             <template #leftIcon>
-              <text class="iconfont icon-jianpan-2 iconfont__btn"></text>
+              <text class="iconfont icon-jianpan iconfont__btn"></text>
             </template>
             <template #rightIcon>
               <text 
                 @tap.stop="toggleMenuOpen" 
-                class="iconfont icon-quxiao"
+                class="iconfont icon-gengduo"
                 :class="[isShowMenu && 'icon-rotated']"
               ></text>
             </template>
@@ -241,6 +242,12 @@ const uploadRecordFile = async (filePath) => {
 };
 /* ====================== 按住说话 end ====================== */
 
+const handleCloneSpace = () => {
+  uni.navigateTo({
+    url: '/pages-sub/home/cloneSpace',
+  })
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -264,7 +271,7 @@ const uploadRecordFile = async (filePath) => {
   margin-right: -10rpx;
 }
 .icon-rotated {
-  transform: rotate(0);
+  transform: rotate(45deg);
 }
 
 .top-btn-box {
@@ -309,9 +316,6 @@ const uploadRecordFile = async (filePath) => {
   }
 
   .icon-jianpan {
-    font-size: 36rpx;
-  }
-  .icon-jianpan-2 {
     font-size: 48rpx;
   }
   .operation-bar-btn {

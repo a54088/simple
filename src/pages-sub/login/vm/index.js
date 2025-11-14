@@ -106,7 +106,7 @@ export class LoginVM extends ViewModel {
   // setTab(index) {
   //   this.tabIndex = +index;
   // }
-  
+
   // 获取短信验证码
   getSmsLoginCode() {
     if (this.smsLoginCodeRef.canGetCode) {
@@ -220,11 +220,12 @@ export class LoginVM extends ViewModel {
         // scene: 1,
       };
       const { data, code } = await memberApi.registerLogin(parameter);
-      const { accessToken, refreshToken, userId } = data;
-      useUserStore().setToken(accessToken);
-      useUserStore().setUserId(userId);
-      useUserStore().setRefreshToken(refreshToken);
-      this.getUserInfo();
+      this.afterLogin(data);
+      // const { accessToken, refreshToken, userId } = data;
+      // useUserStore().setToken(accessToken);
+      // useUserStore().setUserId(userId);
+      // useUserStore().setRefreshToken(refreshToken);
+      // this.getUserInfo();
     } catch (e) {
       console.log(e);
     } finally {
@@ -297,11 +298,12 @@ export class LoginVM extends ViewModel {
         // scene: 1,
       };
       const { data, code } = await memberApi.registerLogin(parameter);
-      const { accessToken, refreshToken, userId } = data;
-      useUserStore().setToken(accessToken);
-      useUserStore().setUserId(userId);
-      useUserStore().setRefreshToken(refreshToken);
-      this.getUserInfo();
+      this.afterLogin(data);
+      // const { accessToken, refreshToken, userId } = data;
+      // useUserStore().setToken(accessToken);
+      // useUserStore().setUserId(userId);
+      // useUserStore().setRefreshToken(refreshToken);
+      // this.getUserInfo();
     } catch (e) {
       console.log(e);
     } finally {
@@ -313,21 +315,21 @@ export class LoginVM extends ViewModel {
       const { data, code } = await memberApi.getUserInfo();
       if (code == 0) {
         useUserStore().setUserInfo(data);
-      // 存在邀请码
-      if (data.inviteFlag && (data.recommendUserId === undefined || data.recommendUserId === null || data.recommendUserId === '')) {
-         uni.navigateTo({
-           url: "/pages-sub/invite/index",
-         });
-         // this.formType = "invite_code";
+        // 存在邀请码
+        if (data.inviteFlag && (data.recommendUserId === undefined || data.recommendUserId === null || data.recommendUserId === '')) {
+          uni.navigateTo({
+            url: "/pages-sub/invite/index",
+          });
+          // this.formType = "invite_code";
         } else {
-        uni.switchTab({
-          url: "/pages/home/index",
-        });
-        // uni.showToast({
-        //   title: t("login.loginSuccess"),
-        //   icon: "none",
-        // });
-      }
+          uni.switchTab({
+            url: "/pages/home/index",
+          });
+          // uni.showToast({
+          //   title: t("login.loginSuccess"),
+          //   icon: "none",
+          // });
+        }
       }
     } catch (e) {
       console.log(e);
@@ -343,11 +345,12 @@ export class LoginVM extends ViewModel {
         ...this.loginForm,
       };
       const { data, code } = await memberApi.authLogin(parameter);
-      const { accessToken, refreshToken, userId } = data;
-      useUserStore().setToken(accessToken);
-      useUserStore().setUserId(userId);
-      useUserStore().setRefreshToken(refreshToken);
-      this.getUserInfo();
+      this.afterLogin(data);
+      // const { accessToken, refreshToken, userId } = data;
+      // useUserStore().setToken(accessToken);
+      // useUserStore().setUserId(userId);
+      // useUserStore().setRefreshToken(refreshToken);
+      // this.getUserInfo();
       // if (getCurrentPages().length === 1) {
       //   uni.switchTab({
       //     url: "/pages/home/index",
@@ -366,6 +369,28 @@ export class LoginVM extends ViewModel {
       console.log(e);
     } finally {
       uni.hideLoading();
+    }
+  }
+
+  afterLogin(data) {
+    const { accessToken, refreshToken, userId } = data;
+    useUserStore().setToken(accessToken);
+    useUserStore().setUserId(userId);
+    useUserStore().setRefreshToken(refreshToken);
+    this.getUserInfo();
+    if (getCurrentPages().length === 1) {
+      uni.reLaunch({
+        url: "/pages/home/index",
+      });
+    } else {
+      const pages = getCurrentPages(); // 当前页面
+      const beforePage = pages[pages.length - 2]; // 上一页
+      uni.navigateBack({
+        delta: 1,
+        success: () => {
+          beforePage.onLoad(); // 执行上一页的onLoad方法
+        },
+      });
     }
   }
 }

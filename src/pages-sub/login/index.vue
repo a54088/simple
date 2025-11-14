@@ -32,6 +32,8 @@ let vm = new LoginVM();
 provide("loginVM", vm);
 
 const handleMobileLogin = (formType) => {
+  console.log(formType);
+  
   vm.formType = formType;
   // uni.navigateTo({
   //   url: "/pages-sub/login/mobile-login",

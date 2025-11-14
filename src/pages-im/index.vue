@@ -8,6 +8,7 @@ import ZSwiper from '@zebra-ui/swiper/components/z-swiper/z-swiper.vue'
 import ZSwiperItem from '@zebra-ui/swiper/components/z-swiper-item/z-swiper-item.vue'
 import { useCustomTabbarStore } from "@/store/index.js";
 import { provide, onMounted, computed, inject } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 
 // let vm = new IMVM()
 // provide('imVM', vm)
@@ -24,6 +25,12 @@ const tabList = computed(() => customTabbarStore.tabList);
 const swiperRef = ref(null)
 onMounted(() => {
     customTabbarStore.swiperRef = swiperRef
+})
+
+onShow(() => {
+    if (imVM) {
+        imVM.initData()
+    }
 })
 </script>
 <template>

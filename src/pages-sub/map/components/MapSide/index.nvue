@@ -2,54 +2,64 @@
   <view class="map-logo-menu">
     <!-- 固定展开的菜单容器 -->
     <view class="logo-menu-container">
-      <image src="/static/map/global.webp" class="logo-global" mode="widthFix"></image>
       <view 
-        class="logo-item" 
+        :class="['logo-item', item.customClass ? item.customClass : '']" 
         v-for="(item, index) in logoItems" 
         :key="index" 
         @tap="handleLogoClick(item)">
-        <image :src="item.logo" class="logo-img" mode="widthFix"></image>
+        <image v-if="!item.active" :src="item.icon" class="logo-img" mode="widthFix"></image>
+        <image v-else :src="item.activeIcon" class="logo-img" mode="widthFix"></image>
       </view>
     </view>
   </view>
 </template>
 
 <script setup>
-// 接收logo配置项
+import { ref } from 'vue';
+
+const emits = defineEmits(['iconClick']);
 const props = defineProps({
   logoItems: {
     type: Array,
     default: () => [
       {
-        name: '招商信息',
-        logo: '/static/map/side-icon1.webp',
-        action: 'business'
+        icon: '/static/images/map/name-card.png',
+        action: 'business',
+        customClass: 'icon-name-card'
       },
       {
-        name: '小时自助',
-        logo: '/static/map/side-icon2.webp',
+        icon: '/static/map/global.webp',
+        action: 'business',
+        customClass: 'logo-global'
+      },
+      {
+        icon: '/static/images/map/moshengren.png',
+        activeIcon: '/static/images/map/moshengren-active.png',
+        active: false,
         action: 'selfService'
       },
       {
-        name: '小时自助',
-        logo: '/static/map/side-icon3.webp',
+        icon: '/static/images/map/yinshen.png',
+        activeIcon: '/static/images/map/yinshen-active.png',
+        active: true,
+        action: 'selfService'
+      },
+      {
+        icon: '/static/images/map/camera.png',
         action: 'selfService'
       }
     ]
   }
 });
-
-// 触发点击事件
-const emit = defineEmits(['logo-click']);
 const handleLogoClick = (item) => {
-  emit('logo-click', item);
+  emits('iconClick', item);
 };
 </script>
 
 <style lang="scss" scoped>
 .map-logo-menu {
   position: absolute;
-  top: 60rpx;
+  top: 200rpx;
   right: 24rpx;
   background-color: transparent;
 }
@@ -84,10 +94,19 @@ const handleLogoClick = (item) => {
   width: 96rpx;
   height: 96rpx;
   margin-bottom: 30rpx;
+  padding: 0;
+  .logo-img {
+    width: 96rpx;
+    height: 96rpx;
+  }
 }
 
 .logo-img {
   width: 48rpx;
   height: 48rpx;
+}
+
+.icon-name-card {
+  border-radius: 50%;
 }
 </style>

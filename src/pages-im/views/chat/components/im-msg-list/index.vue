@@ -2,7 +2,7 @@
 import ImMsg from '../im-msg/index.vue'
 import ImList from '../im-list/index.vue'
 
-const list = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, , 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+const list = []
 </script>
 <template>
         <ImList>

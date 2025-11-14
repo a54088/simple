@@ -84,7 +84,7 @@ export function useMap() {
 
     // 获取定位
     uni.getLocation({
-      type: "gcj02",
+      type: "wgs84", // gcj02 App 和 H5 需配置定位 SDK 信息才可支持 gcj02。
       success: (res) => {
         console.log("获取位置成功:", res);
         currentLatitude.value = res.latitude;
@@ -95,11 +95,6 @@ export function useMap() {
         map.value.moveToLocation({
           latitude: res.latitude,
           longitude: res.longitude
-        });
-
-        uni.showToast({
-          title: "位置获取成功",
-          icon: "success",
         });
       },
       fail: (err) => {

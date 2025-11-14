@@ -9,7 +9,7 @@
   <view class="msg-status-bar">
     <!-- 菜单 -->
     <view @tap="handleMenuClick" class="menu-switch">
-      <i class="iconfont icon-gengduo1"></i>
+      <i class="iconfont icon-chouti"></i>
     </view>
 
     <view class="msg-avatar-box">
@@ -48,8 +48,8 @@
           </view>
         </scroll-view>
 
-        <view @tap="toggleOpen" :class="[isOpen && 'icon-rotated']">
-          <i class="iconfont icon-a-mengbanzu135"></i>
+        <view @tap="toggleOpen" class="icon-xiala-box" :class="[isOpen && 'icon-rotated']">
+          <i class="iconfont icon-xiala"></i>
         </view>
       </view>
     </view>
@@ -103,7 +103,6 @@ const handleAvatarClick = (item) => {
 }
 
 const handleLogoClick = () => {
-  console.log('logo');
   uni.navigateTo({
     url: '/pages-sub/map/index',
   })
@@ -173,13 +172,23 @@ const handleLogoClick = () => {
       align-items: center;
       transition: width 0.2s ease-in-out;
 
-      .iconfont {
+      .icon-xiala-box {
         margin-left: 10rpx;
+        width: 28rpx;
+        height: 28rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(-90deg);
+      }
+
+      .iconfont {
         transition: transform 0.2s ease-in-out;
         cursor: pointer;
+        color: rgba(255, 255, 255, 0.6);
       }
       .icon-rotated {
-        transform: rotate(180deg) translateX(-10rpx);
+        transform: rotate(90deg);
       }
 
       .msg-avatar-group-close {

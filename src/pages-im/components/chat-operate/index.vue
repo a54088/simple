@@ -10,7 +10,7 @@ const props = defineProps({
     },
     
 })
-const emit = defineEmits(['close', 'open'])
+const emit = defineEmits(['close', 'open', 'itemTap'])
 
 const showChatOperate = computed(() => props.show)
 
@@ -27,6 +27,15 @@ const open = () => {
 const overlayClick = () => {
       close()
 }
+
+const handleTap = (item) => {
+      emit('itemTap', item)
+      if (item.path) {
+            uni.navigateTo({
+                  url: item.path
+            })
+      }
+}
 </script>
 <template>
       <view>
@@ -35,7 +44,7 @@ const overlayClick = () => {
                   <slot></slot>
                   <u-transition :show="showChatOperate">
                         <view class="chat-operate__layout">
-                              <view class="chat-operate__item" v-for="(item, index) in chatOperateList" :key="index">
+                              <view class="chat-operate__item" v-for="(item, index) in chatOperateList" :key="index" @tap="handleTap(item)">
                                     <text :class="['iconfont', 'iconfont-init', item.icon]"></text>
                                     <view class="chat-operate__item__text">
                                           <text>{{ item.text }}</text>
