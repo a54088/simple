@@ -5,3 +5,9 @@
   <u-modal />
   <u-action-sheet />
 </template>
+
+<script setup>
+defineOptions({
+    inheritAttrs: false,
+})
+</script>

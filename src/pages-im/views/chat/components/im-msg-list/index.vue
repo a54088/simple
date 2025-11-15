@@ -1,16 +1,18 @@
 <script setup>
 import ImMsg from '../im-msg/index.vue'
 import ImList from '../im-list/index.vue'
-
-const list = []
+import { inject } from 'vue'
+const imVM = inject('imVM')
+const list = computed(() => imVM.currentConversation.msg.dataList)
 </script>
 <template>
+      
         <ImList>
             <template v-for="(item, index) in list" :key="index">
                 <view class="im-list-item">
-                    <ImMsg :index="index" />
+          
+                    <ImMsg :index="index" :msg="item" />
                 </view>
-
             </template>
         </ImList>
 </template>

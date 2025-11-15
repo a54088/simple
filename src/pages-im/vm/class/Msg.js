@@ -10,4 +10,11 @@ export default class Msg extends CloudData {
     this.conversation_id = conversation_id
     this.isFull = false
   }
+
+    __afterAdd(datas){
+    if(!Array.isArray(datas)){
+      datas = [datas]
+    }
+   this.dataList =  [...this.dataList, ...datas]
+  }
 }

@@ -113,9 +113,9 @@ const ImApi = {
    * @param {*} data
    * @returns
    */
-  getConversationDetail: (data) => client.createGet("/im/app-conversation/detail", data),
+  getConversationDetail: (data) => client.createGet("/im/app-conversation/get", data),
 
-  
+
 };
 
 export default ImApi;

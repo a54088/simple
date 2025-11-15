@@ -3,55 +3,53 @@ import CustomNavbar from '@/components/custom-navbar/index.vue'
 import ChatOperate from '../../components/chat-operate/index.vue'
 import ChatFooter from './components/chat-footer/index.vue'
 import { ChatVM } from './vm/index.js'
-import { onMounted, onUnmounted, provide } from 'vue'
+import { inject, onUnmounted, provide } from 'vue'
 import IMMsgList from './components/im-msg-list/index.vue'
+import { onLoad } from '@dcloudio/uni-app'
 
+const imVM = inject('imVM')
 let vm = new ChatVM()
 
 provide('chatVM', vm)
 
+const conversation = computed(() => imVM.currentConversation)
+
 onUnmounted(() => {
     vm = null
 })
+onLoad((options) => {
+    const { conversation_id } = options
+    if (conversation_id) {
+        imVM.setCurrentConversation(+conversation_id)
+    }
+})
 
-const upper = (e) => {
-    console.log(e)
-}
-
-const lower = (e) => {
-    console.log(e)
-}
-
-const scroll = (e) => {
-    console.log(e)
-}
 </script>
 <template>
     <view class="chat__layout">
         <CustomNavbar bgColor="transparent" @rightClick="vm.showChatOperate = !vm.showChatOperate">
             <template v-slot:left>
                 <view class="chat__navbar-left">
-                    <text class="iconfont icon-paizhao-jinru"></text>
+                    <text class="iconfont icon-fanhui-2"></text>
                     <text class="chat__navbar-left-text">94</text>
                 </view>
             </template>
             <template v-slot:center>
                 <view class="chat__navbar-center">
-                    <text class="chat__navbar-center-text">不会捏蛋</text>
+                    <text class="chat__navbar-center-text">{{ conversation.conversationName }}</text>
                 </view>
             </template>
             <template v-slot:right>
                 <view class="chat__navbar-right">
-                    <u-avatar :src="src"></u-avatar>
+                    <u-avatar :src="''"></u-avatar>
                 </view>
 
                 <ChatOperate :show="vm.showChatOperate" :operateList="vm.chatOperateList"
                     @close="vm.showChatOperate = false">
-                    <text class="iconfont icon-gengduo"></text>
+                    <text class="iconfont icon-gengduo-2"></text>
                 </ChatOperate>
             </template>
         </CustomNavbar>
-
         <view class="chat__content">
            <IMMsgList />
         </view>
@@ -101,11 +99,10 @@ const scroll = (e) => {
         color: #FFFFFF;
     }
 
-    .icon-paizhao-jinru {
+    .icon-fanhui-2{
         font-size: 32rpx;
         font-weight: 700;
         color: rgba(255, 255, 255, 0.6);
-        transform: rotate(180deg);
     }
 }
 </style>

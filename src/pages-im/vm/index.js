@@ -4,6 +4,7 @@ import onAppActivateStateChange from './init/onAppActivateStateChange'
 import Apis from '@/api/index.js'
 import { Conversation } from './class/Conversation.js'
 import { useUserStore } from '@/store/index.js'
+import MsgItem from './class/MsgItem.js'
 export class IMVM extends ViewModel {
   showChatOperate = false
 
@@ -35,6 +36,8 @@ export class IMVM extends ViewModel {
 
   conversation = new Conversation()
 
+  currentConversationId = ''
+
   socketTask = null
 
   socketConnectState = null
@@ -54,9 +57,19 @@ export class IMVM extends ViewModel {
     return useUserStore().userId
   }
 
+  get currentConversation() {
+    return this.conversation.get({
+      id: this.currentConversationId
+    })
+  }
+
+  get currentConversationMsg() {
+    return this.currentConversation.dataList
+  }
+
   init() {
     this.socketTask = uni.connectSocket({
-      url: `${import.meta.env.VITE_APP_WS_API_PATH}/im/ws?token=b83056564d1a41099a1e74599ca73f4d&tenant_id=0`, //仅为示例，并非真实接口地址。
+      url: `${import.meta.env.VITE_APP_WS_API_PATH}/im/ws?token=${useUserStore().token}&tenant_id=0`, //仅为示例，并非真实接口地址。
       success: (e) => {
         console.log('ws 链接成功等待消息发送。。。', e)
       },
@@ -64,6 +77,20 @@ export class IMVM extends ViewModel {
         console.log('ws 链接失败', e)
       },
     });
+    this.socketTask.onOpen((res) => {
+
+      console.log('ws onOpen', res)
+    })
+    this.socketTask.onError((res) => {
+      console.log('ws onError', res)
+    })
+    this.socketTask.onClose((res) => {
+      console.log('ws onClose', res)
+    })
+    this.socketTask.onMessage((res) => {
+      console.log('ws onMessage', res)
+    })
+
     onSocketStateChange((state, count) => {
       this.socketConnectState = state;
       if (count > 1) {
@@ -86,27 +113,29 @@ export class IMVM extends ViewModel {
   }
 
   initData() {
-    this.getFriendList()
+    this.getConversationList()
   }
 
-  async getFriendList() {
+  setCurrentConversation(conversation_id) {
+    this.currentConversationId = conversation_id
+  }
+
+  async getConversationList() {
     try {
-      const { data } = await Apis.imApi.getFriendList()
-    } catch(e) {
+      const { data, code } = await Apis.imApi.getConversationList()
+
+      if (code === 0) {
+        this.conversation.add(data.list)
+      }
+    } catch (e) {
       console.log('获取好友列表失败', e)
     }
   }
 
-  async getConversationList() {
-    const { data } = await Apis.imApi.getConversationList({
-      "pageNum": 1,
-      "pageSize": 10,
-    })
-  }
+
 
   async createConversation() {
     try {
-      debugger
       const parameter = {
         "conversationType": 1,
         "conversationName": "新群聊",
@@ -119,25 +148,26 @@ export class IMVM extends ViewModel {
       const { data, code } = await Apis.imApi.createConversation(parameter)
 
       if (code === 0) {
-        this.conversation.add({
-          ...parameter,
-          id:data
-        })
+        // this.conversation.add({
+        //   ...parameter,
+        //   id:data
+        // })
+        this.getConversationDetail(data)
       }
-    } catch(e) {
+    } catch (e) {
       console.log('创建会话失败', e)
     }
   }
 
- async getConversationDetail(id) {
+  async getConversationDetail(id) {
     try {
       const { data, code } = await Apis.imApi.getConversationDetail({
-        "conversationId": id,
+        "id": id,
       })
       if (code === 0) {
         this.conversation.add(data)
       }
-    } catch(e) {
+    } catch (e) {
       console.log('获取会话详情失败', e)
     }
   }
@@ -148,28 +178,42 @@ export class IMVM extends ViewModel {
         "type": "send_message",
         "content": '',
       }
-      data.content = JSON.stringify({
-        "conversationId": 1,
-        "clientMsgId": "cli_20241026153500_u1002",
+      const msg = new MsgItem({
+        "conversationId": this.currentConversationId,
+        "clientMsgId": Date.now(),
         "messageType": 2,
         "content": message,
-        "contentType": "image/jpeg",
-        "fileUrl": "https://storage.example.com/images/act_20241026.jpg",
-        "fileName": "活动现场.jpg",
-        "fileSize": 204800,
+        "contentType": "text",
+        "fileUrl": "",
+        "fileName": "",
+        "fileSize": '',
         "fileDuration": null,
-        "thumbnailUrl": "https://storage.example.com/thumbnails/act_20241026_100x100.jpg",
+        "thumbnailUrl": "",
         "replyMessageId": null
       })
-      console.log('ws 消息发送', data)
+      data.content = JSON.stringify(msg)
+
+
+      const tempData = JSON.stringify(data)
+      console.log('ws 消息发送', tempData)
+      const that = this
       this.socketTask.send({
-        data,
+        data: tempData,
         success: (e) => {
-          console.log('ws 消息发送成功', e)
+          try {
+            const conversation = this.conversation.get({
+              id: this.currentConversationId
+            })
+            conversation.msg.add(msg, { unshift: true })
+            console.log('ws 消息发送成功', conversation)
+          } catch (e) {
+            console.log('ws 消息发送失败', e)
+          }
         },
         fail: (e) => {
           console.log('ws 消息发送失败', e)
         },
+
       })
     }
   }

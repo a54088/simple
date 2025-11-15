@@ -44,6 +44,8 @@ const handleItemTap = (item) => {
         imVM.createConversation()
     }
 }
+
+
 </script>
 <template>
     <view class="chat-list__layout">
@@ -65,7 +67,7 @@ const handleItemTap = (item) => {
                     <ChatItem :isAi="true" />
                 </view>
                 <view class="chat-item__block__layout" v-for="(item, index) in chatList" :key="index">
-                    <ChatItem />
+                    <ChatItem :chatInfo="item" />
                 </view>
                 <view class="chat-list__safe__layout"></view>
             </scroll-view>

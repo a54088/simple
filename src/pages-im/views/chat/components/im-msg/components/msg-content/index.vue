@@ -17,10 +17,10 @@ const componentMap = {
 }
 
 const currentComponent = computed(() => {
-    return componentMap[props.msg.type] || Msgtext
+    return componentMap[props.msg.contentType] || Msgtext
 })
 </script>
 <template>
-    <component :is="currentComponent" />
+    <component :is="currentComponent" :msg="msg" />
 </template>
 <style lang="scss" scoped></style>

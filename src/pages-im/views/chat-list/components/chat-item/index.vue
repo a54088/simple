@@ -1,17 +1,23 @@
 <script setup>
 import { useCustomTabbarStore } from '@/store/index'
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 
 const props = defineProps({
     isAi: {
-        type: String,
-        default: ''
+        type: Boolean,
+        default: false
+    },
+    chatInfo: {
+        type: Object,
+        default: () => ({})
     }
 })
 
+const imVM = inject('imVM')
+
 const onToChatDetail = () => {
     uni.navigateTo({
-        url: '/pages-im/views/chat/index'
+        url: '/pages-im/views/chat/index?conversation_id=' + props.chatInfo.id
     })
 }
 </script>
@@ -28,7 +34,7 @@ const onToChatDetail = () => {
                 <view class="chat-item__content__time">1分钟前</view>
             </view>
             <view class="chat-item__content__des text_ellipsis">
-                {{ isAi ? '有什么问题尽管问' : '' }}
+                {{ isAi ? '有什么问题尽管问' : chatInfo.lastMessageContent }}
             </view>
         </view>
     </view>
