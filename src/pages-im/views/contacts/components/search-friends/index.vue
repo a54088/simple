@@ -1,5 +1,6 @@
 <script setup>
-
+import ImApi from "@/api/im/index";
+import { onMounted } from "vue";
 // import { emit } from 'vue'
 
 const emit = defineEmits(['confirm'])
@@ -13,6 +14,11 @@ const guUrl = () => {
         url: "/pages-im/views/add-friend/index",
     });
 }
+onMounted(() => {
+    // ImApi.getFriendList().then((res) => {
+    //     console.log(res);
+    // })
+})
 </script>
 <template>
     <view class="search-friends" @tap="guUrl">

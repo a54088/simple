@@ -23,13 +23,6 @@ const ImApi = {
    */
   getFriendList: () => client.createGet("/im/user-friend/list"),
 
-  /**
-   * 申请添加好友
-   * @param {*} data
-   * @returns
-   */
-  applyAddFriend: (data) => client.createPostJSON("/im/friend-request/send", data),
-
 
   /**
    * 处理好友申请
@@ -120,7 +113,12 @@ const ImApi = {
    * @returns
    */
   getAppFriendList: () => client.createGet("/im/app-friend/list"),
-  
+  /**
+   * 申请添加好友
+   * @param {*} data
+   * @returns
+   */
+  applyAddFriend: (data) => client.createPostJSON("/im/app-friend/request/send", data),
 };
 
 export default ImApi;

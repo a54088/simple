@@ -9,7 +9,8 @@ const onToSearch = () => {
 
 <template>
     <view class="search-friend" @tap="onToSearch">
-        <text :class="['iconfont', 'icon-a-zu16', 'search-friend__icon']"></text>
+        <!-- <text :class="['iconfont', 'icon-a-zu16', 'search-friend__icon']"></text> -->
+        <u-icon name="search" style="color: #666;margin-right:18rpx" size="24"></u-icon>
         <text class="search-friend__text">搜索名称/账号</text>
     </view>
 </template>
@@ -26,7 +27,7 @@ const onToSearch = () => {
          color: #666666;
     }
     .search-friend__text {
-        margin-left: 20rpx;
+        // margin-left: 20rpx;
         font-size: 28rpx;
         color: #666666;
     }

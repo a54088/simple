@@ -26,7 +26,9 @@ const guUrl = (url) => {
     <view class="new-friends">
         <view class="new-friends__item" v-for="(item, index) in list" :key="index" @tap="guUrl(item.url)">
             <text>{{ item.label }}</text>
-            <text class="iconfont icon-paizhao-jinru"></text>
+            <!-- <text class="iconfont icon-jinru1"></text> -->
+            <u-icon name="arrow-right" color="#000" size="16"></u-icon>
+
         </view>
     </view>
 </template>
