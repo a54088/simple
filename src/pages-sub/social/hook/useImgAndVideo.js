@@ -3,17 +3,16 @@ import { ref, onMounted, onUnmounted, watch, reactive } from 'vue'
 export function useImgAndVideo(feedList) {
   const currentIndex = ref(0)
   const swiperHeight = ref(0)
-  const statusBarHeight = ref(0)
+  const swiperWidth = ref(0)
   
   // 创建响应式状态对象
   const feedStates = reactive(new Map())
 
-  // 计算屏幕高度
-  const calculateSwiperHeight = () => {
+  // 计算屏幕宽高
+  const calculateSwiperSize = () => {
     const systemInfo = uni.getSystemInfoSync()
-    statusBarHeight.value = systemInfo.statusBarHeight || 0
-    // 直接使用屏幕高度，让内容区域全部占满
     swiperHeight.value = systemInfo.windowHeight
+    swiperWidth.value = systemInfo.windowWidth
   }
   
   // 初始化或获取feed项的状态
@@ -240,11 +239,7 @@ export function useImgAndVideo(feedList) {
   }, { deep: true, immediate: true })
 
   onMounted(() => {
-    calculateSwiperHeight()
-    // 监听屏幕旋转
-    uni.onWindowResize(() => {
-      calculateSwiperHeight()
-    })
+    calculateSwiperSize()
   })
 
   onUnmounted(() => {
@@ -267,6 +262,7 @@ export function useImgAndVideo(feedList) {
   return {
     currentIndex,
     swiperHeight,
+    swiperWidth,
     onSlideChange,
     formatCount,
     handleLike,

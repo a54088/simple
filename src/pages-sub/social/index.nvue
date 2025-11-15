@@ -16,11 +16,7 @@
 				</view>
 			</view>
 		</view>
-
-		<!-- 引入图片和视频组件 -->
-		<view class="feed-wrapper" :style="{ paddingTop: (statusBarHeight + 96) + 'px' }">
-			<ImgAndVideo :feedList="feedList" />
-		</view>
+		<ImgAndVideo :feedList="feedList" />
 	</view>
 </template>
 
@@ -182,9 +178,5 @@
 	.tab-item.tab-active {
 		background-color: rgba(255, 255, 255, 0.18);
 		font-weight: 600;
-	}
-
-	.feed-wrapper {
-		flex: 1;
 	}
 </style>
