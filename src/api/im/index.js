@@ -114,7 +114,12 @@ const ImApi = {
    * @returns
    */
   getConversationDetail: (data) => client.createGet("/im/app-conversation/detail", data),
-
+  /**
+   * 获取好友列表
+   * @param {*} data
+   * @returns
+   */
+  getAppFriendList: () => client.createGet("/im/app-friend/list"),
   
 };
 
