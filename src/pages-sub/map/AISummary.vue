@@ -1,7 +1,7 @@
 <template>
    <CustomNavBar title="" bgColor="#f5f5f5 !important">
       <template #right>
-         <image src="/static/map/avatar1.webp" mode="cover" class="head-avatar"></image>
+         <image src="/static/images/map/avatar1.webp" mode="cover" class="head-avatar"></image>
       </template>
    </CustomNavBar>
    <view class="container">
@@ -21,7 +21,7 @@
          <view class="section-title">会话处理</view>
          <view class="session-card">
             <view class="phone-icon">
-               <image src="/static/map/sessionHandling.webp" mode="cover"></image>
+               <image src="/static/images/map/sessionHandling.webp" mode="cover"></image>
             </view>
             <view class="session-info">
                <text>总计处理会话消息22次</text>
@@ -31,9 +31,9 @@
                </view>
                <!-- 头像叠放区域 -->
                <view class="avatar-stack">
-                  <image src="/static/map/avatar1.webp" mode="cover" class="avatar-item"></image>
-                  <image src="/static/map/avatar2.webp" mode="cover" class="avatar-item"></image>
-                  <image src="/static/map/avatar3.webp" mode="cover" class="avatar-item"></image>
+                  <image src="/static/images/map/avatar1.webp" mode="cover" class="avatar-item"></image>
+                  <image src="/static/images/map/avatar2.webp" mode="cover" class="avatar-item"></image>
+                  <image src="/static/images/map/avatar3.webp" mode="cover" class="avatar-item"></image>
                   <view class="more-avatar">+99</view>
                </view>
             </view>

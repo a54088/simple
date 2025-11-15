@@ -28,7 +28,7 @@ const props = defineProps({
         customClass: 'icon-name-card'
       },
       {
-        icon: '/static/map/global.webp',
+        icon: '/static/images/map/global.webp',
         action: 'business',
         customClass: 'logo-global'
       },

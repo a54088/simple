@@ -14,10 +14,10 @@
         <view>
           <view class="popup-header-icons">
             <view class="popup-header-icons-item" @tap="handleClose">
-              <image src="/static/map/icon-down.png" mode="widthFix" class="icon"></image>
+              <image src="/static/images/map/icon-down.png" mode="widthFix" class="icon"></image>
             </view>
             <view class="popup-header-icons-item">
-              <image src="/static/map/icon-search.png" mode="widthFix" class="icon"></image>
+              <image src="/static/images/map/icon-search.png" mode="widthFix" class="icon"></image>
             </view>
           </view>
           <view>
@@ -25,11 +25,11 @@
             <text class="desc">{{ desc }}</text>
           </view>
         </view>
-        <image src="/static/map/addFriendsImg.webp" mode="widthFix" class="add-friends-img"></image>
+        <image src="/static/images/map/addFriendsImg.webp" mode="widthFix" class="add-friends-img"></image>
       </view>
       <!-- 添加好友 -->
       <view class="add">
-        <image src="/static/map/userCommunication.webp" mode="widthFix" class="avatar-imgs"></image>
+        <image src="/static/images/map/userCommunication.webp" mode="widthFix" class="avatar-imgs"></image>
         <!-- 操作按钮 -->
         <view class="action-btn" @tap="handleAction">
           <text class="action-btn-plus">+</text>

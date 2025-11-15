@@ -2,7 +2,7 @@
     <view @click="handleItemClick" class="nearby-item-box">
         <view class="box-top">
             <view class="box-top-left">
-                <image class="box-top-left-image" src="/static/map/restaurantSwiper1.webp"></image>
+                <image class="box-top-left-image" src="/static/images/map/restaurantSwiper1.webp"></image>
             </view>
             <view class="box-top-right">
                 <view class="box-top-right-title flex-row">
@@ -22,9 +22,9 @@
         <view class="box-bottom flex-row">
             <view class="box-bottom-left flex-row">
                 <view class="box-bottom-left-image-box flex-row">
-                    <image class="box-bottom-left-image" src="/static/map/avatar2.webp" mode="widthFix"></image>
-                    <image class="box-bottom-left-image2" src="/static/map/avatar3.webp" mode="widthFix"></image>
-                    <image class="box-bottom-left-image3" src="/static/map/avatar4.webp" mode="widthFix"></image>
+                    <image class="box-bottom-left-image" src="/static/images/map/avatar2.webp" mode="widthFix"></image>
+                    <image class="box-bottom-left-image2" src="/static/images/map/avatar3.webp" mode="widthFix"></image>
+                    <image class="box-bottom-left-image3" src="/static/images/map/avatar4.webp" mode="widthFix"></image>
                 </view>
                 <text class="box-bottom-left-text">20位附近人重复吃过，180人吃过</text>
             </view>
@@ -41,9 +41,9 @@ const props = defineProps({
     navItems: {
         type: Array,
         default: () => [
-            { icon: '/static/map/toolbar-chat.webp', label: '聊天' },
-            { icon: '/static/map/toolbar-eye.webp', label: '圈子' },
-            { icon: '/static/map/toolbar-contacts.webp', label: '通讯录' }
+            { icon: '/static/images/map/toolbar-chat.webp', label: '聊天' },
+            { icon: '/static/images/map/toolbar-eye.webp', label: '圈子' },
+            { icon: '/static/images/map/toolbar-contacts.webp', label: '通讯录' }
         ]
     },
     // 默认选中项索引，支持通过prop传入
