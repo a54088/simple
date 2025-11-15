@@ -42,7 +42,8 @@ const operateList = [
                         <text :class="['iconfont', operate.icon, 'operate__item__icon']"></text>
                         <text class="operate__item__name">{{ operate.name }}</text>
                     </view>
-                    <text class="iconfont icon-paizhao-jinru"></text>
+                    <!-- <text class="iconfont icon-paizhao-jinru"></text> -->
+            <u-icon name="arrow-right" color="#000" size="16"></u-icon>
                 </view>
             </view>
             <view class="new-friend__list">

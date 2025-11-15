@@ -1,20 +1,18 @@
-import { ref, onMounted, onUnmounted, watch, reactive, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, reactive } from 'vue'
 
 export function useImgAndVideo(feedList) {
-  const swiperRef = ref(null)
   const currentIndex = ref(0)
   const swiperHeight = ref(0)
-  const statusBarHeight = ref(0)
+  const swiperWidth = ref(0)
   
-  // 创建响应式状态对象，避免直接修改props
+  // 创建响应式状态对象
   const feedStates = reactive(new Map())
 
-  // 计算屏幕高度
-  const calculateSwiperHeight = () => {
+  // 计算屏幕宽高
+  const calculateSwiperSize = () => {
     const systemInfo = uni.getSystemInfoSync()
-    statusBarHeight.value = systemInfo.statusBarHeight || 0
-    // 直接使用屏幕高度，让内容区域全部占满
     swiperHeight.value = systemInfo.windowHeight
+    swiperWidth.value = systemInfo.windowWidth
   }
   
   // 初始化或获取feed项的状态
@@ -22,6 +20,11 @@ export function useImgAndVideo(feedList) {
     if (!feedStates.has(index)) {
       feedStates.set(index, {
         isPlaying: false,
+        isMuted: true, // 添加音频静音状态
+        currentTime: 0,
+        duration: 0,
+        progress: 0,
+        autoplay: false,
         isLiked: feedList[index]?.isLiked || false,
         likeCount: feedList[index]?.likeCount || 0,
         isExpanded: false,
@@ -32,9 +35,19 @@ export function useImgAndVideo(feedList) {
   }
 
   // 滑动改变
-  const onSlideChange = (swiper) => {
-    console.log('滑动切换，当前索引:', swiper.activeIndex)
-    currentIndex.value = swiper.activeIndex
+  const resolveActiveIndex = (payload) => {
+    if (typeof payload === 'number') return payload
+    if (payload && typeof payload.detail?.current === 'number') {
+      return payload.detail.current
+    }
+    if (payload && typeof payload.activeIndex === 'number') {
+      return payload.activeIndex
+    }
+    return currentIndex.value
+  }
+
+  const onSlideChange = (payload) => {
+    currentIndex.value = resolveActiveIndex(payload)
     
     // 暂停其他视频并重置状态
     feedList.forEach((item, index) => {
@@ -43,18 +56,24 @@ export function useImgAndVideo(feedList) {
           const videoContext = uni.createVideoContext(`video-${index}`)
           if (index !== currentIndex.value) {
             videoContext?.pause()
-            console.log(`暂停视频 ${index}`)
             getFeedState(index).isPlaying = false
-          } else {
-            // 确保当前视频状态重置，让组件重新控制播放
-            getFeedState(index).isPlaying = false
-            console.log(`准备播放视频 ${index}`)
           }
         } catch (error) {
-          console.warn(`操作视频 ${index} 时出错:`, error)
         }
       }
     })
+    
+    // 自动播放当前视频
+    setTimeout(() => {
+      const currentItem = feedList[currentIndex.value]
+      if (currentItem && currentItem.type === 'video') {
+        // 确保视频处于静音状态以支持自动播放
+        const state = getFeedState(currentIndex.value)
+        state.isMuted = true
+        // 延迟播放以确保视频元素完全加载
+        playVideo(currentIndex.value)
+      }
+    }, 300)
   }
 
   // 格式化数字
@@ -78,55 +97,120 @@ export function useImgAndVideo(feedList) {
 
   // 评论
   const handleComment = (item, index) => {
-    console.log('评论', item)
     // TODO: 打开评论页面
   }
 
   // 分享
   const handleShare = (item, index) => {
-    console.log('分享', item)
     // TODO: 打开分享面板
   }
 
   // 更多
   const handleMore = (item, index) => {
-    console.log('更多', item)
     // TODO: 打开更多选项
   }
 
   // 头像点击
   const handleAvatarClick = (item) => {
-    console.log('查看用户', item)
     // TODO: 跳转到用户主页
   }
 
   // 图片点击
   const handleImageClick = (index, imgIndex) => {
-    console.log('查看图片', index, imgIndex)
     // TODO: 打开图片预览
   }
-
-  // 视频播放
-  const handleVideoPlay = (index) => {
-    console.log('视频播放', index)
-    // 记录播放状态
-    getFeedState(index).isPlaying = true
+  
+  // 视频时间更新处理函数
+  const onVideoTimeUpdate = (index, event) => {
+    const detail = event?.detail || {}
+    const currentTime = detail.currentTime || 0
+    const duration = detail.duration || 0
+    const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
     
-    // 确保其他视频暂停
-    feedList.forEach((item, idx) => {
-      if (idx !== index && item.type === 'video') {
-        const videoContext = uni.createVideoContext(`video-${idx}`)
-        videoContext?.pause()
-        getFeedState(idx).isPlaying = false
+    // 更新状态
+    const state = getFeedState(index);
+    state.currentTime = currentTime;
+    state.duration = duration;
+    state.progress = progress;
+  };
+  
+  // 视频加载完成后处理
+  const onVideoLoaded = (index) => {
+    const state = getFeedState(index);
+    state.autoplay = true;
+    
+    // 获取视频元素并设置默认静音
+    state.isMuted = true;
+  };
+  
+  // 切换视频播放状态
+  const toggleVideoPlayState = (index) => {
+    try {
+      const state = getFeedState(index)
+      if (!state) return
+      
+      if (state.isPlaying) {
+        // 如果正在播放，则暂停
+        pauseVideo(index)
+      } else {
+        // 如果暂停或未播放，则播放
+        playVideo(index)
       }
-    })
+    } catch (error) {
+      console.error('切换视频播放状态失败:', error)
+    }
   }
-
-  // 视频暂停
-  const handleVideoPause = (index) => {
-    console.log('视频暂停', index)
-    // 记录暂停状态
-    getFeedState(index).isPlaying = false
+  
+  // 播放视频
+  const playVideo = (index) => {
+    try {
+      const state = getFeedState(index)
+      if (!state) return
+      
+      // 先暂停其他视频
+      pauseOtherVideos(index)
+      
+      // 使用uni.createVideoContext API播放
+      const videoContext = uni.createVideoContext(`video-${index}`)
+      if (videoContext && typeof videoContext.play === 'function') {
+        videoContext.play()
+        // 更新状态
+        state.isPlaying = true
+      }
+    } catch (error) {
+      console.error('播放视频失败:', error)
+    }
+  }
+  
+  // 暂停视频
+  const pauseVideo = (index) => {
+    try {
+      const state = getFeedState(index)
+      if (!state) return
+      
+      // 使用uni.createVideoContext API暂停
+      const videoContext = uni.createVideoContext(`video-${index}`)
+      if (videoContext && typeof videoContext.pause === 'function') {
+        videoContext.pause()
+        // 更新状态
+        state.isPlaying = false
+      }
+    } catch (error) {
+      console.error('暂停视频失败:', error)
+    }
+  }
+  
+  // 暂停其他视频
+  const pauseOtherVideos = (currentIndex) => {
+    try {
+      feedList.forEach((item, index) => {
+        if (index !== currentIndex && item.type === 'video') {
+          pauseVideo(index)
+        }
+      })
+    } catch (error) {
+      console.error('暂停其他视频失败:', error)
+    }
   }
 
   // 展开/收起描述
@@ -135,13 +219,13 @@ export function useImgAndVideo(feedList) {
   }
 
   // 图片滑动改变
-  const onImageSlideChange = (feedIndex, swiper) => {
-    getFeedState(feedIndex).currentImageIndex = swiper.activeIndex
+  const onImageSlideChange = (feedIndex, payload) => {
+    const nextIndex = resolveActiveIndex(payload)
+    getFeedState(feedIndex).currentImageIndex = nextIndex
   }
 
   // 监听 feedList 变化，初始化状态映射
   watch(() => feedList, (newList) => {
-    console.log('feedList 数据更新，共', newList?.length || 0, '条数据')
     // 清除旧的状态
     feedStates.clear()
     
@@ -155,11 +239,7 @@ export function useImgAndVideo(feedList) {
   }, { deep: true, immediate: true })
 
   onMounted(() => {
-    calculateSwiperHeight()
-    // 监听屏幕旋转
-    uni.onWindowResize(() => {
-      calculateSwiperHeight()
-    })
+    calculateSwiperSize()
   })
 
   onUnmounted(() => {
@@ -172,8 +252,6 @@ export function useImgAndVideo(feedList) {
     })
     // 清理状态
     feedStates.clear()
-    // 清理事件监听
-    uni.offWindowResize()
   })
 
   // 获取feed项状态的辅助函数
@@ -182,9 +260,9 @@ export function useImgAndVideo(feedList) {
   }
 
   return {
-    swiperRef,
     currentIndex,
     swiperHeight,
+    swiperWidth,
     onSlideChange,
     formatCount,
     handleLike,
@@ -193,10 +271,14 @@ export function useImgAndVideo(feedList) {
     handleMore,
     handleAvatarClick,
     handleImageClick,
-    handleVideoPlay,
-    handleVideoPause,
     toggleExpand,
     onImageSlideChange,
-    getFeedItemState
+    getFeedItemState,
+    onVideoTimeUpdate,
+    onVideoLoaded,
+    toggleVideoPlayState,
+    playVideo,
+    pauseVideo,
+    pauseOtherVideos
   }
 }

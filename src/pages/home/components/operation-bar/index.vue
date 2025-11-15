@@ -10,7 +10,7 @@
   <view class="operation-bar">
     <view class="operation-bar-content animate__animated" :class="[!isShowMenu && 'animate__slideInDown']">
       <view class="top-btn-box">
-        <view class="top-btn-box-title">分身空间</view>
+        <view @click="handleCloneSpace" class="top-btn-box-title">分身空间</view>
         <view class="top-btn-box-icon">
           <i class="iconfont icon-shengyin"></i>
         </view>
@@ -241,6 +241,12 @@ const uploadRecordFile = async (filePath) => {
   }
 };
 /* ====================== 按住说话 end ====================== */
+
+const handleCloneSpace = () => {
+  uni.navigateTo({
+    url: '/pages-sub/home/cloneSpace',
+  })
+}
 
 </script>
 

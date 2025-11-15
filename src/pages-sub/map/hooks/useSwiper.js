@@ -5,17 +5,17 @@ export default function useSwiper() {
   const swiperList = ref([
     {
       label: '家附近新开了一家餐厅',
-      path: '/static/map/restaurantSwiper1.webp',
+      path: '/static/images/map/restaurantSwiper1.webp',
       key: 'restaurantSwiper1',
     },
     {
       label: '家附近新开了一家餐厅',
-      path: '/static/map/restaurantSwiper2.webp',
+      path: '/static/images/map/restaurantSwiper2.webp',
       key: 'restaurantSwiper2',
     },
     {
       label: '家附近新开了一家餐厅',
-      path: '/static/map/restaurantSwiper1.webp',
+      path: '/static/images/map/restaurantSwiper1.webp',
       key: 'restaurantSwiper3',
     },
   ])

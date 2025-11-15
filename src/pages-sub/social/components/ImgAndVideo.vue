@@ -41,9 +41,9 @@
                         :controls="true" :show-center-play-btn="true" :enable-play-gesture="true" :muted="false"
                         :preload="'auto'" :autoplay="false" playsinline webkit-playsinline x5-playsinline
                         x5-video-player-type="h5" x5-video-player-fullscreen="false" class="media-video"
-                        @play="handleVideoPlay(index)" @pause="handleVideoPause(index)"
+                        @click="toggleVideoPlayState(index)"
                         @loadeddata="onVideoLoaded(index)" @error="onVideoError(index)" @canplay="onVideoCanPlay(index)"
-                        @waiting="onVideoWaiting(index)" @stalled="onVideoStalled(index)"
+                        @stalled="onVideoStalled(index)"
                         @timeupdate="onVideoTimeUpdate(index, $event)"></video>
                      <!-- 视频进度条 -->
                      <view class="video-progress" v-if="getFeedItemState(index).duration > 0">
@@ -64,7 +64,7 @@
                   <view class="action-item avatar-item" @click="handleAvatarClick(item)">
                      <image :src="item.userAvatar" mode="aspectFill" class="avatar-img"></image>
                      <view class="follow-btn">
-                        <image src="/static/social/add.svg" style="width: 48rpx; height: 48rpx;"></image>
+                        <image src="/static/images/social/add.svg" style="width: 48rpx; height: 48rpx;"></image>
                      </view>
                   </view>
 
@@ -79,7 +79,7 @@
                   <!-- 评论 -->
                   <view class="action-item" @click="handleComment(item, index)">
                      <view class="action-icon">
-                        <image src="/static/social/pinglun.svg" style="width: 52rpx; height: 52rpx;"></image>
+                        <image src="/static/images/social/pinglun.svg" style="width: 52rpx; height: 52rpx;"></image>
                      </view>
                      <text class="action-count">{{ formatCount(item.commentCount) }}</text>
                   </view>
@@ -156,32 +156,17 @@ const videoRefs = ref([])
 const setVideoRef = (el, index) => {
    if (el) {
       videoRefs.value[index] = el
-      console.log(`视频元素 ${index} 已绑定`, el)
    }
 }
 
 // 使用 hook
-// 视频时间格式化函数
+// 视频时间格式化函数 - 保留在组件中使用
 const formatTime = (seconds) => {
    if (!seconds || isNaN(seconds)) return '00:00';
    const mins = Math.floor(seconds / 60);
    const secs = Math.floor(seconds % 60);
    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
-
-// 视频时间更新处理函数
-const onVideoTimeUpdate = (index, event) => {
-   const video = event.target;
-   const currentTime = video.currentTime;
-   const duration = video.duration;
-   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-   
-   // 更新状态
-   const state = getFeedItemState(index);
-   state.currentTime = currentTime;
-   state.duration = duration;
-   state.progress = progress;
-};
 
 const {
    swiperRef,
@@ -195,11 +180,13 @@ const {
    handleMore,
    handleAvatarClick,
    handleImageClick,
-   handleVideoPlay,
-   handleVideoPause,
    toggleExpand,
    onImageSlideChange,
-   getFeedItemState
+   getFeedItemState,
+   onVideoTimeUpdate,
+   onVideoLoaded,
+   pauseOtherVideos,
+   toggleVideoPlayState: hookToggleVideoPlayState
 } = useImgAndVideo(props.feedList)
 
 // 增强的滑动切换处理函数
@@ -210,45 +197,28 @@ const onSlideChange = (swiper) => {
    // 尝试播放当前视频
    playCurrentVideo(swiper.activeIndex)
 }
-
 // 尝试播放指定索引的视频
 const playCurrentVideo = async (index) => {
    try {
-      console.log(`准备播放视频 ${index}，videoRefs内容:`, videoRefs.value)
+      
+      // 首先暂停所有其他视频
+      pauseOtherVideos(index)
 
-      // 方法1: 通过refs获取视频元素
+      // 通过refs获取视频元素
       let video = videoRefs.value[index]
 
-      // 如果refs没有获取到，尝试通过DOM查询获取
-      if (!video) {
-         console.log(`通过refs未获取到视频 ${index}，尝试通过DOM查询`)
-         video = document.getElementById(`video-${index}`)
-         if (video) {
-            console.log(`通过DOM查询获取到视频 ${index}`)
-            // 更新refs
-            videoRefs.value[index] = video
-         }
-      }
-
-      // 如果仍然没有获取到，尝试通过uni的API
-      if (!video && props.feedList[index]?.type === 'video') {
-         console.log(`尝试使用uni API播放视频 ${index}`)
-         fallbackPlayVideo(index)
-         return
-      }
-
       if (video && props.feedList[index]?.type === 'video') {
-         console.log(`尝试播放视频 ${index}`, video)
 
-         // // 确保静音（自动播放的必要条件）
-         // video.muted = true
-         // video.defaultMuted = true
 
-         // 确保视频元素已准备好
+         // 确保视频元素已准备好并且有必要的方法
          if (video.readyState < 2) {
-            console.log(`视频 ${index} 尚未准备好，等待加载`)
-            // 先加载视频
-            video.load()
+
+            // 先检查load方法是否存在
+            if (typeof video.load === 'function') {
+               video.load()
+            } else {
+
+            }
             // 短暂延迟后再尝试播放
             setTimeout(() => {
                if (index === currentIndex.value) {
@@ -262,103 +232,24 @@ const playCurrentVideo = async (index) => {
          await attemptPlay(video, index)
       }
    } catch (error) {
-      console.warn(`尝试自动播放视频 ${index} 失败:`, error)
-      // 尝试备用方案
-      fallbackPlayVideo(index)
    }
 }
 
 // 实际执行播放的辅助函数
 const attemptPlay = async (video, index) => {
-   try {
-      console.log(`执行视频 ${index} 播放`)
-      const playPromise = video.play()
-
-      if (playPromise !== undefined) {
-         await playPromise
-         console.log(`视频 ${index} 播放成功`)
-         // 标记视频为正在播放 - 使用hook中的状态管理
-         getFeedItemState(index).isPlaying = true
-      }
-   } catch (error) {
-      console.error(`视频 ${index} 播放失败:`, error)
-      throw error
-   }
+   // 设置为自动播放状态
+   
+   getFeedItemState(index).autoplay = true
+   // 音频控制已移至hook中处理
 }
-
-// 备用播放方案
-const fallbackPlayVideo = (index) => {
-   try {
-      console.log(`尝试备用方案播放视频 ${index}`)
-      // 使用 UniApp 的视频上下文
-      const videoContext = uni.createVideoContext(`video-${index}`)
-      if (videoContext) {
-         videoContext.play()
-         console.log(`使用 UniApp 视频上下文播放视频 ${index}`)
-         // 标记视频为正在播放
-         getFeedItemState(index).isPlaying = true
-      }
-   } catch (error) {
-      console.error(`备用方案播放视频 ${index} 失败:`, error)
-      // 尝试触发用户交互后再播放
-      triggerUserInteractionPlay(index)
-   }
-}
-
-// 触发用户交互后播放
-const triggerUserInteractionPlay = (index) => {
-   console.log(`尝试通过用户交互触发视频 ${index} 播放`)
-
-   // 创建点击事件
-   const clickEvent = new Event('click', { bubbles: true })
-   document.dispatchEvent(clickEvent)
-
-   // 短暂延迟后尝试播放
-   setTimeout(() => {
-      if (index === currentIndex.value) {
-         playCurrentVideo(index)
-      }
-   }, 100)
-}
-
-// 视频加载完成后尝试播放
-const onVideoLoaded = (index) => {
-   console.log(`视频 ${index} 加载完成`)
-
-   // 尝试重新获取视频元素
-   let video = videoRefs.value[index]
-   if (!video) {
-      video = document.getElementById(`video-${index}`)
-      if (video) {
-         videoRefs.value[index] = video
-         console.log(`视频加载时重新获取到视频元素 ${index}`)
-      }
-   }
-
-   if (video) {
-      // 预加载完成后设置一些属性
-      video.muted = true
-      video.defaultMuted = true
-
-      // 确保视频从第一帧开始
-      video.currentTime = 0
-   }
-
-   // 如果当前是活动索引，尝试播放
-   if (index === currentIndex.value) {
-      playCurrentVideo(index)
-   }
-}
-
 // 视频错误处理
 const onVideoError = (index) => {
-   console.error(`视频 ${index} 加载或播放出错`)
 
    // 尝试重新加载视频
    const video = videoRefs.value[index]
    if (video) {
       try {
-         console.log(`尝试重新加载视频 ${index}`)
+
          video.load()
          // 重新加载后尝试播放
          setTimeout(() => {
@@ -367,58 +258,53 @@ const onVideoError = (index) => {
             }
          }, 1000)
       } catch (reloadError) {
-         console.error(`重新加载视频 ${index} 失败:`, reloadError)
+
       }
    }
 }
 
 // 新增视频可播放事件处理
 const onVideoCanPlay = (index) => {
-   console.log(`视频 ${index} 可以播放了`)
    if (index === currentIndex.value) {
       playCurrentVideo(index)
    }
 }
 
-// 视频等待数据事件处理
-const onVideoWaiting = (index) => {
-   console.log(`视频 ${index} 正在等待数据`)
-}
 
 // 视频加载停滞事件处理
 const onVideoStalled = (index) => {
-   console.log(`视频 ${index} 加载停滞，尝试重新加载`)
    const video = videoRefs.value[index]
    if (video) {
       video.load()
    }
 }
 
+// 切换视频播放状态 - 调用hook中的实现
+const toggleVideoPlayState = (index) => {
+   hookToggleVideoPlayState(index)
+}
+
 // 监听 currentIndex 变化，确保当前视频播放
 watch(currentIndex, (newIndex) => {
-   console.log(`当前索引变为 ${newIndex}，尝试播放`)
    playCurrentVideo(newIndex)
 })
 
 // 在组件挂载后尝试播放当前视频
 onMounted(() => {
-   console.log('组件已挂载，开始尝试播放视频')
 
    // 延迟更久一点确保DOM完全渲染和视频元素绑定
    setTimeout(() => {
-      console.log('DOM渲染延迟后，videoRefs内容:', videoRefs.value)
+
       // 检查是否有视频元素 - 避免使用Object.keys()
       const hasVideoRefs = videoRefs.value.some(video => !!video)
-      console.log('是否有视频元素绑定:', hasVideoRefs)
 
       // 主动尝试获取视频元素
       props.feedList.forEach((item, index) => {
          if (item.type === 'video' && !videoRefs.value[index]) {
-            console.log(`主动获取视频元素 ${index}`)
+
             const video = document.getElementById(`video-${index}`)
             if (video) {
                videoRefs.value[index] = video
-               console.log(`成功主动获取视频元素 ${index}`)
             }
          }
       })
@@ -429,7 +315,6 @@ onMounted(() => {
 
    // 添加用户交互监听，确保有用户交互后视频能播放
    const handleUserInteraction = () => {
-      console.log('检测到用户交互，尝试播放所有视频')
 
       // 对当前视频尝试播放
       if (props.feedList[currentIndex.value]?.type === 'video') {
@@ -437,7 +322,6 @@ onMounted(() => {
          const video = document.getElementById(`video-${currentIndex.value}`)
          if (video && !videoRefs.value[currentIndex.value]) {
             videoRefs.value[currentIndex.value] = video
-            console.log(`用户交互时获取到视频元素 ${currentIndex.value}`)
          }
          playCurrentVideo(currentIndex.value)
       }
@@ -454,7 +338,7 @@ onMounted(() => {
          // 只有在视频可能未播放的情况下再次尝试
          const currentFeed = props.feedList[currentIndex.value]
          if (currentFeed && currentFeed.type === 'video' && !getFeedItemState(currentIndex.value).isPlaying) {
-            console.log(`延迟 ${delay}ms 后再次尝试播放视频`)
+
             playCurrentVideo(currentIndex.value)
          }
       }, delay)
