@@ -9,15 +9,17 @@
 					<view class="media-container">
 						<!-- 多图 -->
 						<template v-if="item.type === 'image' && item.images && item.images.length > 1">
-							<swiper class="image-swiper" :indicator-dots="false" :autoplay="false" circular
+							<swiper :indicator-dots="false" :autoplay="false" circular
 								@change="(e) => handleImageSwiperChange(index, e)"
 								:current="getFeedItemState(index).currentImageIndex"
 								:style="{ width: swiperWidth + 'px' , height: swiperHeight + 'px' }">
 								<swiper-item v-for="(img, imgIndex) in item.images" :key="imgIndex"
-									class="images-container" :style="{ width: swiperWidth + 'px' , height: swiperHeight + 'px' }">
+									:style="{ width: swiperWidth + 'px' , height: swiperHeight + 'px' }">
+									<view  class="images-container" :style="{ width: swiperWidth + 'px' , height: swiperHeight + 'px' }">
 									<image :src="img" mode="widthFix" class="media-image"
 										@click="handleImageClick(index, imgIndex)"
 										:style="{ width: swiperWidth + 'px' , height: swiperHeight + 'px' }" />
+									</view>
 								</swiper-item>
 							</swiper>
 							<view class="image-indicator">
@@ -43,7 +45,7 @@
 							<view class="video-container">
 								<video :id="`video-${index}`" :src="item.video" :loop="true" :controls="false"
 									:show-center-play-btn="false" :enable-play-gesture="true"
-									:muted="getFeedItemState(index).isMuted" :autoplay="false" playsinline
+									:autoplay="false" playsinline
 									webkit-playsinline="true" x5-playsinline="true" x5-video-player-type="h5"
 									x5-video-player-fullscreen="false" x5-video-orientation="portrait"
 									object-fit="cover" enable-progress-gesture="false" show-bottom-progress="false"
@@ -83,34 +85,34 @@
 						<view class="action-item avatar-item" @click="handleAvatarClick(item)">
 							<image :src="item.userAvatar" mode="aspectFill" class="avatar-img" />
 							<view class="follow-btn">
-								<image src="/static/images/social/add.svg" style="width: 48rpx; height: 48rpx;" />
+								<image src="/static/images/social/icon-add.png" style="width: 48rpx; height: 48rpx;" />
 							</view>
 						</view>
 
 						<view class="action-item" @click="handleLike(item, index)">
 							<view class="action-icon" :class="{ liked: getFeedItemState(index).isLiked }">
-								<text class="iconfont icon-dianzan-2" style="font-size: 52rpx;"></text>
+							<image src="/static/images/social/icon-heart.png" style="width: 52rpx; height: 52rpx;" />
 							</view>
 							<text class="action-count">{{ formatCount(getFeedItemState(index).likeCount) }}</text>
 						</view>
 
 						<view class="action-item" @click="handleComment(item, index)">
 							<view class="action-icon">
-								<image src="/static/images/social/pinglun.svg" style="width: 52rpx; height: 52rpx;" />
+								<image src="/static/images/social/icon-pinglun.png" style="width: 52rpx; height: 52rpx;" />
 							</view>
 							<text class="action-count">{{ formatCount(item.commentCount) }}</text>
 						</view>
 
 						<view class="action-item" @click="handleShare(item, index)">
 							<view class="action-icon">
-								<text class="iconfont icon-weixuanzhong" style="font-size: 52rpx;"></text>
+								<image src="/static/images/social/icon-share.png" style="width: 52rpx; height: 52rpx;" />
 							</view>
 							<text class="action-count">{{ formatCount(item.shareCount) }}</text>
 						</view>
 
 						<view class="action-item" @click="handleMore(item, index)">
 							<view class="action-icon">
-								<text class="iconfont icon-gengduo-2" style="font-size: 52rpx;"></text>
+								<image src="/static/images/social/icon-more.png" style="width: 52rpx; height: 52rpx;" />
 							</view>
 						</view>
 					</view>
@@ -119,8 +121,7 @@
 					<view class="bottom" :style="{ paddingBottom: (safeAreaInsetBottom + 32) + 'px' }">
 						<view class="bottom-info">
 							<view class="location-info" v-if="item.location">
-								<text class="iconfont icon-paizhao-dingwei"
-									style="font-size: 24rpx; margin-right: 8rpx;"></text>
+								<image src="/static/images/social/icon-location.png" style="width: 44rpx; height: 44rpx;" />
 								<text class="location-text">{{ item.location }}</text>
 							</view>
 
@@ -129,7 +130,7 @@
 								<text class="time">{{ item.time }}</text>
 							</view>
 
-							<view class="description" v-if="item.description">
+							<view class="description" v-if="item.description" :style="{ width: (swiperWidth - 64) + 'px'}">
 								<text class="desc-text" :lines="getFeedItemState(index).isExpanded ? 0 : 2"
 									:class="{ expanded: getFeedItemState(index).isExpanded }">
 									{{ item.description }}
@@ -150,6 +151,7 @@
 </template>
 
 <script setup>
+
 	import {
 		useImgAndVideo
 	} from '../hook/useImgAndVideo.js'
@@ -221,6 +223,7 @@
 </script>
 
 <style scoped>
+	
 	.content-wrapper {
 		position: relative;
 	}
@@ -379,6 +382,7 @@
 	.action-count {
 		margin-top: 8px;
 		font-size: 20px;
+		color: #fff;
 	}
 
 	.avatar-item {
@@ -386,25 +390,23 @@
 	}
 
 	.avatar-img {
-		width: 88px;
-		height: 88px;
+		width: 90rpx;
+		height: 90rpx;
 		border-radius: 44px;
 		border-width: 3px;
 		border-color: #fff;
+		box-sizing: border-box;
 	}
 
 	.follow-btn {
+		width: 90rpx;
+		height: 90rpx;
 		position: absolute;
 		right: 0;
-		bottom: -20px;
-		width: 44px;
-		height: 44px;
-		border-radius: 22px;
-		background-color: #ff194a;
+		bottom: -40rpx;
+		display: flex;
 		justify-content: center;
 		align-items: center;
-		border-width: 2px;
-		border-color: #fff;
 	}
 
 	.bottom {
@@ -415,7 +417,7 @@
 		padding-left: 32px;
 		padding-right: 32px;
 		z-index: 30;
-		background-color: rgba(0, 0, 0, 0.35);
+		//background-color: rgba(0, 0, 0, 0.35);
 	}
 
 	.bottom-info {
@@ -425,15 +427,20 @@
 	}
 
 	.location-info {
+		display: flex;
 		flex-direction: row;
 		align-items: center;
 		margin-bottom: 12px;
-		color: #fff;
+		background: rgba(0, 0, 0, 0.55);
+		padding: 13rpx;
+		border-radius: 12rpx;
+
 	}
 
 	.location-text {
-		font-size: 20px;
+		font-size: 22rpx;
 		margin-left: 6px;
+		color: #fff;
 	}
 
 	.user-info {
@@ -443,7 +450,7 @@
 	}
 
 	.username {
-		font-size: 24px;
+		font-size: 36rpx;
 		color: #fff;
 		font-weight: 600;
 		margin-right: 12px;
@@ -455,13 +462,14 @@
 	}
 
 	.description {
-		font-size: 24px;
+		font-size: 28rpx;
 		color: #fff;
 		line-height: 1.6;
 	}
 
 	.desc-text {
 		opacity: 0.95;
+		color: #fff;
 	}
 
 	.desc-text.expanded {
