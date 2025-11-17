@@ -1,238 +1,236 @@
 {
-  "pages": [
-    {
-      "path": "pages/home/index",
-      "aliasPath": "/",
-      "style": {
-        "animationType": "fade-in",
-        "animationDuration": 300,
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "首页",
-        "disableScroll": true,
-        "backgroundColor": "#fff",
-        "app-plus": {
-          "bounce": "none"
-        }
-      }
-    }
-  ],
-  "subPackages": [
-    {
-      "root": "pages-im",
-      "name": "pagesIm",
-      "pages": [
-        {
-          "path": "index",
-          "style": {
-            "navigationBarTitleText": "IM",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-         {
-          "path": "views/search-list/index",
-          "style": {
-            "navigationBarTitleText": "搜索列表",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "views/new-friend/index",
-          "style": {
-            "navigationBarTitleText": "新的朋友",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "views/add-friend/index",
-          "style": {
-            "navigationBarTitleText": "添加朋友",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "views/my-group/index",
-          "style": {
-            "navigationBarTitleText": "我的群组",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "views/chat/index",
-          "style": {
-            "navigationBarTitleText": "聊天",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "views/chat-setting/index",
-          "style": {
-            "navigationBarTitleText": "聊天设置",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        },
-        {
-          "path": "views/homepage/index",
-          "style": {
-            "navigationBarTitleText": "我的主页",
-            "navigationStyle": "custom",
-            "app-plus": {
-              "bounce": "none"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "root": "devTools/page",
-      "name": "devToolsPage",
-      "pages": [
-        {
-          "path": "index",
-          "style": {
-            "navigationStyle": "custom",
-            "softinputMode": "adjustResize",
-            "backgroundColor": "transparent",
-            "animationDuration": 1,
-            "animationType": "none",
-            "popGesture": "none",
-            "bounce": "none",
-            "titleNView": false,
-            "app-plus": {
-              "usingComponents": true,
-              "nvueCompiler": "uni-app",
-              "nvueStyleCompiler": "uni-app",
-              "compilerVersion": 3
-            }
-          }
-        }
-      ]
-    },
-    {
-      "root": "pages-sub",
-      "pages": [
-        {
-          "path": "circle/addCircle",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "circle/publishWork",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "login/index",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "map/index",
-          "style": {
-            "navigationBarTitleText": "地图模式",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "map/AISummary",
-          "style": {
-            "navigationBarTitleText": "ai总结",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "map/nearbyShops",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "map/storeDetails",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "create/photo-create",
-          "style": {
-            "navigationBarTitleText": "上传图片形象",
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "setting/index",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "setting/account-security/index",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "social/index",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "invite/index",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "home/cloneSpace",
-          "style": {
-            "navigationStyle": "custom"
-          }
-        }
-      ]
-    }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "啊圈",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
-  },
-  "easycom": {
-    "autoscan": true,
-    "custom": {}
-  },
-  "condition": { //模式配置，仅开发期间生效
-    "current": 0, //当前激活的模式(list 的索引项)
-    "list": [
-      {
-        "name": "地图",
-        "path": "pages-im/index",
-        "query": ""
-      }
-    ]
-  }
+	"pages": [{
+		"path": "pages/home/index",
+		"aliasPath": "/",
+		"style": {
+			"animationType": "fade-in",
+			"animationDuration": 300,
+			"navigationStyle": "custom",
+			"navigationBarTitleText": "首页",
+			"disableScroll": true,
+			"backgroundColor": "#fff",
+			"app-plus": {
+				"bounce": "none"
+			}
+		}
+	}],
+	"subPackages": [{
+			"root": "pages-im",
+			"name": "pagesIm",
+			"pages": [{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "IM",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/search-list/index",
+					"style": {
+						"navigationBarTitleText": "搜索列表",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/new-friend/index",
+					"style": {
+						"navigationBarTitleText": "新的朋友",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/add-friend/index",
+					"style": {
+						"navigationBarTitleText": "添加朋友",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/my-group/index",
+					"style": {
+						"navigationBarTitleText": "我的群组",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/chat/index",
+					"style": {
+						"navigationBarTitleText": "聊天",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/chat-setting/index",
+					"style": {
+						"navigationBarTitleText": "聊天设置",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				},
+				{
+					"path": "views/homepage/index",
+					"style": {
+						"navigationBarTitleText": "我的主页",
+						"navigationStyle": "custom",
+						"app-plus": {
+							"bounce": "none"
+						}
+					}
+				}
+			]
+		},
+		{
+			"root": "devTools/page",
+			"name": "devToolsPage",
+			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationStyle": "custom",
+					"softinputMode": "adjustResize",
+					"backgroundColor": "transparent",
+					"animationDuration": 1,
+					"animationType": "none",
+					"popGesture": "none",
+					"bounce": "none",
+					"titleNView": false,
+					"app-plus": {
+						"usingComponents": true,
+						"nvueCompiler": "uni-app",
+						"nvueStyleCompiler": "uni-app",
+						"compilerVersion": 3
+					}
+				}
+			}]
+		},
+		{
+			"root": "pages-sub",
+			"pages": [{
+					"path": "circle/addCircle",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "circle/publishWork",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "login/index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "map/index",
+					"style": {
+						"navigationBarTitleText": "地图模式",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "map/AISummary",
+					"style": {
+						"navigationBarTitleText": "ai总结",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "map/nearbyShops",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "map/storeDetails",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "create/photo-create",
+					"style": {
+						"navigationBarTitleText": "上传图片形象",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "setting/index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "setting/account-security/index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "setting/recorder-test/index",
+					"style": {
+						"navigationStyle": "custom",
+						"navigationBarTitleText": "录音测试"
+					}
+				},
+				{
+					"path": "social/index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "invite/index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "home/cloneSpace",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "啊圈",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"easycom": {
+		"autoscan": true,
+		"custom": {}
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "地图",
+			"path": "pages-im/index",
+			"query": ""
+		}]
+	}
 }

@@ -1,130 +1,352 @@
-/**
- * 引用 Android 系统库，示例如下：
- * import { Context } from "android.content.Context";
- * [可选实现，按需引入]
- */
-
-/* 引入 interface.uts 文件中定义的变量 */
-import { MyApiOptions, MyApiResult, 
-RecordCallbacks,RecordSliceInfoData,
-MyApi,MyApiSync,OnFrameRecorded} from '../interface.uts';
-
-
-import RecordSliceManager from "com.aquan.recorder.RecordSliceManager";
+// 直接导入 Java 类（参考 IconSwitche 案例）
+import UTSRecorderHelper from "com.aquan.recorder.UTSRecorderHelper";
 import RecordFrameCallback from "com.aquan.recorder.RecordFrameCallback";
 import RecordSliceInfo from "com.aquan.recorder.RecordSliceInfo";
+import List from "java.util.List";
+import Context from "android.content.Context";
 
-export class UTSRecordManager {
-  private recordManager: RecordSliceManager | null = null;
-  private callbacks: RecordCallbacks | null = null;
+export interface RecordSliceInfoData {
+  sliceData: ArrayBuffer;
+  sliceIndex: number;
+  sliceDuration: number;
+  sliceSize: number;
+  mimeType: string;
+}
 
-  /**
-   * 初始化录音（对接AAR）
-   * @param targetFrameSize 目标帧大小（字节）
-   * @param callbacks 回调配置
-   */
-  init(targetFrameSize: number, callbacks: RecordCallbacks) {
-    this.callbacks = callbacks;
-    const nativeCallback: RecordFrameCallback = {
-          onFrameRecorded: (nativeSliceInfo: RecordSliceInfo) => {
-            const sliceInfoData: RecordSliceInfoData = this.convertToUTSData(nativeSliceInfo);
-            this.callbacks?.onFrameRecorded(sliceInfoData);
-          },
-      onRecordPaused: () => {
-        this.callbacks?.onRecordPaused?.();
-      },
+// 开始录音的选项
+export interface StartOptions {
+  frameSize?: number; // 目标帧大小（字节），默认 10240
+}
 
-      onRecordResumed: () => {
-        this.callbacks?.onRecordResumed?.();
-      },
+// 回调函数类型定义
+type OnStartCallback = () => void;
+type OnPauseCallback = () => void;
+type OnResumeCallback = () => void;
+type OnStopCallback = (totalSliceCount: number, totalDuration: number, allSlices: RecordSliceInfoData[]) => void;
+type OnFrameRecordedCallback = (sliceInfo: RecordSliceInfoData) => void;
+type OnErrorCallback = (errorMsg: string) => void;
+type OnInterruptionBeginCallback = () => void;
+type OnInterruptionEndCallback = () => void;
+type OnDecibelChangeCallback = (decibel: number) => void;
 
-       onRecordFinished: (
-              totalSliceCount: number,
-              totalDuration: number,
-              nativeAllSlices: List<RecordSliceInfo> // AAR传入的Java List
-            ) => {
-              // 转换：Java List<RecordSliceInfo> → UTS RecordSliceInfoData[]
-              const allSlices: RecordSliceInfoData[] = [];
-              const size = nativeAllSlices.size();
-              for (let i = 0; i < size; i++) {
-                const nativeSlice = nativeAllSlices.get(i);
-                allSlices.push(this.convertToUTSData(nativeSlice));
-              }
-      
-              // 转发给外部回调
-              this.callbacks?.onRecordFinished?.(totalSliceCount, totalDuration, allSlices);
-            },
+// 将 RecordSliceInfo 转换为 RecordSliceInfoData
+function convertSliceInfo(slice: RecordSliceInfo): RecordSliceInfoData {
+  const data = {
+    sliceData: slice.getSliceData(),
+    sliceIndex: slice.getSliceIndex() as number,
+    sliceDuration: slice.getSliceDuration() as number,
+    sliceSize: slice.getSliceSize() as number,
+    mimeType: slice.getMimeType()
+  };
+  return data as RecordSliceInfoData;
+}
 
-
-      onRecordError: (errorMsg: string) => {
-        this.callbacks?.onRecordError?.(errorMsg);
-      },
-    };
-	
-  
-    this.recordManager = new RecordSliceManager(
-      UTSAndroid.getAppContext(), 
-      nativeCallback,
-      44100
-    );
-
-    this.recordManager.setTargetFrameSize(targetFrameSize);
-    this.recordManager.setSaveToFile(true); 
+// 将 List<RecordSliceInfo> 转换为 RecordSliceInfoData[]
+function convertSliceList(allSlices: List<RecordSliceInfo>): RecordSliceInfoData[] {
+  const slicesData: RecordSliceInfoData[] = [];
+  const size = allSlices.size;
+  for (let i: number = 0; i < size; i++) {
+    const slice = allSlices.get(i);
+    slicesData.push(convertSliceInfo(slice));
   }
-  
-    private convertToUTSData(nativeSlice: RecordSliceInfo): RecordSliceInfoData {
-      return {
-        sliceData: nativeSlice.getSliceData(), 
-        sliceIndex: nativeSlice.getSliceIndex(),
-        sliceDuration: nativeSlice.getSliceDuration(),
-        sliceSize: nativeSlice.getSliceSize(),
-        mimeType: nativeSlice.getMimeType(),
-      };
+  return slicesData;
+}
+
+/**
+ * UTS 录音回调实现类（直接实现 Java 接口）
+ */
+class UTSRecordCallback implements RecordFrameCallback {
+  private onStartCallback: OnStartCallback | null = null;
+  private onPauseCallback: OnPauseCallback | null = null;
+  private onResumeCallback: OnResumeCallback | null = null;
+  private onStopCallback: OnStopCallback | null = null;
+  private onFrameRecordedCallback: OnFrameRecordedCallback | null = null;
+  private onErrorCallback: OnErrorCallback | null = null;
+  private onInterruptionBeginCallback: OnInterruptionBeginCallback | null = null;
+  private onInterruptionEndCallback: OnInterruptionEndCallback | null = null;
+  private onDecibelChangeCallback: OnDecibelChangeCallback | null = null;
+
+  setOnStart(callback: OnStartCallback | null): void {
+    this.onStartCallback = callback;
+  }
+
+  setOnPause(callback: OnPauseCallback | null): void {
+    this.onPauseCallback = callback;
+  }
+
+  setOnResume(callback: OnResumeCallback | null): void {
+    this.onResumeCallback = callback;
+  }
+
+  setOnStop(callback: OnStopCallback | null): void {
+    this.onStopCallback = callback;
+  }
+
+  setOnFrameRecorded(callback: OnFrameRecordedCallback | null): void {
+    this.onFrameRecordedCallback = callback;
+  }
+
+  setOnError(callback: OnErrorCallback | null): void {
+    this.onErrorCallback = callback;
+  }
+
+  setOnInterruptionBegin(callback: OnInterruptionBeginCallback | null): void {
+    this.onInterruptionBeginCallback = callback;
+  }
+
+  setOnInterruptionEnd(callback: OnInterruptionEndCallback | null): void {
+    this.onInterruptionEndCallback = callback;
+  }
+
+  setOnDecibelChange(callback: OnDecibelChangeCallback | null): void {
+    this.onDecibelChangeCallback = callback;
+  }
+
+  // 实现 RecordFrameCallback 接口方法
+  onStart(): void {
+    if (this.onStartCallback) {
+      this.onStartCallback();
     }
+  }
 
-  /**
-   * 开始录音（对外暴露的API）
-   */
-  start() {
-    if (!this.recordManager) {
-      this.callbacks?.onRecordError?.("请先调用init初始化");
-      return;
+  onRecordPaused(): void {
+    if (this.onPauseCallback) {
+      this.onPauseCallback();
     }
-    this.recordManager.start();
   }
 
-  /**
-   * 暂停录音（对外暴露的API）
-   */
-  pause() {
-    this.recordManager?.pause();
+  onRecordResumed(): void {
+    if (this.onResumeCallback) {
+      this.onResumeCallback();
+    }
   }
 
-  /**
-   * 恢复录音（对外暴露的API）
-   */
-  resume() {
-    this.recordManager?.resume();
+  onRecordFinished(totalSliceCount: Number, totalDuration: Number, allSlices: List<RecordSliceInfo>): void {
+    if (this.onStopCallback) {
+      const count = totalSliceCount as number;
+      const duration = totalDuration as number;
+      const slicesData = convertSliceList(allSlices);
+      this.onStopCallback(count, duration, slicesData);
+    }
   }
 
-  /**
-   * 停止录音（对外暴露的API）
-   */
-  stop() {
-    this.recordManager?.stop();
+  onFrameRecorded(sliceInfo: RecordSliceInfo): void {
+    if (this.onFrameRecordedCallback) {
+      this.onFrameRecordedCallback(convertSliceInfo(sliceInfo));
+    }
   }
 
-  /**
-   * 销毁资源（对外暴露的API）
-   */
-  destroy() {
-    this.recordManager?.destroy();
-    this.recordManager = null;
-    this.callbacks = null;
+  onRecordError(errorMsg: string): void {
+    if (this.onErrorCallback) {
+      this.onErrorCallback(errorMsg);
+    }
+  }
+
+  onInterruptionBegin(): void {
+    if (this.onInterruptionBeginCallback) {
+      this.onInterruptionBeginCallback();
+    }
+  }
+
+  onInterruptionEnd(): void {
+    if (this.onInterruptionEndCallback) {
+      this.onInterruptionEndCallback();
+    }
+  }
+
+  onDecibelChange(decibel: Number): void {
+    if (this.onDecibelChangeCallback) {
+      this.onDecibelChangeCallback(decibel as number);
+    }
   }
 }
 
-export const utsRecordManager = new UTSRecordManager();
+export class UTSRecorder {
+  private callback: UTSRecordCallback | null = null;
 
+  constructor() {
+    this.callback = new UTSRecordCallback();
+  }
 
+  /**
+   * 开始录音
+   * @param options 录音选项
+   */
+  start(options?: StartOptions): void {
+    let context: Context | null = null;
+    try {
+      // UTSAndroid 是平台内置对象，在 Android 平台上应该自动可用
+      const context = UTSAndroid.getUniActivity() as Context;
+    } catch (e) {
+      console.error("UTSAndroid 未定义，请确保在 Android 平台上运行:", e);
+      return;
+    }
+    
+    if (context == null) {
+      console.error("获取应用上下文失败");
+      return;
+    }
 
+    if (this.callback == null) {
+      console.error("录音回调未初始化");
+      return;
+    }
+
+    const frameSize = options?.frameSize ?? 10240;
+    const frameSizeInt = Math.floor(frameSize) as number;
+    
+    const success = UTSRecorderHelper.start(context, this.callback, frameSizeInt);
+    if (!success) {
+      console.error("启动录音失败");
+    }
+  }
+
+  pause(): void {
+    UTSRecorderHelper.pause();
+  }
+
+  resume(): void {
+    UTSRecorderHelper.resume();
+  }
+
+  stop(): void {
+    UTSRecorderHelper.stop();
+  }
+
+  /**
+   * 监听录音开始事件
+   */
+  onStart(callback: OnStartCallback): void {
+    this.callback?.setOnStart(callback);
+  }
+
+  /**
+   * 取消监听录音开始事件
+   */
+  offStart(): void {
+    this.callback?.setOnStart(null);
+  }
+
+  /**
+   * 监听录音暂停事件
+   */
+  onPause(callback: OnPauseCallback): void {
+    this.callback?.setOnPause(callback);
+  }
+
+  /**
+   * 取消监听录音暂停事件
+   */
+  offPause(): void {
+    this.callback?.setOnPause(null);
+  }
+
+  /**
+   * 监听录音继续事件
+   */
+  onResume(callback: OnResumeCallback): void {
+    this.callback?.setOnResume(callback);
+  }
+
+  /**
+   * 取消监听录音继续事件
+   */
+  offResume(): void {
+    this.callback?.setOnResume(null);
+  }
+
+  /**
+   * 监听录音停止事件
+   */
+  onStop(callback: OnStopCallback): void {
+    this.callback?.setOnStop(callback);
+  }
+
+  /**
+   * 取消监听录音停止事件
+   */
+  offStop(): void {
+    this.callback?.setOnStop(null);
+  }
+
+  /**
+   * 监听已录制完指定帧大小的文件事件
+   */
+  onFrameRecorded(callback: OnFrameRecordedCallback): void {
+    this.callback?.setOnFrameRecorded(callback);
+  }
+
+  /**
+   * 取消监听已录制完指定帧大小的文件事件
+   */
+  offFrameRecorded(): void {
+    this.callback?.setOnFrameRecorded(null);
+  }
+
+  /**
+   * 监听录音错误事件
+   */
+  onError(callback: OnErrorCallback): void {
+    this.callback?.setOnError(callback);
+  }
+
+  /**
+   * 取消监听录音错误事件
+   */
+  offError(): void {
+    this.callback?.setOnError(null);
+  }
+
+  /**
+   * 监听录音因为受到系统占用而被中断开始事件
+   */
+  onInterruptionBegin(callback: OnInterruptionBeginCallback): void {
+    this.callback?.setOnInterruptionBegin(callback);
+  }
+
+  /**
+   * 取消监听录音中断开始事件
+   */
+  offInterruptionBegin(): void {
+    this.callback?.setOnInterruptionBegin(null);
+  }
+
+  /**
+   * 监听录音中断结束事件
+   */
+  onInterruptionEnd(callback: OnInterruptionEndCallback): void {
+    this.callback?.setOnInterruptionEnd(callback);
+  }
+
+  /**
+   * 取消监听录音中断结束事件
+   */
+  offInterruptionEnd(): void {
+    this.callback?.setOnInterruptionEnd(null);
+  }
+
+  /**
+   * 监听声音分贝变化事件
+   */
+  onDecibelChange(callback: OnDecibelChangeCallback): void {
+    this.callback?.setOnDecibelChange(callback);
+  }
+
+  /**
+   * 取消监听声音分贝变化事件
+   */
+  offDecibelChange(): void {
+    this.callback?.setOnDecibelChange(null);
+  }
+
+  /**
+   * 销毁资源
+   */
+  destroy(): void {
+    UTSRecorderHelper.destroy();
+    this.callback = null;
+  }
+}
+
+// 导出实例（供直接使用的情况）
+export const utsRecorder = new UTSRecorder();
