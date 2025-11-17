@@ -21,49 +21,30 @@ export class Conversation extends CloudData {
     if(!Array.isArray(datas)){
       datas = [datas]
     }
-    return datas
+    
+    return datas.reduce((resList, item, index) => {
+   
+      // 插入客户端创建此会话的时间
+      item.client_create_time = Date.now()
+      try{
+        let conversation = new ConversationItem(item)
+        // console.log('新增会话', conversation)
+        resList.push(conversation)
+      }catch(e){
+				console.error('ConversationItem error',e)
+       
+      }
+      return resList
+    }, [])
   }
   __afterAdd(datas){
     if(!Array.isArray(datas)){
       datas = [datas]
     }
-    
-    datas.forEach(conversation => {
-      const {msgList} = conversation
-      if(msgList){
-        // 服务端查找“应当”按消息“更新”时间排序，但显示需要按“创建”时间倒序，所以这里需要重新排序
-        msgList.sort((a,b) => a.create_time - b.create_time)
-        // 将会话数据带的msgList添加到msg中
-        conversation.msg.add(msgList,{canSetIsFull:true})
-        // 删除冗余数据
-        delete conversation.msgList
-      }
-    })
-    
-    
-    // 通过 setTimeout 0，使得在下一次事件循环中执行，避免冲突
-    setTimeout(() => {
-      // console.log('__afterAdd',datas)
-      datas.forEach(conversation => {
-        // init响应式字段
-        const activeProperty = this.find(conversation.id).activeProperty()
-        Object.keys(activeProperty).forEach(key => {
-          const item = activeProperty[key]
-          conversation[key] = computed(item)
-        })
-      })
-    }, 0)
+   this.dataList = datas
   }
   __afterGet(datas){
-    // 获取单个会话时，检查群会话是否已经加载完群成员
-    if(datas && !Array.isArray(datas)){
-      const conversation = datas
-      const member = conversation.group?.member
-      if (member?.needLoadOnce) {
-        member.needLoadOnce = false
-        setTimeout(()=>member.loadMore(),1000)
-      }
-    }
+    
   }
   __afterGetMore(datas){
     if (this.dataList.length === 0 && datas.length >0){
@@ -125,6 +106,14 @@ export class Conversation extends CloudData {
     }
     return res.data
   }
+
+  __beforeFind(param){
+    if (typeof param === 'string'){
+      // 设置为默认按id查找会话，而不是按_id查找
+      return {id:param}
+    }
+  }
+
   // 统计所有消息的未读数
   unreadCount() {
     // console.log('计算 conversation unreadCount')

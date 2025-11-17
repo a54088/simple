@@ -6,7 +6,7 @@ import IndexList from './components/index-list/index.vue'
 </script>
 <template>
     <view class="chat-list__layout">
-        <CustomNavbar :autoBack="false">
+        <CustomNavbar :autoBack="false" bgColor="#F4F4F4">
             <template v-slot:left>
                 <text class="custom-navbar__title">通讯录</text>
             </template>
@@ -35,7 +35,7 @@ import IndexList from './components/index-list/index.vue'
 .chat-list__content {
     flex-grow: 1;
     height: 100%;
-    padding: 32rpx;
+    padding: 48rpx 32rpx 32rpx;
 }
 
 .search-friends__layout {
@@ -47,7 +47,7 @@ import IndexList from './components/index-list/index.vue'
 }
 
 .chat-list__layout {
-    background-color: #fff;
+    background-color: #F4F4F4;
     height: 100vh;
     display: flex;
     flex-direction: column;

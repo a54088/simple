@@ -6,13 +6,14 @@ const props = defineProps({
         type: Object,
         default: () => ({
             type: 'text',
-            body: '6666666'
+            content: ''
         })
     },
     index: {
         type: Number
     }
 })
+
 </script>
 
 <template>

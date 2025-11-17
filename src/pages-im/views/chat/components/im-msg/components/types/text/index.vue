@@ -3,7 +3,7 @@ const props = defineProps({
     msg: {
         type: Object,
         default: () => ({
-            body: '6666666'
+            content: ''
         })
     },
     imgMaxWidth: {
@@ -19,7 +19,7 @@ const trText = (str) => {
 </script>
 <template>
     <view class="msg-text-box">
-        <text class="msg-text" :decode="true" space="ensp">{{123}}</text>
+        <text class="msg-text" :decode="true" space="ensp">{{msg.content}}</text>
     </view>
 </template>
 <style lang="scss" scoped></style>
