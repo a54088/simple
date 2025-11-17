@@ -147,10 +147,16 @@
 				</view>
 			</swiper-item>
 		</swiper>
+		<SharePopup 
+		        :visible="sharePopupShow"
+		        @close="sharePopupShow = false"
+		        @action="handleSharePopupShow"
+		    />
 	</view>
 </template>
 
 <script setup>
+	import SharePopup from '../components/popups/sharePop.nvue';
 
 	import {
 		useImgAndVideo
@@ -174,11 +180,13 @@
 		currentIndex,
 		swiperWidth,
 		swiperHeight,
+		sharePopupShow,
 		onSlideChange,
 		formatCount,
 		handleLike,
 		handleComment,
 		handleShare,
+		handleSharePopupShow,
 		handleMore,
 		handleAvatarClick,
 		handleImageClick,
@@ -381,7 +389,7 @@
 
 	.action-count {
 		margin-top: 8px;
-		font-size: 20px;
+		font-size: 24rpx;
 		color: #fff;
 	}
 

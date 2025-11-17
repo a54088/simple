@@ -1,0 +1,393 @@
+<template>
+  <!-- 弹框容器：通过 shouldRender 控制显示 -->
+  <view v-if="shouldRender" class="map-popup">
+    <!-- 遮罩层（可选，点击关闭弹框） -->
+    <view :class="['popup-mask', { 'popup-mask-show': isShow }]" @tap="handleClose"></view>
+
+    <!-- 弹框主体 -->
+    <view class="popup-content" :style="{ transform: `translateY(${isShow ? 0 : screenHeightPx}px)`,width: swiperWidth + 'px' }">
+      <view @tap="handleClose" class="popup-content-arrow-down">
+        <image src="/static/images/common/xiala.png" mode="aspectFit" style="width: 40rpx; height: 40rpx;"></image>
+      </view>
+      <view class="popup-content-header"  :style="{ width: swiperWidth-32 + 'px'}">
+        <text class="popup-content-title">分享给</text>
+      </view>
+      
+      <!-- 联系人列表 - 使用 scroll-view 实现水平滚动 -->
+      <view class="contacts-section" :style="{ width: swiperWidth-32 + 'px'}">
+        <scroll-view 
+          class="contacts-swiper"
+          scroll-x="true"
+          show-scrollbar="false"
+          :style="{ width: swiperWidth-32 + 'px'}"
+        >
+          <view 
+            v-for="(contact, index) in contacts" 
+            :key="contact.id || index"
+            class="contact-item"
+            @tap="handleContactClick(contact, index)"
+          >
+            <view class="contact-avatar-wrapper">
+              <image 
+                :src="contact.avatar" 
+                mode="aspectFill" 
+                class="contact-avatar"
+              />
+            </view>
+            <text class="contact-name">{{ contact.name }}</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 操作按钮区域 -->
+      <view class="actions-section" :style="{ width: swiperWidth + 'px'}">
+        <view class="action-item" @tap="handleRecommend">
+          <view class="action-icon-wrapper">
+            <image 
+                src="/static/images/social/icon-recommend.png" 
+                mode="aspectWith" 
+                class="action-icon"
+              />
+          </view>
+          <text class="action-text">推荐</text>
+        </view>
+        <view class="action-item" @tap="handleShareLink">
+          <view class="action-icon-wrapper">
+             <image 
+                src="/static/images/social/icon-share2.png" 
+                mode="aspectWith" 
+                class="action-icon"
+              />
+          </view>
+          <text class="action-text">分享链接</text>
+        </view>
+        <view class="action-item" @tap="handleReport">
+          <view class="action-icon-wrapper">
+             <image 
+                src="/static/images/social/icon-report.png" 
+                mode="aspectWith" 
+                class="action-icon"
+              />
+          </view>
+          <text class="action-text">举报</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup>
+import { ref, watch, nextTick, defineProps, defineEmits, computed } from 'vue';
+
+// 获取屏幕宽度
+const systemInfo = uni.getSystemInfoSync();
+const swiperWidth = computed(() => systemInfo.windowWidth);
+
+
+// 定义组件属性
+const props = defineProps({
+  // 是否显示弹框
+  visible: {
+    type: Boolean,
+    default: false
+  },
+  // 标题文本
+  title: {
+    type: String,
+    default: '用户名称'
+  },
+  // 描述文本
+  desc: {
+    type: String,
+    default: '已持续和28位用户交流'
+  },
+  // 头像列表（最多显示5个）
+  avatars: {
+    type: Array,
+    default: () => []
+  },
+  // 联系人列表
+  contacts: {
+    type: Array,
+    default: () => [
+      {
+        id: 1,
+        name: '我的分身',
+        avatar: '/static/images/map/avatar1.webp'
+      },
+      {
+        id: 2,
+        name: '小桃花',
+        avatar: '/static/images/map/avatar2.webp'
+      },
+      {
+        id: 3,
+        name: 'Hahah',
+        avatar: '/static/images/map/avatar3.webp'
+      },
+      {
+        id: 4,
+        name: '不吃香菜',
+        avatar: '/static/images/map/avatar4.webp'
+      },
+      {
+        id: 5,
+        name: 'Hahah',
+        avatar: '/static/images/map/avatar5.webp'
+      },
+      {
+        id: 6,
+        name: '不吃香菜',
+        avatar: '/static/images/map/avatar5.webp'
+      },
+    ]
+  },
+});
+
+const emit = defineEmits(['close', 'action', 'contactClick', 'recommend', 'shareLink', 'report']);
+
+// 获取屏幕高度（px）
+const screenHeightPx = systemInfo.windowHeight;
+
+// 控制元素是否渲染
+const shouldRender = ref(false);
+// 控制动画状态
+const isShow = ref(false);
+
+// 动画
+watch(() => props.visible, (newVal) => {
+  if (newVal) {
+    // 显示时：先渲染元素，然后触发进入动画
+    shouldRender.value = true;
+    isShow.value = false;
+    nextTick(() => {
+      // 延迟一帧，确保初始状态已渲染
+      setTimeout(() => {
+        isShow.value = true;
+      }, 50);
+    });
+  } else {
+    // 隐藏时：先触发退出动画，动画完成后移除元素
+    isShow.value = false;
+    setTimeout(() => {
+      shouldRender.value = false;
+    }, 200);
+  }
+}, { immediate: true });
+
+// 关闭弹框
+const handleClose = () => {
+  emit('close');
+};
+
+// 操作按钮点击事件
+const handleAction = () => {
+  emit('action');
+};
+
+// 联系人点击
+const handleContactClick = (contact, index) => {
+  emit('contactClick', { contact, index });
+};
+
+// 推荐
+const handleRecommend = () => {
+  emit('recommend');
+  handleClose();
+};
+
+// 分享链接
+const handleShareLink = () => {
+  emit('shareLink');
+  handleClose();
+};
+
+// 举报
+const handleReport = () => {
+  emit('report');
+  handleClose();
+};
+
+</script>
+
+<style lang="scss" scoped>
+.map-popup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: transparent;
+}
+
+/* 遮罩层 */
+.popup-mask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0);
+  transition-property: background-color;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+
+.popup-mask-show {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* 弹框内容 */
+.popup-content {
+  position: relative;
+  width: 750rpx;
+  background-color: #fff;
+  border-top-left-radius: 20rpx;
+  border-top-right-radius: 20rpx;
+  padding-top: 40rpx;
+  padding-bottom: 40rpx;
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+  display: flex;
+  flex-direction: column;
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+
+  .popup-content-arrow-down {
+    margin-bottom: 20rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .popup-content-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 32rpx;
+  }
+
+  .popup-content-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/* 联系人列表区域 */
+.contacts-section {
+  width: 100%;
+  margin-bottom: 48rpx;
+}
+
+.contacts-swiper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 180rpx;
+  white-space: nowrap;
+}
+
+.contact-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 180rpx;
+  box-sizing: border-box;
+  padding-right: 42rpx;
+  flex-shrink: 0;
+}
+
+.contact-avatar-wrapper {
+  width: 106rpx;
+  height: 106rpx;
+  border-radius: 53rpx;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+  background-color: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.contact-avatar {
+  width: 106rpx;
+  height: 106rpx;
+  border-radius: 53rpx;
+}
+
+.contact-name {
+  font-size: 24rpx;
+  color: #333333;
+  text-align: center;
+  width: 120rpx;
+  lines: 1;
+}
+
+/* 操作按钮区域 */
+.actions-section {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 48rpx;
+}
+
+.action-icon-wrapper {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+
+}
+.action-icon{
+   width: 40rpx;
+height: 40rpx;
+}
+
+.action-text {
+  font-size: 24rpx;
+  color: #666666;
+  text-align: center;
+}
+
+/* 关闭按钮 */
+.close-btn {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-icon {
+  color: #ffffff;
+  font-size: 30rpx;
+}
+</style>
