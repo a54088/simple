@@ -10,7 +10,7 @@
         <image src="/static/images/common/xiala.png" mode="aspectFit" style="width: 40rpx; height: 40rpx;"></image>
       </view>
       <view class="popup-content-header"  :style="{ width: swiperWidth-32 + 'px'}">
-        <text class="popup-content-title">分享给</text>
+        <text class="popup-content-title">{{title}}</text>
       </view>
       
       <!-- 联系人列表 - 使用 scroll-view 实现水平滚动 -->
@@ -94,17 +94,7 @@ const props = defineProps({
   // 标题文本
   title: {
     type: String,
-    default: '用户名称'
-  },
-  // 描述文本
-  desc: {
-    type: String,
-    default: '已持续和28位用户交流'
-  },
-  // 头像列表（最多显示5个）
-  avatars: {
-    type: Array,
-    default: () => []
+    default: '分享给'
   },
   // 联系人列表
   contacts: {
