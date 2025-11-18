@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.angong.app">
+
+    <application>
+
+        <!-- <activity
+            android:name="io.dcloud.PandoraEntry"
+            android:exported="true"
+            android:theme="@7F0F00A8"  
+            android:label="@7F0E001C"  
+            android:screenOrientation="2" 
+            android:configChanges="0x40000DF3"  
+            android:windowSoftInputMode="0x00000010"  
+            android:hardwareAccelerated="true"  
+            tools:node="replace">  
+            
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity> -->
+
+        <!-- 启动别名1（默认启用，图标为ic_launcher） -->
+        <activity-alias
+            android:name="com.example.icon.Alias1"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"  
+            android:label="@7F0E001C"  
+            android:targetActivity="io.dcloud.PandoraEntry">  
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 启动别名2（默认禁用，图标为icon1） -->
+        <activity-alias
+            android:name="com.example.icon.Alias2"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/icon1"  
+            android:label="别名2名称"  
+            android:targetActivity="io.dcloud.PandoraEntry">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- 启动别名3（默认禁用，图标为icon2） -->
+        <activity-alias
+            android:name="com.example.icon.Alias3"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/icon2"  
+            android:label="别名3名称"  
+            android:targetActivity="io.dcloud.PandoraEntry">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+</manifest>

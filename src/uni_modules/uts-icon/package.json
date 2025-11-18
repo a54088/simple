@@ -1,10 +1,10 @@
 {
-  "id": "aquan-recorder",
-  "displayName": "aquan-recorder",
+  "id": "uts-icon",
+  "displayName": "uts-icon",
   "version": "1.0.0",
-  "description": "aquan-recorder",
+  "description": "uts-icon",
   "keywords": [
-    "aquan-recorder"
+    "uts-icon"
 ],
   "repository": "",
   "engines": {

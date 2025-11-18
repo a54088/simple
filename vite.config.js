@@ -17,6 +17,53 @@ import { createHtmlPlugin } from "vite-plugin-html";
 export default defineConfig({
   base: "/",
   plugins: [
+    // 自定义插件：注入 UTSAndroid 全局对象占位符（仅开发模式，不处理 UTS 文件）
+    {
+      name: 'vite-plugin-inject-uts-android',
+      enforce: 'pre',
+      transform(code, id, options) {
+        // 不处理 UTS 文件，UTS 文件会被编译到原生代码，UTSAndroid 会由 uni-app 自动提供
+        if (id.endsWith('.uts')) {
+          return null;
+        }
+        
+        // 只在开发模式（非生产构建）时注入占位符
+        // 生产构建时不应该注入占位符，UTSAndroid 应该由 uni-app 在编译时提供
+        const isProduction = options?.ssr === false && process.env.NODE_ENV === 'production';
+        if (isProduction) {
+          return null;
+        }
+        
+        // 只处理 .ts 和 .js 文件（用于开发模式）
+        if (id.match(/\.(ts|js)$/) && code.includes('UTSAndroid') && !code.includes('declare const UTSAndroid') && !code.includes('UTSAndroid 开发模式占位符')) {
+          // 在文件开头注入 UTSAndroid 的全局声明和占位符实现
+          const isTypeScript = id.endsWith('.ts');
+          const typeCast = isTypeScript ? '(globalThis as any)' : 'globalThis';
+          const utsAndroidShim = `
+// ===== UTSAndroid 开发模式占位符（自动注入，仅开发模式使用） =====
+// 注意：UTSAndroid 仅在 Android 平台编译时可用，此代码仅用于开发模式
+// 此占位符仅在非 UTS 文件中使用，UTS 文件会直接使用编译时提供的 UTSAndroid
+// 在生产构建时，此占位符不会被注入
+if (typeof globalThis !== 'undefined' && typeof ${typeCast}.UTSAndroid === 'undefined') {
+  ${typeCast}.UTSAndroid = {
+    getUniActivity: function() {
+      console.warn('[开发模式] UTSAndroid.getUniActivity() 仅在 Android 平台可用');
+      return null;
+    },
+    getAppContext: function() {
+      console.warn('[开发模式] UTSAndroid.getAppContext() 仅在 Android 平台可用');
+      return null;
+    }
+  };
+}
+// ===== 占位符结束 =====
+
+`;
+          return utsAndroidShim + code;
+        }
+        return null;
+      },
+    },
     // 自定义插件：必须在 uni() 插件之前，以拦截 Android 系统库导入
     {
       name: 'vite-plugin-ignore-uts-imports',

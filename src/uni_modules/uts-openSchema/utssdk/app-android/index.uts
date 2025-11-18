@@ -2,14 +2,34 @@ import Intent from 'android.content.Intent'
 import Uri from 'android.net.Uri'
 import { OpenSchema, CanOpenURL } from '../interface.uts'
 
+// UTSAndroid 全局对象声明（由 uni-app 在编译时提供）
+declare const UTSAndroid: {
+  getUniActivity(): any;
+  getAppContext(): any;
+};
+
 export const openSchema : OpenSchema = function (url : string) {
   if (canOpenURL(url)) {
-    const context = UTSAndroid.getUniActivity()!
-    const uri = Uri.parse(url)
-    const intent = new Intent(Intent.ACTION_VIEW, uri)
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    intent.setData(uri)
-    context.startActivity(intent)
+    try {
+      // UTSAndroid 是平台内置对象，如果未定义会抛出 ReferenceError
+      const context = UTSAndroid.getUniActivity()
+      if (context == null) {
+        console.error('获取 Activity 上下文失败：context 为 null');
+        return;
+      }
+      const uri = Uri.parse(url)
+      const intent = new Intent(Intent.ACTION_VIEW, uri)
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      intent.setData(uri)
+      context.startActivity(intent)
+    } catch (e) {
+      // 捕获 UTSAndroid 未定义的错误
+      if (e instanceof ReferenceError || (e as any).message?.includes('UTSAndroid')) {
+        console.error('UTSAndroid 未定义，请确保在 Android 平台上运行。错误:', e);
+      } else {
+        console.error('打开链接失败:', e);
+      }
+    }
   } else {
     console.error('url param Error：', JSON.stringify(url))
   }
@@ -17,10 +37,25 @@ export const openSchema : OpenSchema = function (url : string) {
 
 export const canOpenURL : CanOpenURL = function (url : string) : boolean {
   if (typeof url === 'string' && url.length > 0) {
-    const context = UTSAndroid.getUniActivity()!
-    const uri = Uri.parse(url)
-    const intent = new Intent(Intent.ACTION_VIEW, uri)
-    return intent.resolveActivity(context.packageManager) != null ? true : false
+    try {
+      // UTSAndroid 是平台内置对象，如果未定义会抛出 ReferenceError
+      const context = UTSAndroid.getUniActivity()
+      if (context == null) {
+        console.error('获取 Activity 上下文失败：context 为 null');
+        return false;
+      }
+      const uri = Uri.parse(url)
+      const intent = new Intent(Intent.ACTION_VIEW, uri)
+      return intent.resolveActivity(context.packageManager) != null ? true : false
+    } catch (e) {
+      // 捕获 UTSAndroid 未定义的错误
+      if (e instanceof ReferenceError || (e as any).message?.includes('UTSAndroid')) {
+        console.error('UTSAndroid 未定义，请确保在 Android 平台上运行。错误:', e);
+      } else {
+        console.error('检查 URL 是否可打开失败:', e);
+      }
+      return false;
+    }
   } else {
     return false
   }

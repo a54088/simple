@@ -1,9 +1,16 @@
-// 直接导入 Java 类（参考 IconSwitche 案例）
 import UTSRecorderHelper from "com.aquan.recorder.UTSRecorderHelper";
 import RecordFrameCallback from "com.aquan.recorder.RecordFrameCallback";
 import RecordSliceInfo from "com.aquan.recorder.RecordSliceInfo";
 import List from "java.util.List";
 import Context from "android.content.Context";
+
+// UTSAndroid 全局对象声明（由 uni-app 在编译时提供）
+declare const UTSAndroid: {
+  getUniActivity(): Context | null;
+  getAppContext(): Context | null;
+};
+
+
 
 export interface RecordSliceInfoData {
   sliceData: ArrayBuffer;
@@ -173,20 +180,6 @@ export class UTSRecorder {
    * @param options 录音选项
    */
   start(options?: StartOptions): void {
-    let context: Context | null = null;
-    try {
-      // UTSAndroid 是平台内置对象，在 Android 平台上应该自动可用
-      const context = UTSAndroid.getUniActivity() as Context;
-    } catch (e) {
-      console.error("UTSAndroid 未定义，请确保在 Android 平台上运行:", e);
-      return;
-    }
-    
-    if (context == null) {
-      console.error("获取应用上下文失败");
-      return;
-    }
-
     if (this.callback == null) {
       console.error("录音回调未初始化");
       return;
@@ -195,7 +188,7 @@ export class UTSRecorder {
     const frameSize = options?.frameSize ?? 10240;
     const frameSizeInt = Math.floor(frameSize) as number;
     
-    const success = UTSRecorderHelper.start(context, this.callback, frameSizeInt);
+    const success = UTSRecorderHelper.start( this.callback, frameSizeInt);
     if (!success) {
       console.error("启动录音失败");
     }

@@ -1,0 +1,35 @@
+import IconSwitche from "com.example.icon.IconSwitche";
+
+// UTSAndroid 全局对象声明（由 uni-app 在编译时提供）
+declare const UTSAndroid: {
+  getUniActivity(): any;
+  getAppContext(): any;
+};
+
+export function changeIcon(type:number){
+	try {
+		let aliasName: string;
+		if(type == 1){
+			aliasName = "Alias1";
+		}else if (type == 2){
+			aliasName = "Alias2";
+		}else{
+			aliasName = "Alias3";
+		}
+		
+		// UTSAndroid 是平台内置对象，如果未定义会抛出 ReferenceError
+		const context = UTSAndroid.getAppContext();
+		if (context == null) {
+			console.error("获取应用上下文失败：context 为 null");
+			return;
+		}
+		IconSwitche.changeIcon(context, aliasName);
+	} catch (e) {
+		// 捕获 UTSAndroid 未定义的错误
+		if (e instanceof ReferenceError || (e as any).message?.includes('UTSAndroid')) {
+			console.error("UTSAndroid 未定义，请确保在 Android 平台上运行。错误:", e);
+		} else {
+			console.error("切换图标失败:", e);
+		}
+	}
+}
